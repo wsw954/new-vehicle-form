@@ -34,6 +34,8 @@ export default function Home() {
 
   //Helper function
   const handleMakeSelected = (event) => {
+
+    console.log(event);
     const modelsList = makes.find((obj) => obj.name === event.target.value);
     const listModels = modelsList.models.map((make) => make.name);
     setFormChoices((prevState) => {
@@ -50,6 +52,7 @@ export default function Home() {
 
   //Helper function
   const handleModelSelected = (event) => {
+    console.log(event)
     console.log(formChoices);
     updateVehicle((vehicle) => {
       return { ...vehicle, model: event.target.value };

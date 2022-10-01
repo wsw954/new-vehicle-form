@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 uuidv4();
 
 export default function ModelDropdown({ models, onChange }) {
+  const [value, setValue] = useState();
   //Create list of option elements to load make select
   const modelOptions = models.map((model) => (
     <option key={uuidv4({ model })} value={model}>
@@ -13,9 +14,15 @@ export default function ModelDropdown({ models, onChange }) {
     </option>
   ));
 
+
+  const handleChange = (event) => {
+    onChange(event);
+    setValue(event.target.value);
+  }
+
   return (
     <>
-      <select defaultValue={0} onChange={onChange}>
+      <select defaultValue={0} onChange={handleChange} value={value}>
         <option key={uuidv4(0)} disabled value={0}>
           Choose A Model
         </option>
