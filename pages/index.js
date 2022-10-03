@@ -4,6 +4,7 @@ import { makes } from "/data/make";
 import reducer from "/pages/api/reducer";
 import Make from "/components/makedropdown.js";
 import Model from "/components/modeldropdown.js";
+import Dropdown from "/components/dropdown.js";
 import { v4 as uuidv4 } from "uuid";
 
 //Retrieve list of makes for selection
@@ -50,18 +51,21 @@ export default function Home() {
 
   //Helper function
   const handleModelSelected = (event) => {
-    console.log(formChoices);
     updateVehicle((vehicle) => {
       return { ...vehicle, model: event.target.value };
     });
 
     console.log(event.target.value);
+    //1. Call function to retriev trim data
+    //2. Load this trim data into trim dropdown
   };
 
   //Handle form submit
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(vehicle);
+    e.preventDefault(e);
+    const data = new FormData(e.target);
+    console.log(Object.fromEntries(data.entries()));
+    //Insert code to call database API to save form data
   };
 
   return (
@@ -70,15 +74,23 @@ export default function Home() {
         <h3>New Vehicle Form</h3>
         <form onSubmit={handleSubmit}>
           <fieldset>
-            <Make onChange={handleMakeSelected}></Make>
+            {/* <Make onChange={handleMakeSelected}></Make> */}
+            <Dropdown
+              defaultValue={0}
+              name="Make"
+              choices={makeChoices}
+              onChange={handleMakeSelected}
+            ></Dropdown>
           </fieldset>
           <br></br>
           {!vehicle.make ? null : (
             <fieldset>
-              <Model
-                models={formChoices.models}
+              <Dropdown
+                defaultValue={0}
+                name="Model"
+                choices={formChoices.models}
                 onChange={handleModelSelected}
-              ></Model>
+              ></Dropdown>
             </fieldset>
           )}
           <br></br>
