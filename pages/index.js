@@ -2,8 +2,6 @@ import styles from "../styles/Home.module.css";
 import { useState, useReducer } from "react";
 import { makes } from "/data/make";
 import reducer from "/pages/api/reducer";
-import Make from "/components/makedropdown.js";
-import Model from "/components/modeldropdown.js";
 import Dropdown from "/components/dropdown.js";
 import { v4 as uuidv4 } from "uuid";
 
