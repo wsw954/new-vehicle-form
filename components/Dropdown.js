@@ -9,11 +9,11 @@ export default function DropDropdown({
   name,
   choices,
   onChange,
-  defaultValue,
+  firstDisabled,
 }) {
-  const [value, setValue] = useState();
+  const [state, setState] = useState();
   //Create list of option elements to load make select
-  const choicesOptions = choices.map((choice) => (
+  const choicesOptions = choices.map((choice, index) => (
     <option key={uuidv4({ choice })} value={choice}>
       {choice}
     </option>
@@ -21,20 +21,15 @@ export default function DropDropdown({
 
   const handleChange = (event) => {
     onChange(event);
-    setValue(event.target.value);
+    setState(event.target.value);
   };
 
   return (
     <>
       <label htmlFor={name}>{name}</label>
       <br></br>
-      <select
-        name={name}
-        onChange={handleChange}
-        defaultValue={defaultValue}
-        value={value}
-      >
-        <option key={uuidv4(0)} disabled value={defaultValue}>
+      <select name={name} onChange={handleChange} value={state}>
+        <option key={0} value={"DEFAULT"} disabled={firstDisabled}>
           Choose A {name}
         </option>
         {choicesOptions}

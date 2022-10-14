@@ -28,23 +28,39 @@ export default function Home() {
     options: [{}],
   });
 
-  //useReducer hook, which returns the current state and a di[spatch function
-  const [state, dispatch] = useReducer(reducer, formChoices);
+  //useReducer hook, which returns the current state and a dispatch function
+  // const [vehicle, dispatch] = useReducer(reducer, {
+  //   make: "",
+  //   model: "",
+  //   year: 0,
+  //   trim: "",
+  //   options: [{}],
+  // });
 
   //Helper function
   const handleMakeSelected = (event) => {
     const modelsList = makes.find((obj) => obj.name === event.target.value);
     const listModels = modelsList.models.map((make) => make.name);
+
     setFormChoices((prevState) => {
       return { ...prevState, models: listModels }; //Here it preserves the original state object
     });
+    //Reset vehicle state to be just make
     updateVehicle((vehicle) => {
-      return { ...vehicle, make: event.target.value };
+      return {
+        ...vehicle,
+        make: event.target.value,
+        model: "",
+        year: 0,
+        trim: "",
+        options: [{}],
+      };
     });
-    dispatch({
-      type: "ACTIONS.MAKE_SELECTED",
-      payload: { make: event.target.value },
-    });
+    // dispatch({
+    //   type: "MAKE_SELECTED",
+    //   payload: { make: event.target.value },
+    // });
+    console.log(vehicle);
   };
 
   //Helper function
@@ -53,8 +69,12 @@ export default function Home() {
       return { ...vehicle, model: event.target.value };
     });
 
-    console.log(event.target.value);
-    //1. Call function to retriev trim data
+    // dispatch({
+    //   type: "MODEL_SELECTED",
+    //   payload: vehicle,
+    // });
+
+    //1. Call function to retrieve trim data
     //2. Load this trim data into trim dropdown
   };
 
@@ -72,22 +92,21 @@ export default function Home() {
         <h3>New Vehicle Form</h3>
         <form onSubmit={handleSubmit}>
           <fieldset>
-            {/* <Make onChange={handleMakeSelected}></Make> */}
             <Dropdown
-              defaultValue={0}
               name="Make"
               choices={makeChoices}
               onChange={handleMakeSelected}
+              firstDisabled={!vehicle.make ? null : true}
             ></Dropdown>
           </fieldset>
           <br></br>
           {!vehicle.make ? null : (
             <fieldset>
               <Dropdown
-                defaultValue={0}
                 name="Model"
                 choices={formChoices.models}
                 onChange={handleModelSelected}
+                firstDisabled={!vehicle.model ? null : true}
               ></Dropdown>
             </fieldset>
           )}

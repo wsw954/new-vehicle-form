@@ -1,22 +1,30 @@
+import { makes } from "/data/make";
+
+// const modelsList = makes.find((obj) => obj.name === event.target.value);
+// const listModels = modelsList.models.map((make) => make.name);
+
 const ACTIONS = {
-  MAKE_SELECTED: "make-selected",
-  MODEL_SELECTED: "model-selected",
-  TRIM_SELECTED: "trim-selected",
-  OPTION_SELECTED: "option-selected",
+  MAKE_SELECTED: "MAKE_SELECTED",
+  MODEL_SELECTED: "MODEL_SELECTED",
+  TRIM_SELECTED: "TRIM_SELECTED",
+  OPTION_SELECTED: "OPTIONS:SELECTED",
 };
 
-const reducer = (state, action) => {
-  console.log(action);
+const reducer = (vehicle, action) => {
   switch (action.type) {
     case ACTIONS.MAKE_SELECTED:
-      console.log(action.paylod);
-      return { state }; //Return modelChoices
+      console.log(vehicle);
+      console.log(action.payload);
+      const modelsList = makes.find((obj) => obj.name === action.payload.make);
+
+      return { ...vehicle, make: action.payload.make }; //Return  modelChoices
     case ACTIONS.MODEL_SELECTED:
-      return { count: state.count - 1 }; //Return trimChoices
+      console.log(action);
+      return { vehicle }; //Return trimChoices
     case ACTIONS.TRIM_SELECTED:
-      return { count: state.count - 1 }; //Return optionChoices
+      return { vehicle }; //Return optionChoices
     case ACTIONS.OPTION_SELECTED:
-      return { count: state.count - 1 }; //Call on modelValidate() function to return a state
+      return { vehicle }; //Call on modelValidate() function to return a state
     default:
       return state;
   }
