@@ -12,7 +12,7 @@ export default function DropDropdown({
   firstDisabled,
 }) {
   const [state, setState] = useState();
-  //Create list of option elements to load make select
+  //Create list of option elements to load select
   const choicesOptions = choices.map((choice, index) => (
     <option key={uuidv4({ choice })} value={choice}>
       {choice}
