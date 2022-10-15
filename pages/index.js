@@ -6,7 +6,8 @@ import Dropdown from "/components/dropdown.js";
 import { v4 as uuidv4 } from "uuid";
 
 //Retrieve list of makes for selection
-const makeChoices = makes.map((make) => make.name);
+const makeChoices = makes.map((make) => make);
+
 //Call uuidv4, to use to create unique IDs
 uuidv4();
 
@@ -30,8 +31,8 @@ export default function Home() {
   //Hook to retrieve form choices
   const [formChoices, dispatch] = useReducer(reducer, {
     makes: makeChoices,
-    models: [],
-    trims: [],
+    models: [{}],
+    trims: [{}],
     options: [{}],
   });
 
@@ -76,11 +77,11 @@ export default function Home() {
 
     dispatch({
       type: "MODEL_SELECTED",
-      payload: { model: event.target.value },
+      payload: { make: vehicle.make, model: event.target.value },
     });
-    console.log(vehicle);
   };
 
+  //Helper function
   const handleTrimSelected = (event) => {
     updateVehicle((vehicle) => {
       return { ...vehicle, trim: event.target.value, options: [{}] };
@@ -88,7 +89,11 @@ export default function Home() {
 
     dispatch({
       type: "TRIM_SELECTED",
-      payload: { trim: event.target.value },
+      payload: {
+        make: vehicle.make,
+        model: vehicle.model,
+        trim: event.target.value,
+      },
     });
 
     console.log("Handle Trim Selected");
@@ -133,7 +138,9 @@ export default function Home() {
                 name="Trim"
                 choices={formChoices.trims}
                 onChange={handleTrimSelected}
-                firstDisabled={!vehicle.trim ? null : true}
+                firstDisabled={
+                  !vehicle.trim ? null || formChoices.trims.length < 2 : true
+                }
               ></Dropdown>
             </fieldset>
           )}

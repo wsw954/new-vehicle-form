@@ -3,19 +3,7 @@ export let makes = [
     name: "Acura",
     models: [
       {
-        name: "ILX",
-      },
-      {
         name: "Integra",
-      },
-      {
-        name: "MDX",
-      },
-      {
-        name: "NSX Type S",
-      },
-      {
-        name: "NSX GT3",
       },
       {
         name: "MDX",
