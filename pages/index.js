@@ -95,8 +95,6 @@ export default function Home() {
         trim: event.target.value,
       },
     });
-
-    console.log("Handle Trim Selected");
   };
 
   //Handle form submit
@@ -117,7 +115,7 @@ export default function Home() {
               name="Make"
               choices={formChoices.makes}
               onChange={handleMakeSelected}
-              firstDisabled={!vehicle.make ? null : true}
+              firstDisabled={vehicle.make != null ? true : false}
             ></Dropdown>
           </fieldset>
           <br></br>
@@ -127,7 +125,7 @@ export default function Home() {
                 name="Model"
                 choices={formChoices.models}
                 onChange={handleModelSelected}
-                firstDisabled={!vehicle.model ? null : true}
+                firstDisabled={vehicle.model != null ? true : false}
               ></Dropdown>
             </fieldset>
           )}
@@ -139,7 +137,9 @@ export default function Home() {
                 choices={formChoices.trims}
                 onChange={handleTrimSelected}
                 firstDisabled={
-                  !vehicle.trim ? null || formChoices.trims.length < 2 : true
+                  formChoices.trims.length === 1 || vehicle.trim != null
+                    ? true
+                    : false
                 }
               ></Dropdown>
             </fieldset>

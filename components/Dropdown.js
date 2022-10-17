@@ -13,11 +13,53 @@ export default function DropDropdown({
 }) {
   const [state, setState] = useState();
   //Create list of option elements to load select
-  const choicesOptions = choices.map((choice, index) => (
-    <option key={uuidv4({ index })} value={choice.name}>
-      {choice.name}
-    </option>
-  ));
+  let choiceOptions = {};
+  // const choicesOptions = choices.map((choice, index) => (
+  //   <option key={uuidv4({ index })} value={choice.name}>
+  //     {choice.name}
+  //   </option>
+  // ));
+
+  switch (name) {
+    case "Make":
+      choiceOptions = choices.map((choice, index) => (
+        <option key={uuidv4({ index })} value={choice.name}>
+          {choice.name}
+        </option>
+      ));
+      break;
+    case "Model":
+      choiceOptions = choices.map((choice, index) => (
+        <option key={uuidv4({ index })} value={choice.name}>
+          {choice.name}
+        </option>
+      ));
+      break;
+    case "Trim":
+      choiceOptions = choices.map((choice, index) => (
+        <option
+          key={uuidv4({ index })}
+          value={choice.name}
+          data-price={choice.price}
+        >
+          {choice.name + "-MSRP-$" + choice.price}
+        </option>
+      ));
+      break;
+    case "Option":
+      choiceOptions = choices.map((choice, index) => (
+        <option
+          key={uuidv4({ index })}
+          value={choice.name}
+          data-price={choice.price}
+        >
+          {choice.name + "-MSRP-$" + choice.price}
+        </option>
+      ));
+      break;
+    default:
+      console.log(`Sorry, we are out of ${expr}.`);
+  }
 
   const handleChange = (event) => {
     onChange(event);
@@ -32,7 +74,7 @@ export default function DropDropdown({
         <option key={0} value={"DEFAULT"} disabled={firstDisabled}>
           Choose A {name}
         </option>
-        {choicesOptions}
+        {choiceOptions}
       </select>
     </>
   );
