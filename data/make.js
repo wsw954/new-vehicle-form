@@ -32,9 +32,6 @@ export let makes = [
         name: "HR-V",
       },
       {
-        name: "Odyssey",
-      },
-      {
         name: "Passport",
       },
       {

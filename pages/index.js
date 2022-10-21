@@ -3,7 +3,6 @@ import { useState, useReducer } from "react";
 import { makes } from "/data/make";
 import reducer from "/pages/api/reducer";
 import Dropdown from "/components/dropdown.js";
-
 import { v4 as uuidv4 } from "uuid";
 
 //Retrieve list of makes for selection
@@ -15,9 +14,9 @@ uuidv4();
 export default function Home() {
   //Track the selected vehicle choices
   const [vehicle, updateVehicle] = useState({
-    make: null,
-    model: null,
-    trim: null,
+    make: "",
+    model: "",
+    trim: "",
     options: [{}],
   });
 
@@ -35,8 +34,8 @@ export default function Home() {
       return {
         ...vehicle,
         make: make,
-        model: null,
-        trim: null,
+        model: "",
+        trim: "",
         options: [{}],
       };
     });
@@ -53,7 +52,7 @@ export default function Home() {
       return {
         ...vehicle,
         model: model,
-        trim: null,
+        trim: "",
         options: [{}],
       };
     });
@@ -66,6 +65,7 @@ export default function Home() {
 
   //Helper function
   const handleTrimSelected = (trim) => {
+    //Reset the vehicle to be clear out all options
     updateVehicle((vehicle) => {
       return { ...vehicle, trim: trim, options: [{}] };
     });
@@ -84,7 +84,7 @@ export default function Home() {
   const handleSubmit = (e) => {
     e.preventDefault(e);
     const data = new FormData(e.target);
-    // console.log(Object.fromEntries(data.entries()));
+
     //Insert code to call database API to save form data
   };
 
@@ -99,18 +99,20 @@ export default function Home() {
               vehicle={vehicle}
               choices={makeChoices}
               onChange={handleMakeSelected}
-              firstDisabled={vehicle.make != null ? true : false}
+              firstDisabled={vehicle.make != "" ? true : false}
             ></Dropdown>
           </fieldset>
           <br></br>
-          {!vehicle.make ? null : (
+          {!vehicle.make ? (
+            ""
+          ) : (
             <fieldset>
               <Dropdown
                 name="Model"
                 vehicle={vehicle}
                 choices={formChoices.models}
                 onChange={handleModelSelected}
-                firstDisabled={vehicle.model != null ? true : false}
+                firstDisabled={vehicle.model != "" ? true : false}
               ></Dropdown>
             </fieldset>
           )}
@@ -123,13 +125,11 @@ export default function Home() {
                 choices={formChoices.trims}
                 onChange={handleTrimSelected}
                 firstDisabled={
-                  formChoices.trims.length === 1 || vehicle.trim != null
+                  formChoices.trims.length === 1 || vehicle.trim != ""
                     ? true
                     : false
                 }
               ></Dropdown>
-
-              {console.log(formChoices.trims)}
             </fieldset>
           )}
           <button>Submit</button>

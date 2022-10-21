@@ -12,14 +12,15 @@ export default function DropDropdown({
   onChange,
   firstDisabled,
 }) {
-  const [state, setState] = useState();
   console.log(vehicle);
 
   //Create list of option elements to load select
   let choiceOptions = {};
+  var initialValue = {};
 
   switch (name) {
     case "Make":
+      initialValue = vehicle.make;
       choiceOptions = choices.map((choice, index) => (
         <option key={uuidv4({ index })} value={choice.name}>
           {choice.name}
@@ -27,6 +28,7 @@ export default function DropDropdown({
       ));
       break;
     case "Model":
+      initialValue = vehicle.model;
       choiceOptions = choices.map((choice, index) => (
         <option key={uuidv4({ index })} value={choice.name}>
           {choice.name}
@@ -34,6 +36,7 @@ export default function DropDropdown({
       ));
       break;
     case "Trim":
+      initialValue = vehicle.trim;
       choiceOptions = choices.map((choice, index) => (
         <option
           key={uuidv4({ index })}
@@ -56,19 +59,18 @@ export default function DropDropdown({
       ));
       break;
     default:
-      console.log(`Sorry, we are out of ${expr}.`);
+      console.log([]);
   }
 
   const handleChange = (event) => {
     onChange(event.target.value);
-    setState(event.target.value);
   };
 
   return (
     <>
       <label htmlFor={name}>{name}</label>
       <br></br>
-      <select name={name} onChange={handleChange} value={state}>
+      <select name={name} onChange={handleChange} value={initialValue}>
         <option key={0} disabled={firstDisabled}>
           Choose A {name}
         </option>

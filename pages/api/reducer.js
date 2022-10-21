@@ -25,8 +25,8 @@ const reducer = (formChoices, action) => {
       //Return an array of trims per model selected
       return { ...formChoices, trims: dataFile.trimsData.trims }; //Return trimChoices
     case ACTIONS.TRIM_SELECTED:
-      console.log(formChoices);
-      console.log(action.payload);
+      // console.log(formChoices);
+      // console.log(action.payload);
       return { ...formChoices, options: optionChoices }; //Return optionChoices
     case ACTIONS.OPTION_SELECTED:
       return { formChoices }; //Call on modelValidate() function to return a state
