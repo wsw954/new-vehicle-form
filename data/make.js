@@ -57,9 +57,6 @@ export let makes = [
       {
         name: "Corolla",
       },
-      {
-        name: "Prius",
-      },
     ],
   },
   {
@@ -70,15 +67,6 @@ export let makes = [
       },
       {
         name: "Atlas",
-      },
-      {
-        name: "Atlas Cross Sport",
-      },
-      {
-        name: "Golf R",
-      },
-      {
-        name: "Golf GTI",
       },
       {
         name: "Jetta",

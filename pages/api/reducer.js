@@ -7,8 +7,6 @@ const ACTIONS = {
   OPTION_SELECTED: "OPTIONS:SELECTED",
 };
 
-//Temp hardcoded trim choices passed to index.js file
-const trimChoices = ["Sedan LX", "Sedan Sport", "Sedan EX"];
 //Temp stand in code for options
 const optionChoices = [{ wheels: [], engines: [], intAcc: [] }];
 

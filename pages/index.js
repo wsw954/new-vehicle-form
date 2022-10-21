@@ -3,6 +3,7 @@ import { useState, useReducer } from "react";
 import { makes } from "/data/make";
 import reducer from "/pages/api/reducer";
 import Dropdown from "/components/dropdown.js";
+
 import { v4 as uuidv4 } from "uuid";
 
 //Retrieve list of makes for selection
@@ -12,14 +13,6 @@ const makeChoices = makes.map((make) => make);
 uuidv4();
 
 export default function Home() {
-  //Track the vehicle choices available for the form
-  // const [formChoices, setFormChoices] = useState({
-  //   makes: makeChoices,
-  //   models: [],
-  //   trims: [],
-  //   options: [{ name: "", type: "", choices: [] }],
-  // });
-
   //Track the selected vehicle choices
   const [vehicle, updateVehicle] = useState({
     make: null,
@@ -30,28 +23,18 @@ export default function Home() {
 
   //Hook to retrieve form choices
   const [formChoices, dispatch] = useReducer(reducer, {
-    makes: makeChoices,
     models: [{}],
     trims: [{}],
     options: [{}],
   });
 
-  //useReducer hook, which returns the current state and a dispatch function
-  // const [vehicle, dispatch2] = useReducer(reducer, {
-  //   make: "",
-  //   model: "",
-  //   year: 0,
-  //   trim: "",
-  //   options: [{}],
-  // });
-
   //Helper function
-  const handleMakeSelected = (event) => {
+  const handleMakeSelected = (make) => {
     //Reset vehicle state to be just make
     updateVehicle((vehicle) => {
       return {
         ...vehicle,
-        make: event.target.value,
+        make: make,
         model: null,
         trim: null,
         options: [{}],
@@ -59,17 +42,17 @@ export default function Home() {
     });
     dispatch({
       type: "MAKE_SELECTED",
-      payload: { make: event.target.value },
+      payload: { make: make },
     });
   };
 
   //Helper function
-  const handleModelSelected = (event) => {
+  const handleModelSelected = (model) => {
     //Reset the vehicle to be clear out trims and options
     updateVehicle((vehicle) => {
       return {
         ...vehicle,
-        model: event.target.value,
+        model: model,
         trim: null,
         options: [{}],
       };
@@ -77,14 +60,14 @@ export default function Home() {
 
     dispatch({
       type: "MODEL_SELECTED",
-      payload: { make: vehicle.make, model: event.target.value },
+      payload: { make: vehicle.make, model: model },
     });
   };
 
   //Helper function
-  const handleTrimSelected = (event) => {
+  const handleTrimSelected = (trim) => {
     updateVehicle((vehicle) => {
-      return { ...vehicle, trim: event.target.value, options: [{}] };
+      return { ...vehicle, trim: trim, options: [{}] };
     });
 
     dispatch({
@@ -92,7 +75,7 @@ export default function Home() {
       payload: {
         make: vehicle.make,
         model: vehicle.model,
-        trim: event.target.value,
+        trim: trim,
       },
     });
   };
@@ -113,7 +96,8 @@ export default function Home() {
           <fieldset>
             <Dropdown
               name="Make"
-              choices={formChoices.makes}
+              vehicle={vehicle}
+              choices={makeChoices}
               onChange={handleMakeSelected}
               firstDisabled={vehicle.make != null ? true : false}
             ></Dropdown>
@@ -123,6 +107,7 @@ export default function Home() {
             <fieldset>
               <Dropdown
                 name="Model"
+                vehicle={vehicle}
                 choices={formChoices.models}
                 onChange={handleModelSelected}
                 firstDisabled={vehicle.model != null ? true : false}
@@ -134,6 +119,7 @@ export default function Home() {
             <fieldset>
               <Dropdown
                 name="Trim"
+                vehicle={vehicle}
                 choices={formChoices.trims}
                 onChange={handleTrimSelected}
                 firstDisabled={
@@ -142,6 +128,8 @@ export default function Home() {
                     : false
                 }
               ></Dropdown>
+
+              {console.log(formChoices.trims)}
             </fieldset>
           )}
           <button>Submit</button>

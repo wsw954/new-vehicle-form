@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { makes } from "/data/make";
 import { v4 as uuidv4 } from "uuid";
 
@@ -7,18 +7,16 @@ uuidv4();
 
 export default function DropDropdown({
   name,
+  vehicle,
   choices,
   onChange,
   firstDisabled,
 }) {
   const [state, setState] = useState();
+  console.log(vehicle);
+
   //Create list of option elements to load select
   let choiceOptions = {};
-  // const choicesOptions = choices.map((choice, index) => (
-  //   <option key={uuidv4({ index })} value={choice.name}>
-  //     {choice.name}
-  //   </option>
-  // ));
 
   switch (name) {
     case "Make":
@@ -42,7 +40,7 @@ export default function DropDropdown({
           value={choice.name}
           data-price={choice.price}
         >
-          {choice.name + "-MSRP-$" + choice.price}
+          {choice.name + " -MSRP-$" + choice.price}
         </option>
       ));
       break;
@@ -62,7 +60,7 @@ export default function DropDropdown({
   }
 
   const handleChange = (event) => {
-    onChange(event);
+    onChange(event.target.value);
     setState(event.target.value);
   };
 
@@ -71,7 +69,7 @@ export default function DropDropdown({
       <label htmlFor={name}>{name}</label>
       <br></br>
       <select name={name} onChange={handleChange} value={state}>
-        <option key={0} value={"DEFAULT"} disabled={firstDisabled}>
+        <option key={0} disabled={firstDisabled}>
           Choose A {name}
         </option>
         {choiceOptions}
