@@ -1,4 +1,5 @@
 import { makes } from "/data/make";
+import { validate } from "/utils/validate";
 
 const ACTIONS = {
   MAKE_SELECTED: "MAKE_SELECTED",
@@ -8,7 +9,7 @@ const ACTIONS = {
 };
 
 //Temp stand in code for options
-const optionChoices = [{ wheels: [], engines: [], intAcc: [] }];
+const optionChoices2 = [{ wheels: [], engines: [], intAcc: [] }];
 
 const reducer = (formChoices, action) => {
   switch (action.type) {
@@ -21,17 +22,20 @@ const reducer = (formChoices, action) => {
         action.payload.make.toLowerCase() +
         "/" +
         action.payload.model.toLowerCase() +
-        "/trims");
+        "/options");
       //Return an array of trims per model selected
       return { ...formChoices, trims: dataFile.trimsData.trims }; //Return trimChoices
     case ACTIONS.TRIM_SELECTED:
-      // console.log(formChoices);
-      // console.log(action.payload);
-      return { ...formChoices, options: optionChoices }; //Return optionChoices
+      var dataFile = require("../../data/" +
+        action.payload.currVehicle.make.toLowerCase() +
+        "/" +
+        action.payload.currVehicle.model.toLowerCase() +
+        "/options");
+      return { ...formChoices, options: dataFile.optionsData.options }; //Return optionChoices
     case ACTIONS.OPTION_SELECTED:
       return { formChoices }; //Call on modelValidate() function to return a state
     default:
-      return state;
+      return { formChoices };
   }
 };
 

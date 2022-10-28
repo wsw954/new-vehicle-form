@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { makes } from "/data/make";
 import { v4 as uuidv4 } from "uuid";
 
 //Call uuidv4, to use to create unique IDs
@@ -12,8 +10,6 @@ export default function DropDropdown({
   onChange,
   firstDisabled,
 }) {
-  console.log(vehicle);
-
   //Create list of option elements to load select
   let choiceOptions = {};
   var initialValue = {};
@@ -47,19 +43,20 @@ export default function DropDropdown({
         </option>
       ));
       break;
-    case "Option":
+    case "Powertrain":
+      console.log("Line 47 in Dropdown Comp");
       choiceOptions = choices.map((choice, index) => (
         <option
           key={uuidv4({ index })}
           value={choice.name}
           data-price={choice.price}
         >
-          {choice.name + "-MSRP-$" + choice.price}
+          {choice.name + "-price-$" + choice.price}
         </option>
       ));
       break;
-    default:
-      console.log([]);
+
+    // console.log([]);
   }
 
   const handleChange = (event) => {
@@ -68,9 +65,11 @@ export default function DropDropdown({
 
   return (
     <>
-      <label htmlFor={name}>{name}</label>
+      <label className="dropdown-name" htmlFor={name}>
+        {name}
+      </label>
       <br></br>
-      <select name={name} onChange={handleChange} value={initialValue}>
+      <select className={name} onChange={handleChange} value={initialValue}>
         <option key={0} disabled={firstDisabled}>
           Choose A {name}
         </option>

@@ -3,6 +3,7 @@ import { useState, useReducer } from "react";
 import { makes } from "/data/make";
 import reducer from "/pages/api/reducer";
 import Dropdown from "/components/dropdown.js";
+import Options from "/components/options.js";
 import { v4 as uuidv4 } from "uuid";
 
 //Retrieve list of makes for selection
@@ -23,7 +24,7 @@ export default function Home() {
   //Hook to retrieve form choices
   const [formChoices, dispatch] = useReducer(reducer, {
     models: [{}],
-    trims: [{}],
+    trims: [],
     options: [{}],
   });
 
@@ -73,11 +74,51 @@ export default function Home() {
     dispatch({
       type: "TRIM_SELECTED",
       payload: {
-        make: vehicle.make,
-        model: vehicle.model,
-        trim: trim,
+        currVehicle: vehicle,
+        selectedItem: { name: "Trim", choice: trim },
       },
     });
+    //Add code that will create formGroups for Dropdowns & Checkboxes for each option group
+  };
+
+  function optionsBuilder() {
+    var optionDropdowns = {};
+    formChoices.options.forEach((element) => {
+      // console.log(element.name);
+      switch (element.type) {
+        case "Single":
+          console.log("Dropdown for -  " + element.name);
+          return (optionDropdowns = (
+            <Dropdown
+              name={element.name}
+              vehicle={vehicle}
+              choices={makeChoices}
+              onChange={handleMakeSelected}
+              firstDisabled={false}
+            ></Dropdown>
+          ));
+
+        case "Multiple":
+          return (optionDropdowns = (
+            <Dropdown
+              name={element.name}
+              vehicle={vehicle}
+              choices={makeChoices}
+              onChange={handleMakeSelected}
+              firstDisabled={false}
+            ></Dropdown>
+          ));
+          break;
+
+        default:
+          console.log(`Sorry, we are out of ${expr}.`);
+      }
+    });
+  }
+
+  //Helper function
+  const handleOptionSelected = (trim) => {
+    console.log("Option Selected");
   };
 
   //Handle form submit
@@ -90,7 +131,7 @@ export default function Home() {
 
   return (
     <>
-      <div>
+      <div className="container">
         <h3>New Vehicle Form</h3>
         <form onSubmit={handleSubmit}>
           <fieldset>
@@ -103,9 +144,7 @@ export default function Home() {
             ></Dropdown>
           </fieldset>
           <br></br>
-          {!vehicle.make ? (
-            ""
-          ) : (
+          {vehicle.make ? (
             <fieldset>
               <Dropdown
                 name="Model"
@@ -115,9 +154,11 @@ export default function Home() {
                 firstDisabled={vehicle.model != "" ? true : false}
               ></Dropdown>
             </fieldset>
+          ) : (
+            <br></br>
           )}
           <br></br>
-          {!vehicle.model ? null : (
+          {vehicle.model ? (
             <fieldset>
               <Dropdown
                 name="Trim"
@@ -131,7 +172,16 @@ export default function Home() {
                 }
               ></Dropdown>
             </fieldset>
+          ) : (
+            <br></br>
           )}
+          <br></br>
+          {formChoices.trims.length === 1 || vehicle.trim ? (
+            <span>Place Options html here</span>
+          ) : (
+            <br></br>
+          )}
+
           <button>Submit</button>
         </form>
       </div>
