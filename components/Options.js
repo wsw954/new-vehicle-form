@@ -4,21 +4,31 @@ import Dropdown from "/components/dropdown.js";
 //Call uuidv4, to use to create unique IDs
 uuidv4();
 
-export default function Options({ vehicle, options, onChange }) {
-  console.log(vehicle);
-  console.log(options);
+export default function Options({ vehicle, optionGroups, onChange }) {
+  var optionDropdowns = [];
 
-  //Create list of option elements to load select
-  let choiceOptions = {};
-  var initialValue = {};
-
-  const handleChange = (event) => {
-    onChange(event.target.value);
-  };
+  optionGroups.forEach((element) => {
+    switch (element.type) {
+      case "Single":
+        optionDropdowns.push(
+          <div key={uuidv4(element.name)}>
+            <Dropdown
+              name={element.name}
+              vehicle={vehicle}
+              choices={element.choices}
+              onChange={onChange}
+              firstDisabled={false}
+            ></Dropdown>
+            <br></br>
+            <br></br>
+          </div>
+        );
+    }
+  });
 
   return (
     <>
-      <span>Put code for Options fieldsets here</span>
+      {optionDropdowns}
       <br></br>
     </>
   );

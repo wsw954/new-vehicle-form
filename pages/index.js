@@ -8,7 +8,8 @@ import { v4 as uuidv4 } from "uuid";
 
 //Retrieve list of makes for selection
 const makeChoices = makes.map((make) => make);
-
+var optionGroups = [];
+var optionComponents = [];
 //Call uuidv4, to use to create unique IDs
 uuidv4();
 
@@ -78,43 +79,7 @@ export default function Home() {
         selectedItem: { name: "Trim", choice: trim },
       },
     });
-    //Add code that will create formGroups for Dropdowns & Checkboxes for each option group
   };
-
-  function optionsBuilder() {
-    var optionDropdowns = {};
-    formChoices.options.forEach((element) => {
-      // console.log(element.name);
-      switch (element.type) {
-        case "Single":
-          console.log("Dropdown for -  " + element.name);
-          return (optionDropdowns = (
-            <Dropdown
-              name={element.name}
-              vehicle={vehicle}
-              choices={makeChoices}
-              onChange={handleMakeSelected}
-              firstDisabled={false}
-            ></Dropdown>
-          ));
-
-        case "Multiple":
-          return (optionDropdowns = (
-            <Dropdown
-              name={element.name}
-              vehicle={vehicle}
-              choices={makeChoices}
-              onChange={handleMakeSelected}
-              firstDisabled={false}
-            ></Dropdown>
-          ));
-          break;
-
-        default:
-          console.log(`Sorry, we are out of ${expr}.`);
-      }
-    });
-  }
 
   //Helper function
   const handleOptionSelected = (trim) => {
@@ -125,8 +90,6 @@ export default function Home() {
   const handleSubmit = (e) => {
     e.preventDefault(e);
     const data = new FormData(e.target);
-
-    //Insert code to call database API to save form data
   };
 
   return (
@@ -177,10 +140,17 @@ export default function Home() {
           )}
           <br></br>
           {formChoices.trims.length === 1 || vehicle.trim ? (
-            <span>Place Options html here</span>
+            <>
+              <Options
+                vehicle={vehicle}
+                optionGroups={formChoices.options}
+                onChange={handleOptionSelected}
+              ></Options>
+            </>
           ) : (
             <br></br>
           )}
+          <br></br>
 
           <button>Submit</button>
         </form>

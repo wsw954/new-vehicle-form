@@ -43,8 +43,7 @@ export default function DropDropdown({
         </option>
       ));
       break;
-    case "Powertrain":
-      console.log("Line 47 in Dropdown Comp");
+    default:
       choiceOptions = choices.map((choice, index) => (
         <option
           key={uuidv4({ index })}
