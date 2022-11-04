@@ -14,6 +14,10 @@ export default function DropDropdown({
   let choiceOptions = {};
   var initialValue = {};
 
+  var handleChange = (event) => {
+    onChange(event.target.value);
+  };
+
   switch (name) {
     case "Make":
       initialValue = vehicle.make;
@@ -38,33 +42,50 @@ export default function DropDropdown({
           key={uuidv4({ index })}
           value={choice.name}
           data-price={choice.price}
+          data-serial={choice.serial}
         >
           {choice.name + " -MSRP-$" + choice.price}
         </option>
       ));
+      handleChange = (event) => {
+        onChange(
+          event.target.value,
+          event.target.selectedOptions[0].getAttribute("data-serial")
+        );
+      };
+
       break;
     default:
+      initialValue = choices[0].name;
+      handleChange = (event) => {
+        onChange(
+          event.target.selectedOptions[0].getAttribute("data-optionname"),
+          event.target.value,
+          event.target.selectedOptions[0].getAttribute("data-serial")
+        );
+      };
+
       choiceOptions = choices.map((choice, index) => (
         <option
           key={uuidv4({ index })}
           value={choice.name}
           data-price={choice.price}
+          data-optionname={name}
+          data-serial={choice.serial}
         >
           {choice.name + "-price-$" + choice.price}
         </option>
       ));
       break;
-
-    // console.log([]);
   }
 
-  const handleChange = (event) => {
-    onChange(event.target.value);
-  };
+  // const handleChange = (event) => {
+  //   onChange(event.target.value);
+  // };
 
   return (
     <>
-      <label className="dropdown-name" htmlFor={name}>
+      <label className="option-name" htmlFor={name}>
         {name}
       </label>
       <br></br>

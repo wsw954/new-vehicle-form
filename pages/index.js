@@ -66,24 +66,44 @@ export default function Home() {
   };
 
   //Helper function
-  const handleTrimSelected = (trim) => {
+  const handleTrimSelected = (trim, serial) => {
     //Reset the vehicle to be clear out all options
     updateVehicle((vehicle) => {
       return { ...vehicle, trim: trim, options: [{}] };
     });
 
+    //Pass into dispatch the name & serial of the trim selected
     dispatch({
       type: "TRIM_SELECTED",
       payload: {
-        currVehicle: vehicle,
-        selectedItem: { name: "Trim", choice: trim },
+        make: vehicle.make,
+        model: vehicle.model,
+        trimSelected: trim,
+        serial: serial,
       },
     });
   };
 
   //Helper function
-  const handleOptionSelected = (trim) => {
-    console.log("Option Selected");
+  const handleOptionSelected = (optionGroup, name, serial) => {
+    console.log(optionGroup + "---" + name + "---" + serial);
+    updateVehicle((vehicle) => {
+      return {
+        ...vehicle,
+        options: vehicle.options.push(serial),
+      };
+    });
+
+    // dispatch({
+    //   type: "OPTION_SELECTED",
+    //   payload: {
+    //     currVehicle: vehicle,
+    //     optionSelected: {
+    //       name: name,
+    //       choice: serial,
+    //     },
+    //   },
+    // });
   };
 
   //Handle form submit

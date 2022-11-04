@@ -5,13 +5,14 @@ const ACTIONS = {
   MAKE_SELECTED: "MAKE_SELECTED",
   MODEL_SELECTED: "MODEL_SELECTED",
   TRIM_SELECTED: "TRIM_SELECTED",
-  OPTION_SELECTED: "OPTIONS:SELECTED",
+  OPTION_SELECTED: "OPTION:SELECTED",
 };
 
 //Temp stand in code for options
-const optionChoices2 = [{ wheels: [], engines: [], intAcc: [] }];
 
 const reducer = (formChoices, action) => {
+  //Retrieve the relevant data file per make/model selected
+
   switch (action.type) {
     case ACTIONS.MAKE_SELECTED:
       const modelsList = makes.find((obj) => obj.name === action.payload.make);
@@ -24,16 +25,31 @@ const reducer = (formChoices, action) => {
         action.payload.model.toLowerCase() +
         "/options");
       //Return an array of trims per model selected
-      return { ...formChoices, trims: dataFile.trimsData.trims }; //Return trimChoices
+      return { ...formChoices, trims: dataFile.trims }; //Return trimChoices
     case ACTIONS.TRIM_SELECTED:
       var dataFile = require("../../data/" +
-        action.payload.currVehicle.make.toLowerCase() +
+        action.payload.make.toLowerCase() +
         "/" +
-        action.payload.currVehicle.model.toLowerCase() +
+        action.payload.model.toLowerCase() +
         "/options");
-      return { ...formChoices, options: dataFile.optionsData.options }; //Return optionChoices
+      var optionsForTrimSelected = dataFile.trimSelected(
+        action.payload.trimSelected,
+        action.payload.serial
+      );
+      return { ...formChoices, options: optionsForTrimSelected }; //Return optionChoices
     case ACTIONS.OPTION_SELECTED:
-      return { formChoices }; //Call on modelValidate() function to return a state
+      var dataFile = require("../../data/" +
+        action.payload.currVehicle.vehicle.make.toLowerCase() +
+        "/" +
+        action.payload.currVehicle.vehicle.model.toLowerCase() +
+        "/options");
+      console.log("Call A validate function from reducer");
+      var optionsForTrimSelected = dataFile.trimSelected(
+        action.payload.trimSelected,
+        action.payload.serial
+      );
+
+      return { ...formChoices, options: dataFile.optionsData.options }; //Return optionChoices
     default:
       return { formChoices };
   }
