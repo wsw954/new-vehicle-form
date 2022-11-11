@@ -210,6 +210,7 @@ export const options = [
 ];
 
 //Test function using dummy data
+//Retrieves from optionsData, all options where the array of trim serials includes the serial of the trim selected
 export const trimSelected = (trim, serialSelected) => {
   var optionsForTrimSelected = dummyOptionsData.map((option) => {
     return {

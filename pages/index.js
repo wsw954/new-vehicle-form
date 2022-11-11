@@ -8,8 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 
 //Retrieve list of makes for selection
 const makeChoices = makes.map((make) => make);
-var optionGroups = [];
-var optionComponents = [];
+
 //Call uuidv4, to use to create unique IDs
 uuidv4();
 
@@ -21,6 +20,12 @@ export default function Home() {
     trim: "",
     options: [{}],
   });
+
+  //Track the selected vehicle choices
+  // const [options, updateOptions] = useState({
+  //   name: "",
+  //   choices: [{}],
+  // });
 
   //Hook to retrieve form choices
   const [formChoices, dispatch] = useReducer(reducer, {
@@ -67,7 +72,7 @@ export default function Home() {
 
   //Helper function
   const handleTrimSelected = (trim, serial) => {
-    //Reset the vehicle to be clear out all options
+    //Add trim to vehicle object & clear out all options
     updateVehicle((vehicle) => {
       return { ...vehicle, trim: trim, options: [{}] };
     });
@@ -86,11 +91,16 @@ export default function Home() {
 
   //Helper function
   const handleOptionSelected = (optionGroup, name, serial) => {
-    console.log(optionGroup + "---" + name + "---" + serial);
     updateVehicle((vehicle) => {
       return {
         ...vehicle,
-        options: vehicle.options.push(serial),
+        options: [
+          {
+            name: optionGroup,
+            choice: name,
+            serial: serial,
+          },
+        ],
       };
     });
 
@@ -99,8 +109,9 @@ export default function Home() {
     //   payload: {
     //     currVehicle: vehicle,
     //     optionSelected: {
-    //       name: name,
-    //       choice: serial,
+    //       optionGroupName: optionGroup,
+    //       choice: name,
+    //       serial: serial,
     //     },
     //   },
     // });
@@ -110,6 +121,7 @@ export default function Home() {
   const handleSubmit = (e) => {
     e.preventDefault(e);
     const data = new FormData(e.target);
+    console.log("Submit Clicked");
   };
 
   return (
@@ -163,8 +175,7 @@ export default function Home() {
             <>
               <Options
                 vehicle={vehicle}
-                optionGroups={formChoices.options}
-                onChange={handleOptionSelected}
+                initialOptions={formChoices.options}
               ></Options>
             </>
           ) : (

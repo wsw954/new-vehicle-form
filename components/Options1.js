@@ -1,35 +1,15 @@
-import { useState, useReducer } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Dropdown from "/components/dropdown.js";
 import CheckBoxGroup from "/components/checkboxgroup.js";
-import reducer from "/pages/api/reducer";
+
 //Call uuidv4, to use to create unique IDs
 uuidv4();
 
-export default function Options({ vehicle, initialOptions }) {
-  // Get the initial option groups & choice as per trim selected
-
-  const [vehicleOptions, dispatch] = useReducer(reducer, initialOptions);
-
-  var handleOptionSelected = (optionGroup, name, serial) => {
-    dispatch({
-      type: "OPTION_SELECTED",
-      payload: {
-        vehicle: vehicle,
-        optionGroup: optionGroup,
-        optionName: name,
-        optionSerial: serial,
-      },
-    });
-  };
-
-  console.log(vehicleOptions);
+export default function Options({ vehicle, optionGroups, onChange }) {
   var optionDropdowns = [];
   var optionCheckBoxes = [];
 
-  //I think I will have to replace the code below to use 2 separate functions that return the relevant  html elements
-
-  vehicleOptions.forEach((element) => {
+  optionGroups.forEach((element) => {
     switch (element.type) {
       case "Single":
         //Check if the optionGroup has choices
@@ -40,7 +20,7 @@ export default function Options({ vehicle, initialOptions }) {
                 name={element.name}
                 vehicle={vehicle}
                 choices={element.choices}
-                onChange={handleOptionSelected}
+                onChange={onChange}
                 firstDisabled={element.choices > 1 ? true : false}
               ></Dropdown>
               <br></br>
@@ -59,7 +39,7 @@ export default function Options({ vehicle, initialOptions }) {
                 name={element.name}
                 vehicle={vehicle}
                 choices={element.choices}
-                onChange={handleOptionSelected}
+                onChange={onChange}
                 firstDisabled={false}
               ></CheckBoxGroup>
               <br></br>

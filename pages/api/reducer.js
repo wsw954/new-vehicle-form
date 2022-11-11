@@ -5,10 +5,8 @@ const ACTIONS = {
   MAKE_SELECTED: "MAKE_SELECTED",
   MODEL_SELECTED: "MODEL_SELECTED",
   TRIM_SELECTED: "TRIM_SELECTED",
-  OPTION_SELECTED: "OPTION:SELECTED",
+  OPTION_SELECTED: "OPTION_SELECTED",
 };
-
-//Temp stand in code for options
 
 const reducer = (formChoices, action) => {
   //Retrieve the relevant data file per make/model selected
@@ -39,17 +37,16 @@ const reducer = (formChoices, action) => {
       return { ...formChoices, options: optionsForTrimSelected }; //Return optionChoices
     case ACTIONS.OPTION_SELECTED:
       var dataFile = require("../../data/" +
-        action.payload.currVehicle.vehicle.make.toLowerCase() +
+        action.payload.vehicle.make.toLowerCase() +
         "/" +
-        action.payload.currVehicle.vehicle.model.toLowerCase() +
+        action.payload.vehicle.model.toLowerCase() +
         "/options");
-      console.log("Call A validate function from reducer");
-      var optionsForTrimSelected = dataFile.trimSelected(
+
+      var vehicleOptions = dataFile.trimSelected(
         action.payload.trimSelected,
         action.payload.serial
       );
-
-      return { ...formChoices, options: dataFile.optionsData.options }; //Return optionChoices
+      return vehicleOptions; //Return optionChoices
     default:
       return { formChoices };
   }

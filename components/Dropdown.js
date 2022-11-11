@@ -11,7 +11,7 @@ export default function DropDropdown({
   firstDisabled,
 }) {
   //Create list of option elements to load select
-  let choiceOptions = {};
+  var choiceOptions = {};
   var initialValue = {};
 
   var handleChange = (event) => {
@@ -57,6 +57,7 @@ export default function DropDropdown({
       break;
     default:
       initialValue = choices[0].name;
+
       handleChange = (event) => {
         onChange(
           event.target.selectedOptions[0].getAttribute("data-optionname"),
@@ -78,10 +79,6 @@ export default function DropDropdown({
       ));
       break;
   }
-
-  // const handleChange = (event) => {
-  //   onChange(event.target.value);
-  // };
 
   return (
     <>
