@@ -17,23 +17,20 @@ export default function Options({ vehicle, initialOptions }) {
       payload: {
         vehicle: vehicle,
         optionGroup: optionGroup,
-        optionName: name,
-        optionSerial: serial,
+        name: name,
+        serial: serial,
       },
     });
   };
 
-  console.log(vehicleOptions);
   var optionDropdowns = [];
   var optionCheckBoxes = [];
 
-  //I think I will have to replace the code below to use 2 separate functions that return the relevant  html elements
-
-  vehicleOptions.forEach((element) => {
-    switch (element.type) {
-      case "Single":
-        //Check if the optionGroup has choices
-        element.choices.length > 0 ? (
+  function optionBuilder(optionsArray) {
+    optionsArray.forEach((element) => {
+      switch (element.type) {
+        case "Single":
+          //Return Dropdowns for each Option Group
           optionDropdowns.push(
             <div key={uuidv4(element.name)}>
               <Dropdown
@@ -41,18 +38,15 @@ export default function Options({ vehicle, initialOptions }) {
                 vehicle={vehicle}
                 choices={element.choices}
                 onChange={handleOptionSelected}
-                firstDisabled={element.choices > 1 ? true : false}
+                firstDisabled={element.choices.length === 1 ? true : false}
               ></Dropdown>
               <br></br>
               <br></br>
             </div>
-          )
-        ) : (
-          <br></br>
-        );
-        break;
-      case "Multiple":
-        element.choices.length > 0 ? (
+          );
+          break;
+        case "Multiple":
+          //Return Dropdowns for each Option Group
           optionCheckBoxes.push(
             <div key={uuidv4(element.name)}>
               <CheckBoxGroup
@@ -60,24 +54,23 @@ export default function Options({ vehicle, initialOptions }) {
                 vehicle={vehicle}
                 choices={element.choices}
                 onChange={handleOptionSelected}
-                firstDisabled={false}
+                firstDisabled={element.choices.length === 1 ? true : false}
               ></CheckBoxGroup>
               <br></br>
               <br></br>
             </div>
-          )
-        ) : (
-          <br></br>
-        );
-        break;
-    }
-  });
+          );
+          break;
+      }
+    });
+  }
 
   return (
     <>
       <br></br>
       <fieldset>
         <legend> Vehicle Options</legend>
+        {optionBuilder(vehicleOptions)}
         {optionDropdowns}
         <br></br>
         {optionCheckBoxes}

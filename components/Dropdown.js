@@ -57,15 +57,6 @@ export default function DropDropdown({
       break;
     default:
       initialValue = choices[0].name;
-
-      handleChange = (event) => {
-        onChange(
-          event.target.selectedOptions[0].getAttribute("data-optionname"),
-          event.target.value,
-          event.target.selectedOptions[0].getAttribute("data-serial")
-        );
-      };
-
       choiceOptions = choices.map((choice, index) => (
         <option
           key={uuidv4({ index })}
@@ -77,6 +68,13 @@ export default function DropDropdown({
           {choice.name + "-price-$" + choice.price}
         </option>
       ));
+      handleChange = (event) => {
+        onChange(
+          event.target.selectedOptions[0].getAttribute("data-optionname"),
+          event.target.value,
+          event.target.selectedOptions[0].getAttribute("data-serial")
+        );
+      };
       break;
   }
 
@@ -88,7 +86,7 @@ export default function DropDropdown({
       <br></br>
       <select className={name} onChange={handleChange} value={initialValue}>
         <option key={0} disabled={firstDisabled}>
-          Choose A {name}
+          Select {name}
         </option>
         {choiceOptions}
       </select>

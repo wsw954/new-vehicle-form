@@ -41,12 +41,14 @@ const reducer = (formChoices, action) => {
         "/" +
         action.payload.vehicle.model.toLowerCase() +
         "/options");
-
-      var vehicleOptions = dataFile.trimSelected(
-        action.payload.trimSelected,
+      //Stand in code returns ALL Options for now
+      var vehicleOptions = dataFile.optionSelected(
+        action.payload.optionGroup,
         action.payload.serial
       );
+
       return vehicleOptions; //Return optionChoices
+
     default:
       return { formChoices };
   }

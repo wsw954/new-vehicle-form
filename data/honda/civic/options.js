@@ -223,21 +223,14 @@ export const trimSelected = (trim, serialSelected) => {
   return optionsForTrimSelected;
 };
 
-//Validation function for only selections which will affect other possible choices, say select, deselect or change choices available
-// export const validate = (vehicle, optionChoice) => {
-//   switch (optionChoice) {
-//     case "Oranges":
-//       console.log("Oranges are $0.59 a pound.");
-//       break;
-//     case "Mangoes":
-//     case "Papayas":
-//       console.log("Mangoes and papayas are $2.79 a pound.");
-//       // expected output: "Mangoes and papayas are $2.79 a pound."
-//       break;
-//     default:
-//       console.log(`Sorry, we are out of ${expr}.`);
-//   }
-// };
+export const optionSelected = (groupName, serial) => {
+  //This is basically a stand in code, that returns ALL options
+  //Will have to recode to allow complex logic to return a set of Options based on current options selected
+  //Different manufacturers have differing complexity
+  console.log(groupName);
+  console.log(serial);
+  return dummyOptionsData;
+};
 
 export const dummyOptionsData = [
   {
