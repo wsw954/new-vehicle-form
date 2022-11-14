@@ -220,15 +220,17 @@ export const trimSelected = (trim, serialSelected) => {
       ),
     };
   });
+  console.log(optionsForTrimSelected);
   return optionsForTrimSelected;
 };
 
+//Test Function
 export const optionSelected = (groupName, serial) => {
   //This is basically a stand in code, that returns ALL options
   //Will have to recode to allow complex logic to return a set of Options based on current options selected
   //Different manufacturers have differing complexity
-  console.log(groupName);
-  console.log(serial);
+  // console.log(groupName);
+  // console.log(serial);
   return dummyOptionsData;
 };
 

@@ -7,10 +7,12 @@ export default function DropDropdown({
   name,
   vehicle,
   choices,
+  selectedOptions,
   onChange,
   firstDisabled,
 }) {
-  //Create list of option elements to load select
+  //Create global variables
+  var dropdownName = name;
   var choiceOptions = {};
   var initialValue = {};
 
@@ -18,6 +20,7 @@ export default function DropDropdown({
     onChange(event.target.value);
   };
 
+  //Customize Dropdown, relevant to vehicle variable
   switch (name) {
     case "Make":
       initialValue = vehicle.make;
@@ -56,13 +59,13 @@ export default function DropDropdown({
 
       break;
     default:
-      initialValue = choices[0].name;
+      initialValue = selectedOptions.length > 0 ? selectedOptions[0].name : "";
       choiceOptions = choices.map((choice, index) => (
         <option
           key={uuidv4({ index })}
           value={choice.name}
           data-price={choice.price}
-          data-optionname={name}
+          data-option-group={name}
           data-serial={choice.serial}
         >
           {choice.name + "-price-$" + choice.price}
@@ -70,7 +73,7 @@ export default function DropDropdown({
       ));
       handleChange = (event) => {
         onChange(
-          event.target.selectedOptions[0].getAttribute("data-optionname"),
+          event.target.selectedOptions[0].getAttribute("data-option-group"),
           event.target.value,
           event.target.selectedOptions[0].getAttribute("data-serial")
         );

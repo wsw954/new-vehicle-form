@@ -7,11 +7,32 @@ import reducer from "/pages/api/reducer";
 uuidv4();
 
 export default function Options({ vehicle, initialOptions }) {
-  // Get the initial option groups & choice as per trim selected
+  //Track all selected vehicle options
+  const [selectedOptions, updateSelectedOptions] = useState(
+    initialOptions.map((optionGroup, index) => ({
+      name: optionGroup.name,
+      choices: [],
+    }))
+  );
 
+  //Tracks all available vehicle options
   const [vehicleOptions, dispatch] = useReducer(reducer, initialOptions);
 
-  var handleOptionSelected = (optionGroup, name, serial) => {
+  //Recode  this to just add only the option selected to the state of selectedOptions
+  var handleDropdownSelected = (optionGroup, name, serial) => {
+    updateSelectedOptions((current) =>
+      current.map((obj) => {
+        if (obj.name === optionGroup) {
+          obj.choices.push({ name: name, serial: serial });
+          return {
+            ...obj,
+            choices: [{ name: name, serial: serial }],
+          };
+        }
+        return obj;
+      })
+    );
+
     dispatch({
       type: "OPTION_SELECTED",
       payload: {
@@ -19,6 +40,7 @@ export default function Options({ vehicle, initialOptions }) {
         optionGroup: optionGroup,
         name: name,
         serial: serial,
+        selectedOptions: selectedOptions,
       },
     });
   };
@@ -27,7 +49,7 @@ export default function Options({ vehicle, initialOptions }) {
   var optionCheckBoxes = [];
 
   function optionBuilder(optionsArray) {
-    optionsArray.forEach((element) => {
+    optionsArray.forEach((element, index) => {
       switch (element.type) {
         case "Single":
           //Return Dropdowns for each Option Group
@@ -37,7 +59,8 @@ export default function Options({ vehicle, initialOptions }) {
                 name={element.name}
                 vehicle={vehicle}
                 choices={element.choices}
-                onChange={handleOptionSelected}
+                selectedOptions={selectedOptions[index].choices}
+                onChange={handleDropdownSelected}
                 firstDisabled={element.choices.length === 1 ? true : false}
               ></Dropdown>
               <br></br>
@@ -52,8 +75,9 @@ export default function Options({ vehicle, initialOptions }) {
               <CheckBoxGroup
                 name={element.name}
                 vehicle={vehicle}
+                options={selectedOptions}
                 choices={element.choices}
-                onChange={handleOptionSelected}
+                onChange={handleDropdownSelected}
                 firstDisabled={element.choices.length === 1 ? true : false}
               ></CheckBoxGroup>
               <br></br>

@@ -21,12 +21,6 @@ export default function Home() {
     options: [{}],
   });
 
-  //Track the selected vehicle choices
-  // const [options, updateOptions] = useState({
-  //   name: "",
-  //   choices: [{}],
-  // });
-
   //Hook to retrieve form choices
   const [formChoices, dispatch] = useReducer(reducer, {
     models: [{}],

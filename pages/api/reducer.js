@@ -36,6 +36,7 @@ const reducer = (formChoices, action) => {
       );
       return { ...formChoices, options: optionsForTrimSelected }; //Return optionChoices
     case ACTIONS.OPTION_SELECTED:
+      // console.log(action.payload);
       var dataFile = require("../../data/" +
         action.payload.vehicle.make.toLowerCase() +
         "/" +
