@@ -7,7 +7,6 @@ export default function DropDropdown({
   name,
   vehicle,
   choices,
-  selectedOptions,
   onChange,
   firstDisabled,
 }) {
@@ -23,24 +22,24 @@ export default function DropDropdown({
   //Customize Dropdown, relevant to vehicle variable
   switch (name) {
     case "Make":
-      initialValue = vehicle.make;
-      choiceOptions = choices.map((choice, index) => (
+      initialValue = vehicle.selected.make;
+      choiceOptions = vehicle.makes.map((choice, index) => (
         <option key={uuidv4({ index })} value={choice.name}>
           {choice.name}
         </option>
       ));
       break;
     case "Model":
-      initialValue = vehicle.model;
-      choiceOptions = choices.map((choice, index) => (
+      initialValue = vehicle.selected.model;
+      choiceOptions = vehicle.models.map((choice, index) => (
         <option key={uuidv4({ index })} value={choice.name}>
           {choice.name}
         </option>
       ));
       break;
     case "Trim":
-      initialValue = vehicle.trim;
-      choiceOptions = choices.map((choice, index) => (
+      initialValue = vehicle.selected.trim;
+      choiceOptions = vehicle.trims.map((choice, index) => (
         <option
           key={uuidv4({ index })}
           value={choice.name}
@@ -59,7 +58,7 @@ export default function DropDropdown({
 
       break;
     default:
-      initialValue = selectedOptions.length > 0 ? selectedOptions[0].name : "";
+      initialValue = vehicle.trims.length > 0 ? vehicle.options[0].name : "";
       choiceOptions = choices.map((choice, index) => (
         <option
           key={uuidv4({ index })}

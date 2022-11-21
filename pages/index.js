@@ -12,34 +12,34 @@ const makeChoices = makes.map((make) => make);
 //Call uuidv4, to use to create unique IDs
 uuidv4();
 
-export default function Home() {
-  //Track the selected vehicle choices
-  const [vehicle, updateVehicle] = useState({
+//Set vehicle initial state
+var initialState = {
+  makes: makes.map((make) => make),
+  models: [],
+  trims: [],
+  options: [],
+  selected: {
     make: "",
     model: "",
     trim: "",
-    options: [{}],
-  });
+    options: [{ group: "", choices: [{ name: "", serial: [] }] }],
+  },
+};
+
+export default function Home() {
+  //Track the selected vehicle choices
+  // const [vehicle, updateVehicle] = useState({
+  //   make: "",
+  //   model: "",
+  //   trim: "",
+  //   options: [{}],
+  // });
 
   //Hook to retrieve form choices
-  const [formChoices, dispatch] = useReducer(reducer, {
-    models: [{}],
-    trims: [],
-    options: [{}],
-  });
+  const [vehicle, dispatch] = useReducer(reducer, initialState);
 
   //Helper function
   const handleMakeSelected = (make) => {
-    //Reset vehicle state to be just make
-    updateVehicle((vehicle) => {
-      return {
-        ...vehicle,
-        make: make,
-        model: "",
-        trim: "",
-        options: [{}],
-      };
-    });
     dispatch({
       type: "MAKE_SELECTED",
       payload: { make: make },
@@ -48,67 +48,35 @@ export default function Home() {
 
   //Helper function
   const handleModelSelected = (model) => {
-    //Reset the vehicle to be clear out trims and options
-    updateVehicle((vehicle) => {
-      return {
-        ...vehicle,
-        model: model,
-        trim: "",
-        options: [{}],
-      };
-    });
-
     dispatch({
       type: "MODEL_SELECTED",
-      payload: { make: vehicle.make, model: model },
+      payload: { model: model },
     });
   };
 
   //Helper function
   const handleTrimSelected = (trim, serial) => {
-    //Add trim to vehicle object & clear out all options
-    updateVehicle((vehicle) => {
-      return { ...vehicle, trim: trim, options: [{}] };
-    });
-
     //Pass into dispatch the name & serial of the trim selected
     dispatch({
       type: "TRIM_SELECTED",
       payload: {
-        make: vehicle.make,
-        model: vehicle.model,
-        trimSelected: trim,
+        trim: trim,
         serial: serial,
       },
     });
   };
 
   //Helper function
-  const handleOptionSelected = (optionGroup, name, serial) => {
-    updateVehicle((vehicle) => {
-      return {
-        ...vehicle,
-        options: [
-          {
-            name: optionGroup,
-            choice: name,
-            serial: serial,
-          },
-        ],
-      };
+  const handleOptionSelected = (groupName, name, serial) => {
+    //Add code to handle option selected
+    dispatch({
+      type: "OPTION_SELECTED",
+      payload: {
+        groupName: groupName,
+        name: name,
+        serial: serial,
+      },
     });
-
-    // dispatch({
-    //   type: "OPTION_SELECTED",
-    //   payload: {
-    //     currVehicle: vehicle,
-    //     optionSelected: {
-    //       optionGroupName: optionGroup,
-    //       choice: name,
-    //       serial: serial,
-    //     },
-    //   },
-    // });
   };
 
   //Handle form submit
@@ -129,47 +97,41 @@ export default function Home() {
               vehicle={vehicle}
               choices={makeChoices}
               onChange={handleMakeSelected}
-              firstDisabled={vehicle.make != "" ? true : false}
+              firstDisabled={vehicle.selected.make != "" ? true : false}
             ></Dropdown>
           </fieldset>
           <br></br>
-          {vehicle.make ? (
+          {vehicle.selected.make ? (
             <fieldset>
               <Dropdown
                 name="Model"
                 vehicle={vehicle}
-                choices={formChoices.models}
                 onChange={handleModelSelected}
-                firstDisabled={vehicle.model != "" ? true : false}
+                firstDisabled={vehicle.selected.model != "" ? true : false}
               ></Dropdown>
             </fieldset>
           ) : (
             <br></br>
           )}
           <br></br>
-          {vehicle.model ? (
+          {vehicle.selected.model ? (
             <fieldset>
               <Dropdown
                 name="Trim"
                 vehicle={vehicle}
-                choices={formChoices.trims}
                 onChange={handleTrimSelected}
-                firstDisabled={
-                  formChoices.trims.length === 1 || vehicle.trim != ""
-                    ? true
-                    : false
-                }
+                firstDisabled={false}
               ></Dropdown>
             </fieldset>
           ) : (
             <br></br>
           )}
           <br></br>
-          {formChoices.trims.length === 1 || vehicle.trim ? (
+          {vehicle.trims.length === 1 || vehicle.selected.trim ? (
             <>
               <Options
                 vehicle={vehicle}
-                initialOptions={formChoices.options}
+                onChange={handleOptionSelected}
               ></Options>
             </>
           ) : (

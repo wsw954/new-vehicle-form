@@ -1,238 +1,9 @@
 export const trims = [
-  { name: "Sedan Sport", price: 24650, serial: "tt1" },
-  { name: "Sedan EX", price: 26050, serial: "tt2" },
-  { name: "Sedan Touring", price: 29650, serial: "tt3" },
-  { name: "Hatchback Sport", price: 22450, serial: "tt4" },
-  { name: "Hatchback EX-L", price: 27750, serial: "tt5" },
-  { name: "Hatchback Sport Touring", price: 30550, serial: "tt6" },
-  { name: "Si", price: 27300, serial: "tt7" },
+  { name: "Sport", price: 38800, serial: "tt1" },
+  { name: "RTL", price: 41780, serial: "tt2" },
+  { name: "RTL-E", price: 44730, serial: "tt3" },
+  { name: "Black Edition", price: 46230, serial: "tt4" },
 ];
-
-export const options = [
-  {
-    name: "Powertrain",
-    type: "Single",
-    choices: [
-      {
-        name: "2.0L 4-Cyl. Engine w/ CVT",
-        price: 0,
-        trim: ["tt1"],
-        serial: "pw1",
-      },
-      {
-        name: "1.5L Turbo 4-Cyl. Engine w/ CVT",
-        price: 0,
-        trim: ["tt2", "tt3"],
-        serial: "pw2",
-      },
-      {
-        name: "Test Data for TT2",
-        price: 0,
-        trim: ["tt2"],
-        serial: "pw3",
-      },
-      {
-        name: "Test Data for TT3",
-        price: 0,
-        trim: ["tt3"],
-        serial: "pw4",
-      },
-      {
-        name: "Test Data for TT4",
-        price: 0,
-        trim: ["tt4"],
-        serial: "pw5",
-      },
-      {
-        name: "Test Data for TT5",
-        price: 0,
-        trim: ["tt5"],
-        serial: "pw6",
-      },
-      {
-        name: "Test Data for TT6",
-        price: 0,
-        trim: ["tt6"],
-        serial: "pw7",
-      },
-      {
-        name: "Test Data for TT7",
-        price: 0,
-        trim: ["tt7"],
-        serial: "pw8",
-      },
-    ],
-  },
-  {
-    name: "Exterior Color",
-    type: "Single",
-    choices: [
-      {
-        name: "Aegean Blue Metallic",
-        price: 0,
-        trim: ["tt1", "tt2"],
-        serial: "exc1",
-      },
-      {
-        name: "Crystal Pearl Black",
-        price: 0,
-        trim: ["tt1", "tt2"],
-        serial: "exc2",
-      },
-      {
-        name: "Lunar Silver Metallic",
-        price: 0,
-        trim: ["tt1", "tt2"],
-        serial: "exa3",
-      },
-      {
-        name: "Meteorite Gray Metallic",
-        price: 0,
-        trim: ["tt1", "tt2"],
-        serial: "exa4",
-      },
-      { name: "Rallye Red", price: 0, trim: ["tt1", "tt2"], serial: "exa5" },
-      {
-        name: "Platinum Pearl White",
-        price: 395,
-        trim: ["tt1", "tt2"],
-        serial: "exa6",
-      },
-      {
-        name: "Sonic Gray Pearl",
-        price: 395,
-        trim: ["tt1", "tt2"],
-        serial: "exa7",
-      },
-      { name: "Test Data for TT2", price: 0, trim: ["tt2"], serial: "ec8" },
-      { name: "Test Data for TT3", price: 0, trim: ["tt3"], serial: "ec9" },
-      { name: "Test Data for TT4", price: 0, trim: ["tt4"], serial: "ec10" },
-      { name: "Test Data for TT5", price: 0, trim: ["tt5"], serial: "ec11" },
-      { name: "Test Data for TT6", price: 0, trim: ["tt6"], serial: "ec12" },
-      { name: "Test Data for TT7", price: 0, trim: ["tt7"], serial: "ec13" },
-    ],
-  },
-  {
-    name: "Interior Color",
-    type: "Single",
-    choices: [{ name: "Black Cloth", price: 0, trim: ["tt1"], serial: "inc1" }],
-  },
-  {
-    name: "Wheels",
-    type: "Single",
-    choices: [
-      {
-        name: "18-inch Gloss-Black Alloy Wheels",
-        price: 0,
-        trim: ["tt1"],
-        serial: "w1",
-      },
-      {
-        name: "18-inch Black Alloy Wheels",
-        price: 1708,
-        trim: ["tt1"],
-        serial: "w2",
-      },
-      { name: "17-inch Alloy Wheels", price: 0, trim: ["tt2"], serial: "w3" },
-    ],
-  },
-  {
-    name: "Packages",
-    type: "Multiple",
-    choices: [
-      {
-        name: "All-Season Protection Package I",
-        price: 420,
-        trim: ["tt1", "tt2"],
-        serial: "pk1",
-      },
-      {
-        name: "All-Season Protection Package II",
-        price: 370,
-        trim: ["tt1", "tt2"],
-        serial: "pk2",
-      },
-      { name: "HPD Package", price: 1452, trim: ["tt1", "tt2"], serial: "pk3" },
-      {
-        name: "Protection Package",
-        price: 300,
-        trim: ["tt1", "tt2"],
-        serial: "pk4",
-      },
-    ],
-  },
-  {
-    name: "Exterior Accessories",
-    type: "Multiple",
-    choices: [
-      { name: "Body Side Molding", price: 242, trim: ["tt1"], serial: "ea1" },
-      { name: "Decklid Spoiler", price: 322, trim: ["tt1"], serial: "ea2" },
-      { name: "Door Edge Film", price: 54, trim: ["tt1"], serial: "ea" },
-      { name: "Door Edge Guard", price: 124, trim: ["tt1"], serial: "ea4" },
-      { name: "Door Handle Film", price: 54, trim: ["tt1"], serial: "ea5" },
-      { name: "Test Data for TT2", price: 54, trim: ["tt2"], serial: "ea" },
-    ],
-  },
-  {
-    name: "Interior Accessories",
-    type: "Multiple",
-    choices: [
-      {
-        name: "All Season Floor Mats",
-        price: 183,
-        trim: ["tt1"],
-        serial: "ia1",
-      },
-      { name: "Body Side Moulding", price: 242, trim: ["tt2"], serial: "ia2" },
-      { name: "Cargo Hook", price: 14, trim: ["tt1"], serial: "ia3" },
-      { name: "Cargo Net", price: 54, trim: ["tt1"], serial: "ia4" },
-      { name: "Carpet Floor Mats", price: 194, trim: ["tt1"], serial: "ia5" },
-      {
-        name: "Door Sill Protection Film",
-        price: 108,
-        trim: ["tt1"],
-        serial: "ia6",
-      },
-    ],
-  },
-  {
-    name: "Electronic Accessories",
-    type: "Multiple",
-    choices: [
-      {
-        name: "Engine Block Heater",
-        price: 90,
-        trim: ["tt1"],
-        serial: "elec1",
-      },
-    ],
-  },
-];
-
-//Test function using dummy data
-//Retrieves from optionsData, all options where the array of trim serials includes the serial of the trim selected
-export const trimSelected = (trim, serialSelected) => {
-  var optionsForTrimSelected = dummyOptionsData.map((option) => {
-    return {
-      ...option,
-      choices: option.choices.filter((choice) =>
-        choice.trim.includes(serialSelected)
-      ),
-    };
-  });
-  return optionsForTrimSelected;
-};
-
-//Test Function
-export const optionSelected = (groupName, name, serial) => {
-  console.log("Line 228 /data/honda/civic/options");
-  //This is basically a stand in code, that returns ALL options
-  //Will have to recode to allow complex logic to return a set of Options based on current options selected
-  //Different manufacturers have differing complexity
-  // console.log(groupName);
-  // console.log(serial);
-  return dummyOptionsData;
-};
 
 export const dummyOptionsData = [
   {
@@ -434,3 +205,15 @@ export const dummyOptionsData = [
     ],
   },
 ];
+
+export const trimSelected = (trim, serialSelected) => {
+  var optionsForTrimSelected = dummyOptionsData.map((option) => {
+    return {
+      ...option,
+      choices: option.choices.filter((choice) =>
+        choice.trim.includes(serialSelected)
+      ),
+    };
+  });
+  return optionsForTrimSelected;
+};
