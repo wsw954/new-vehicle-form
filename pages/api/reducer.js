@@ -1,4 +1,4 @@
-import { options } from "../../data/honda/civic/options";
+// import { options } from "../../data/honda/civic/options";
 import { makes } from "/data/make";
 import { validate } from "/utils/validate";
 
@@ -23,12 +23,13 @@ const reducer = (vehicle, action) => {
         options: [], //Clear out all prior options available
         selected: {
           ...vehicle.selected,
-          make: action.payload.make,
+          make: action.payload.make, //Add make selected
           model: "", //Clear out any prior selected model
           trim: "", //Clear out any prior selected trim
-          options: [], //Clear out any prior selected options
-        }, //Add make selected
+          options: [{ group: "", choices: [{ name: "", serial: [] }] }], //Reset to default
+        },
       };
+      break;
     case ACTIONS.MODEL_SELECTED:
       var dataFile = require("../../data/" +
         vehicle.selected.make.toLowerCase() +
@@ -43,9 +44,10 @@ const reducer = (vehicle, action) => {
           ...vehicle.selected,
           model: action.payload.model, //Update model selected
           trim: "", //Clear out the prior selected trim
-          options: [], //Clear out all prior selected options
+          options: [{ group: "", choices: [{ name: "", serial: [] }] }], //Reset to default
         },
       };
+      break;
     case ACTIONS.TRIM_SELECTED:
       var dataFile = require("../../data/" +
         vehicle.selected.make.toLowerCase() +
@@ -62,36 +64,26 @@ const reducer = (vehicle, action) => {
         selected: {
           ...vehicle.selected,
           trim: action.payload.trim, //Update the trim selected
-          options: [], //Clear out all prior selected options
+          options: [{ group: "", choices: [{ name: "", serial: [] }] }], //Reset to default
         },
       };
+      break;
     case ACTIONS.OPTION_SELECTED:
       var dataFile = require("../../data/" +
         vehicle.selected.make.toLowerCase() +
         "/" +
         vehicle.selected.model.toLowerCase() +
         "/options");
-      //Stand in code returns ALL Options for now
-      var vehicleOptions = dataFile.optionSelected(
-        action.payload.optionGroup,
+
+      var updatedVehicle = dataFile.optionSelected(
+        vehicle,
+        action.payload.groupName,
+        action.payload.name,
         action.payload.serial
       );
-      console.log(vehicle);
-      return {
-        ...vehicle,
-        options: vehicleOptions,
-        selected: {
-          ...vehicle.selected,
-          options: [
-            {
-              groupName: action.payload.groupName,
-              name: action.payload.name,
-              serial: action.payload.serial,
-            },
-          ],
-        },
-      }; //Stand in code just to add to the options array, the selected option.
 
+      return updatedVehicle;
+      break;
     default:
       return { vehicle };
   }

@@ -6,60 +6,43 @@ export const trims = [
   { name: "Hatchback EX-L", price: 27750, serial: "tt5" },
   { name: "Hatchback Sport Touring", price: 30550, serial: "tt6" },
   { name: "Si", price: 27300, serial: "tt7" },
+  { name: "Type R", price: 42895, serial: "tt8" },
 ];
 
-export const options = [
+export const optionsAvailable = [
   {
     name: "Powertrain",
     type: "Single",
     choices: [
       {
-        name: "2.0L 4-Cyl. Engine w/ CVT",
+        name: "158hp 2.0L 4-Cyl. Engine w/ CVT",
         price: 0,
-        trim: ["tt1"],
+        trim: ["tt1", "tt4"],
         serial: "pw1",
       },
       {
-        name: "1.5L Turbo 4-Cyl. Engine w/ CVT",
+        name: "180hp 1.5L Turbo 4-Cyl. Engine w/ CVT",
         price: 0,
-        trim: ["tt2", "tt3"],
+        trim: ["tt2", "tt3", "tt5", "tt6"],
         serial: "pw2",
       },
       {
-        name: "Test Data for TT2",
+        name: "158hp 6MT 2.0L 4-Cyl",
         price: 0,
-        trim: ["tt2"],
+        trim: ["tt4"],
         serial: "pw3",
       },
       {
-        name: "Test Data for TT3",
+        name: "180hp 6MT 1.5L Turbo 4-Cyl",
         price: 0,
         trim: ["tt3"],
         serial: "pw4",
       },
       {
-        name: "Test Data for TT4",
-        price: 0,
-        trim: ["tt4"],
-        serial: "pw5",
-      },
-      {
-        name: "Test Data for TT5",
-        price: 0,
-        trim: ["tt5"],
-        serial: "pw6",
-      },
-      {
-        name: "Test Data for TT6",
-        price: 0,
-        trim: ["tt6"],
-        serial: "pw7",
-      },
-      {
-        name: "Test Data for TT7",
+        name: "200hp 6MT 1.5L Turbo 4-Cyl",
         price: 0,
         trim: ["tt7"],
-        serial: "pw8",
+        serial: "pw5",
       },
     ],
   },
@@ -71,38 +54,38 @@ export const options = [
         name: "Aegean Blue Metallic",
         price: 0,
         trim: ["tt1", "tt2"],
-        serial: "exc1",
+        serial: "ec1",
       },
       {
         name: "Crystal Pearl Black",
         price: 0,
         trim: ["tt1", "tt2"],
-        serial: "exc2",
+        serial: "ec2",
       },
       {
         name: "Lunar Silver Metallic",
         price: 0,
         trim: ["tt1", "tt2"],
-        serial: "exa3",
+        serial: "ec3",
       },
       {
         name: "Meteorite Gray Metallic",
         price: 0,
         trim: ["tt1", "tt2"],
-        serial: "exa4",
+        serial: "ec4",
       },
-      { name: "Rallye Red", price: 0, trim: ["tt1", "tt2"], serial: "exa5" },
+      { name: "Rallye Red", price: 0, trim: ["tt1", "tt2"], serial: "ec5" },
       {
         name: "Platinum Pearl White",
         price: 395,
         trim: ["tt1", "tt2"],
-        serial: "exa6",
+        serial: "ec6",
       },
       {
         name: "Sonic Gray Pearl",
         price: 395,
         trim: ["tt1", "tt2"],
-        serial: "exa7",
+        serial: "ec7",
       },
       { name: "Test Data for TT2", price: 0, trim: ["tt2"], serial: "ec8" },
       { name: "Test Data for TT3", price: 0, trim: ["tt3"], serial: "ec9" },
@@ -115,7 +98,7 @@ export const options = [
   {
     name: "Interior Color",
     type: "Single",
-    choices: [{ name: "Black Cloth", price: 0, trim: ["tt1"], serial: "inc1" }],
+    choices: [{ name: "Black Cloth", price: 0, trim: ["tt1"], serial: "ic1" }],
   },
   {
     name: "Wheels",
@@ -224,14 +207,44 @@ export const trimSelected = (trim, serialSelected) => {
 };
 
 //Test Function
-export const optionSelected = (groupName, name, serial) => {
-  console.log("Line 228 /data/honda/civic/options");
-  //This is basically a stand in code, that returns ALL options
-  //Will have to recode to allow complex logic to return a set of Options based on current options selected
-  //Different manufacturers have differing complexity
-  // console.log(groupName);
-  // console.log(serial);
-  return dummyOptionsData;
+export const optionSelected = (vehicle, groupName, name, serial) => {
+  var updatedVehicle = vehicle;
+
+  switch (vehicle.selected.trim) {
+    case "Sedan Sport":
+      //Add code here to update the vehicle object for option selected
+      //The code will have to handle changing BOTH the selected options, and options available
+      return updatedVehicle;
+
+      break;
+    case "Sedan EX":
+      break;
+    case "Sedan Touring":
+      console.log("Return for Sedan Touring");
+      updatedVehicle = dummyOptionsData;
+      break;
+    case "Hatchback Sport":
+      console.log("Return for HatchBack Sport");
+      updatedVehicle = dummyOptionsData;
+      break;
+    case "Hatchback EX-L":
+      console.log("Return ");
+      updatedVehicle = dummyOptionsData;
+      break;
+    case "Hatchback Sport Touring":
+      console.log("Return ");
+      updatedVehicle = dummyOptionsData;
+      break;
+    case "Si":
+      console.log("Return SI Data");
+      updatedVehicle = dummyOptionsData;
+      break;
+    case "Type R":
+      console.log("Return Type R Data");
+      updatedVehicle = dummyOptionsData;
+      break;
+  }
+  return updatedVehicle;
 };
 
 export const dummyOptionsData = [
