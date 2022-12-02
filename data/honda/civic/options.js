@@ -9,193 +9,10 @@ export const trims = [
   { name: "Type R", price: 42895, serial: "tt8" },
 ];
 
-export const optionsAvailable = [
-  {
-    name: "Powertrain",
-    type: "Single",
-    choices: [
-      {
-        name: "158hp 2.0L 4-Cyl. Engine w/ CVT",
-        price: 0,
-        trim: ["tt1", "tt4"],
-        serial: "pw1",
-      },
-      {
-        name: "180hp 1.5L Turbo 4-Cyl. Engine w/ CVT",
-        price: 0,
-        trim: ["tt2", "tt3", "tt5", "tt6"],
-        serial: "pw2",
-      },
-      {
-        name: "158hp 6MT 2.0L 4-Cyl",
-        price: 0,
-        trim: ["tt4"],
-        serial: "pw3",
-      },
-      {
-        name: "180hp 6MT 1.5L Turbo 4-Cyl",
-        price: 0,
-        trim: ["tt3"],
-        serial: "pw4",
-      },
-      {
-        name: "200hp 6MT 1.5L Turbo 4-Cyl",
-        price: 0,
-        trim: ["tt7"],
-        serial: "pw5",
-      },
-    ],
-  },
-  {
-    name: "Exterior Color",
-    type: "Single",
-    choices: [
-      {
-        name: "Aegean Blue Metallic",
-        price: 0,
-        trim: ["tt1", "tt2"],
-        serial: "ec1",
-      },
-      {
-        name: "Crystal Pearl Black",
-        price: 0,
-        trim: ["tt1", "tt2"],
-        serial: "ec2",
-      },
-      {
-        name: "Lunar Silver Metallic",
-        price: 0,
-        trim: ["tt1", "tt2"],
-        serial: "ec3",
-      },
-      {
-        name: "Meteorite Gray Metallic",
-        price: 0,
-        trim: ["tt1", "tt2"],
-        serial: "ec4",
-      },
-      { name: "Rallye Red", price: 0, trim: ["tt1", "tt2"], serial: "ec5" },
-      {
-        name: "Platinum Pearl White",
-        price: 395,
-        trim: ["tt1", "tt2"],
-        serial: "ec6",
-      },
-      {
-        name: "Sonic Gray Pearl",
-        price: 395,
-        trim: ["tt1", "tt2"],
-        serial: "ec7",
-      },
-      { name: "Test Data for TT2", price: 0, trim: ["tt2"], serial: "ec8" },
-      { name: "Test Data for TT3", price: 0, trim: ["tt3"], serial: "ec9" },
-      { name: "Test Data for TT4", price: 0, trim: ["tt4"], serial: "ec10" },
-      { name: "Test Data for TT5", price: 0, trim: ["tt5"], serial: "ec11" },
-      { name: "Test Data for TT6", price: 0, trim: ["tt6"], serial: "ec12" },
-      { name: "Test Data for TT7", price: 0, trim: ["tt7"], serial: "ec13" },
-    ],
-  },
-  {
-    name: "Interior Color",
-    type: "Single",
-    choices: [{ name: "Black Cloth", price: 0, trim: ["tt1"], serial: "ic1" }],
-  },
-  {
-    name: "Wheels",
-    type: "Single",
-    choices: [
-      {
-        name: "18-inch Gloss-Black Alloy Wheels",
-        price: 0,
-        trim: ["tt1"],
-        serial: "w1",
-      },
-      {
-        name: "18-inch Black Alloy Wheels",
-        price: 1708,
-        trim: ["tt1"],
-        serial: "w2",
-      },
-      { name: "17-inch Alloy Wheels", price: 0, trim: ["tt2"], serial: "w3" },
-    ],
-  },
-  {
-    name: "Packages",
-    type: "Multiple",
-    choices: [
-      {
-        name: "All-Season Protection Package I",
-        price: 420,
-        trim: ["tt1", "tt2"],
-        serial: "pk1",
-      },
-      {
-        name: "All-Season Protection Package II",
-        price: 370,
-        trim: ["tt1", "tt2"],
-        serial: "pk2",
-      },
-      { name: "HPD Package", price: 1452, trim: ["tt1", "tt2"], serial: "pk3" },
-      {
-        name: "Protection Package",
-        price: 300,
-        trim: ["tt1", "tt2"],
-        serial: "pk4",
-      },
-    ],
-  },
-  {
-    name: "Exterior Accessories",
-    type: "Multiple",
-    choices: [
-      { name: "Body Side Molding", price: 242, trim: ["tt1"], serial: "ea1" },
-      { name: "Decklid Spoiler", price: 322, trim: ["tt1"], serial: "ea2" },
-      { name: "Door Edge Film", price: 54, trim: ["tt1"], serial: "ea" },
-      { name: "Door Edge Guard", price: 124, trim: ["tt1"], serial: "ea4" },
-      { name: "Door Handle Film", price: 54, trim: ["tt1"], serial: "ea5" },
-      { name: "Test Data for TT2", price: 54, trim: ["tt2"], serial: "ea" },
-    ],
-  },
-  {
-    name: "Interior Accessories",
-    type: "Multiple",
-    choices: [
-      {
-        name: "All Season Floor Mats",
-        price: 183,
-        trim: ["tt1"],
-        serial: "ia1",
-      },
-      { name: "Body Side Moulding", price: 242, trim: ["tt2"], serial: "ia2" },
-      { name: "Cargo Hook", price: 14, trim: ["tt1"], serial: "ia3" },
-      { name: "Cargo Net", price: 54, trim: ["tt1"], serial: "ia4" },
-      { name: "Carpet Floor Mats", price: 194, trim: ["tt1"], serial: "ia5" },
-      {
-        name: "Door Sill Protection Film",
-        price: 108,
-        trim: ["tt1"],
-        serial: "ia6",
-      },
-    ],
-  },
-  {
-    name: "Electronic Accessories",
-    type: "Multiple",
-    choices: [
-      {
-        name: "Engine Block Heater",
-        price: 90,
-        trim: ["tt1"],
-        serial: "elec1",
-      },
-    ],
-  },
-];
-
-//Test function using dummy data
-//Retrieves from optionsData, all options where the array of trim serials includes the serial of the trim selected
+//Retrieve options available, as well as default options selected
 export const trimSelected = (trim, serialSelected) => {
-  var optionsForTrimSelected = dummyOptionsData.map((option) => {
+  //Retrieve all options available, per trim selected
+  var optionsAvailable = dummyOptionsData.map((option) => {
     return {
       ...option,
       choices: option.choices.filter((choice) =>
@@ -203,45 +20,128 @@ export const trimSelected = (trim, serialSelected) => {
       ),
     };
   });
-  return optionsForTrimSelected;
+  //Create default option selected object
+  var optionsSelected = dummyOptionsData.map((option) => {
+    return { groupName: option.name, choicesSelected: [] };
+  });
+
+  var optionsData = {
+    available: optionsAvailable,
+    selected: optionsSelected,
+  };
+  return optionsData;
 };
 
 //Test Function
 export const optionSelected = (vehicle, groupName, name, serial) => {
-  var updatedVehicle = vehicle;
-
   switch (vehicle.selected.trim) {
     case "Sedan Sport":
-      //Add code here to update the vehicle object for option selected
-      //The code will have to handle changing BOTH the selected options, and options available
-      return updatedVehicle;
+      var testVehicle = {
+        makes: vehicle.makes,
+        models: vehicle.models,
+        trims: vehicle.trims,
+        options: vehicle.options,
+        selected: {
+          make: vehicle.selected.make,
+          model: vehicle.selected.model,
+          trim: vehicle.selected.trim,
+          options: vehicle.selected.options,
+        },
+      };
+
+      var optionToChange = testVehicle.selected.options.find(
+        (e) => e.groupName === groupName
+      ); //Retrieve the existing selected options
+      optionToChange.choicesSelected = [
+        dummyOptionsData
+          .find((e) => e.name === groupName)
+          .choices.find((c) => c.serial === serial),
+      ]; //Add the new selected option to the array of choicesSelected
+
+      testVehicle.selected.options.find(
+        (os) => os.groupName === groupName
+      ).choicesSelected = optionToChange.choicesSelected; //
+
+      return testVehicle;
 
       break;
     case "Sedan EX":
+      var testVehicle = {
+        makes: vehicle.makes,
+        models: vehicle.models,
+        trims: vehicle.trims,
+        options: vehicle.options,
+        selected: {
+          make: vehicle.selected.make,
+          model: vehicle.selected.model,
+          trim: vehicle.selected.trim,
+          options: vehicle.selected.options,
+        },
+      };
+
+      var optionToChange = testVehicle.selected.options.find(
+        (e) => e.groupName === groupName
+      ); //Retrieve the existing selected options
+      optionToChange.choicesSelected = [
+        dummyOptionsData
+          .find((e) => e.name === groupName)
+          .choices.find((c) => c.serial === serial),
+      ]; //Add the new selected option to the array of choicesSelected
+
+      testVehicle.selected.options.find(
+        (os) => os.groupName === groupName
+      ).choicesSelected = optionToChange.choicesSelected; //
+
+      return testVehicle;
       break;
     case "Sedan Touring":
-      console.log("Return for Sedan Touring");
-      updatedVehicle = dummyOptionsData;
+      var testVehicle = {
+        makes: vehicle.makes,
+        models: vehicle.models,
+        trims: vehicle.trims,
+        options: vehicle.options,
+        selected: {
+          make: vehicle.selected.make,
+          model: vehicle.selected.model,
+          trim: vehicle.selected.trim,
+          options: vehicle.selected.options,
+        },
+      };
+
+      var optionToChange = testVehicle.selected.options.find(
+        (e) => e.groupName === groupName
+      ); //Retrieve the existing selected options
+      optionToChange.choicesSelected = [
+        dummyOptionsData
+          .find((e) => e.name === groupName)
+          .choices.find((c) => c.serial === serial),
+      ]; //Add the new selected option to the array of choicesSelected
+
+      testVehicle.selected.options.find(
+        (os) => os.groupName === groupName
+      ).choicesSelected = optionToChange.choicesSelected; //
+
+      return testVehicle;
       break;
     case "Hatchback Sport":
       console.log("Return for HatchBack Sport");
-      updatedVehicle = dummyOptionsData;
+      return testVehicle;
       break;
     case "Hatchback EX-L":
       console.log("Return ");
-      updatedVehicle = dummyOptionsData;
+      return testVehicle;
       break;
     case "Hatchback Sport Touring":
       console.log("Return ");
-      updatedVehicle = dummyOptionsData;
+      return testVehicle;
       break;
     case "Si":
       console.log("Return SI Data");
-      updatedVehicle = dummyOptionsData;
+      return testVehicle;
       break;
     case "Type R":
       console.log("Return Type R Data");
-      updatedVehicle = dummyOptionsData;
+      return testVehicle;
       break;
   }
   return updatedVehicle;
@@ -257,24 +157,28 @@ export const dummyOptionsData = [
         price: 0,
         trim: ["tt1", "tt2"],
         serial: "pw1",
+        action: null,
       },
       {
         name: "Powertrain for TT2",
         price: 0,
         trim: ["tt2"],
         serial: "pw2",
+        action: null,
       },
       {
         name: "Powertrain for TT3",
         price: 0,
         trim: ["tt3"],
         serial: "pw3",
+        action: null,
       },
       {
         name: "Powertrain TT4",
         price: 0,
         trim: ["tt4"],
         serial: "pw4",
+        action: null,
       },
       {
         name: "Powertrain TT5",

@@ -28,7 +28,7 @@ export default function Options({ vehicle, onChange }) {
           );
           break;
         case "Multiple":
-          //Return Dropdowns for each Option Group
+          //Return CheckBox Group for each Option Group
           optionCheckBoxes.push(
             <div key={uuidv4(element.name)}>
               <CheckBoxGroup

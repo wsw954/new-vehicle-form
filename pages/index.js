@@ -22,19 +22,11 @@ var initialState = {
     make: "",
     model: "",
     trim: "",
-    options: [{ group: "", choices: [{ name: "", serial: [] }] }],
+    options: [],
   },
 };
 
 export default function Home() {
-  //Track the selected vehicle choices
-  // const [vehicle, updateVehicle] = useState({
-  //   make: "",
-  //   model: "",
-  //   trim: "",
-  //   options: [{}],
-  // });
-
   //Hook to retrieve form choices
   const [vehicle, dispatch] = useReducer(reducer, initialState);
 
@@ -68,6 +60,7 @@ export default function Home() {
 
   //Helper function
   const handleOptionSelected = (groupName, name, serial) => {
+    // console.log(vehicle.selected);
     //Add code to handle option selected
     dispatch({
       type: "OPTION_SELECTED",
@@ -120,7 +113,7 @@ export default function Home() {
                 name="Trim"
                 vehicle={vehicle}
                 onChange={handleTrimSelected}
-                firstDisabled={false}
+                firstDisabled={vehicle.selected.trim != "" ? true : false}
               ></Dropdown>
             </fieldset>
           ) : (

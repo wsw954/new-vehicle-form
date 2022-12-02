@@ -26,7 +26,7 @@ const reducer = (vehicle, action) => {
           make: action.payload.make, //Add make selected
           model: "", //Clear out any prior selected model
           trim: "", //Clear out any prior selected trim
-          options: [{ group: "", choices: [{ name: "", serial: [] }] }], //Reset to default
+          options: [], //Reset to default
         },
       };
       break;
@@ -44,7 +44,7 @@ const reducer = (vehicle, action) => {
           ...vehicle.selected,
           model: action.payload.model, //Update model selected
           trim: "", //Clear out the prior selected trim
-          options: [{ group: "", choices: [{ name: "", serial: [] }] }], //Reset to default
+          options: [], //Reset to default
         },
       };
       break;
@@ -54,17 +54,19 @@ const reducer = (vehicle, action) => {
         "/" +
         vehicle.selected.model.toLowerCase() +
         "/options");
-      var optionsForTrimSelected = dataFile.trimSelected(
+      //Retrieve options available per trim, as well as default options selected
+      var optionsData = dataFile.trimSelected(
         action.payload.trimSelected,
         action.payload.serial
       );
+
       return {
         ...vehicle,
-        options: optionsForTrimSelected, //Update options available, per trim selected
+        options: optionsData.available, //Update options available, per trim selected
         selected: {
           ...vehicle.selected,
           trim: action.payload.trim, //Update the trim selected
-          options: [{ group: "", choices: [{ name: "", serial: [] }] }], //Reset to default
+          options: optionsData.selected, //Reset to default
         },
       };
       break;

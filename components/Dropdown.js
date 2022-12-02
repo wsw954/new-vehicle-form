@@ -11,7 +11,6 @@ export default function DropDropdown({
   firstDisabled,
 }) {
   //Create global variables
-  var dropdownName = name;
   var choiceOptions = {};
   var initialValue = {};
 
@@ -58,8 +57,13 @@ export default function DropDropdown({
 
       break;
     default:
+      // console.log(
+      //   vehicle.selected.options.find((e) => e.groupName === name)
+      //     .choicesSelected.length > 0
+      // );
+
       initialValue =
-        vehicle.trims.length > 0 ? vehicle.selected.options[0].name : "";
+        vehicle.selected.trims === "" ? vehicle.selected.options[0].name : "";
       choiceOptions = choices.map((choice, index) => (
         <option
           key={uuidv4({ index })}
