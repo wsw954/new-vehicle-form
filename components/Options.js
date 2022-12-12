@@ -18,7 +18,7 @@ export default function Options({ vehicle, onChange }) {
               <Dropdown
                 name={element.name}
                 vehicle={vehicle}
-                choices={element.choices}
+                choices={element.choicesAvailable}
                 onChange={onChange}
                 firstDisabled={false}
               ></Dropdown>
@@ -34,7 +34,7 @@ export default function Options({ vehicle, onChange }) {
               <CheckBoxGroup
                 name={element.name}
                 vehicle={vehicle}
-                choices={element.choices}
+                choices={element.choicesAvailable}
                 onChange={onChange}
               ></CheckBoxGroup>
               <br></br>

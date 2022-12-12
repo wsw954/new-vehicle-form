@@ -61,7 +61,7 @@ export default function DropDropdown({
       //   vehicle.selected.options.find((e) => e.groupName === name)
       //     .choicesSelected.length > 0
       // );
-
+      // console.log(vehicle);
       initialValue =
         vehicle.selected.trims === "" ? vehicle.selected.options[0].name : "";
       choiceOptions = choices.map((choice, index) => (

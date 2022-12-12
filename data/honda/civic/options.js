@@ -15,12 +15,12 @@ export const trimSelected = (trim, serialSelected) => {
   var optionsAvailable = dummyOptionsData.map((option) => {
     return {
       ...option,
-      choices: option.choices.filter((choice) =>
+      choicesAvailable: option.choicesAvailable.filter((choice) =>
         choice.trim.includes(serialSelected)
       ),
     };
   });
-  //Create default option selected object
+  //Create default selected object, w/ blank choicesSelected
   var optionsSelected = dummyOptionsData.map((option) => {
     return { groupName: option.name, choicesSelected: [] };
   });
@@ -32,153 +32,104 @@ export const trimSelected = (trim, serialSelected) => {
   return optionsData;
 };
 
-//Test Function
-export const optionSelected = (vehicle, groupName, name, serial) => {
-  switch (vehicle.selected.trim) {
-    case "Sedan Sport":
-      var testVehicle = {
-        makes: vehicle.makes,
-        models: vehicle.models,
-        trims: vehicle.trims,
-        options: vehicle.options,
-        selected: {
-          make: vehicle.selected.make,
-          model: vehicle.selected.model,
-          trim: vehicle.selected.trim,
-          options: vehicle.selected.options,
-        },
-      };
+//Test function
+export const handleOptionSelected = (vehicle, groupName, serial) => {
+  //Create local var to store current vehicle info
+  var updatedVehicle = vehicle;
 
-      var optionToChange = testVehicle.selected.options.find(
-        (e) => e.groupName === groupName
-      ); //Retrieve the existing selected options
-      optionToChange.choicesSelected = [
-        dummyOptionsData
-          .find((e) => e.name === groupName)
-          .choices.find((c) => c.serial === serial),
-      ]; //Add the new selected option to the array of choicesSelected
+  //Retrieve the option group data
+  var optionGroup = dummyOptionsData.find((e) => e.name === groupName);
 
-      testVehicle.selected.options.find(
-        (os) => os.groupName === groupName
-      ).choicesSelected = optionToChange.choicesSelected; //
-
-      return testVehicle;
-
-      break;
-    case "Sedan EX":
-      var testVehicle = {
-        makes: vehicle.makes,
-        models: vehicle.models,
-        trims: vehicle.trims,
-        options: vehicle.options,
-        selected: {
-          make: vehicle.selected.make,
-          model: vehicle.selected.model,
-          trim: vehicle.selected.trim,
-          options: vehicle.selected.options,
-        },
-      };
-
-      var optionToChange = testVehicle.selected.options.find(
-        (e) => e.groupName === groupName
-      ); //Retrieve the existing selected options
-      optionToChange.choicesSelected = [
-        dummyOptionsData
-          .find((e) => e.name === groupName)
-          .choices.find((c) => c.serial === serial),
-      ]; //Add the new selected option to the array of choicesSelected
-
-      testVehicle.selected.options.find(
-        (os) => os.groupName === groupName
-      ).choicesSelected = optionToChange.choicesSelected; //
-
-      return testVehicle;
-      break;
-    case "Sedan Touring":
-      var testVehicle = {
-        makes: vehicle.makes,
-        models: vehicle.models,
-        trims: vehicle.trims,
-        options: vehicle.options,
-        selected: {
-          make: vehicle.selected.make,
-          model: vehicle.selected.model,
-          trim: vehicle.selected.trim,
-          options: vehicle.selected.options,
-        },
-      };
-
-      var optionToChange = testVehicle.selected.options.find(
-        (e) => e.groupName === groupName
-      ); //Retrieve the existing selected options
-      optionToChange.choicesSelected = [
-        dummyOptionsData
-          .find((e) => e.name === groupName)
-          .choices.find((c) => c.serial === serial),
-      ]; //Add the new selected option to the array of choicesSelected
-
-      testVehicle.selected.options.find(
-        (os) => os.groupName === groupName
-      ).choicesSelected = optionToChange.choicesSelected; //
-
-      return testVehicle;
-      break;
-    case "Hatchback Sport":
-      console.log("Return for HatchBack Sport");
-      return testVehicle;
-      break;
-    case "Hatchback EX-L":
-      console.log("Return ");
-      return testVehicle;
-      break;
-    case "Hatchback Sport Touring":
-      console.log("Return ");
-      return testVehicle;
-      break;
-    case "Si":
-      console.log("Return SI Data");
-      return testVehicle;
-      break;
-    case "Type R":
-      console.log("Return Type R Data");
-      return testVehicle;
-      break;
+  //Retrieve the actual option selected
+  var optionSelected = optionGroup.choicesAvailable.find(
+    (c) => c.serial === serial
+  );
+  //Check if any special action required for the option selected
+  if (optionSelected.hasOwnProperty("action")) {
+    //Adjust vehicle for the special action required for this option selection
+    updatedVehicle = optionSelected.action(
+      vehicle,
+      optionGroup.type,
+      groupName,
+      serial
+    );
+    console.log("Line 54 in data/civic/options, special action required");
+  } else {
+    updatedVehicle = addOptionSelected(
+      vehicle,
+      optionGroup.type,
+      groupName,
+      serial
+    );
+    console.log("Line 62 in data/civic/options, no special action required");
   }
   return updatedVehicle;
 };
+
+//Helper function
+function addOptionSelected(vehicle, optionType, groupName, serial) {
+  var updatedVehicle = vehicle;
+  switch (optionType) {
+    case "Single":
+      //Change the selected option for vehicle to be
+      updatedVehicle.selected.options.find(
+        (os) => os.groupName === groupName
+      ).choicesSelected = addSingleOption(groupName, serial);
+      break;
+    case "Multiple":
+      console.log("Add option to vehicle.selected.groupName.choices[x]");
+      break;
+  }
+
+  return updatedVehicle;
+}
+
+//Helper Function
+function addSingleOption(groupName, serial) {
+  return [
+    dummyOptionsData
+      .find((e) => e.name === groupName)
+      .choicesAvailable.find((c) => c.serial === serial),
+  ];
+}
+
+//Placeholder function for
+function addMultipleOption(groupName, serial) {
+  return [
+    dummyOptionsData
+      .find((e) => e.name === groupName)
+      .choicesAvailable.find((c) => c.serial === serial),
+  ];
+}
 
 export const dummyOptionsData = [
   {
     name: "Powertrain",
     type: "Single",
-    choices: [
+    choicesAvailable: [
       {
         name: "Powertrain for TT1",
         price: 0,
         trim: ["tt1", "tt2"],
         serial: "pw1",
-        action: null,
       },
       {
         name: "Powertrain for TT2",
         price: 0,
         trim: ["tt2"],
         serial: "pw2",
-        action: null,
       },
       {
         name: "Powertrain for TT3",
         price: 0,
         trim: ["tt3"],
         serial: "pw3",
-        action: null,
       },
       {
         name: "Powertrain TT4",
         price: 0,
         trim: ["tt4"],
         serial: "pw4",
-        action: null,
       },
       {
         name: "Powertrain TT5",
@@ -203,28 +154,84 @@ export const dummyOptionsData = [
   {
     name: "Exterior Color",
     type: "Single",
-    choices: [
-      { name: "Ex Color TT1", price: 0, trim: ["tt1"], serial: "ec1" },
-      { name: "Ex Color TT1", price: 0, trim: ["tt1", "tt2"], serial: "ec2" },
+    choicesAvailable: [
       {
-        name: "Ex Color TT2",
+        name: "Aegean Blue Metallic",
         price: 0,
-        trim: ["tt1", "tt3"],
-        serial: "ec3",
+        trim: ["tt1", "tt2"],
+        serial: "ec1",
+        action: (vehicle, groupType, groupName, serial) =>
+          exteriorColorAction(vehicle, groupType, groupName, serial),
       },
-      { name: "Exterior Color TT3", price: 0, trim: ["tt3"], serial: "ec4" },
-      { name: "exterior Color  TT4", price: 0, trim: ["tt4"], serial: "ec5" },
-      { name: "EXterior Color TT5", price: 0, trim: ["tt5"], serial: "ec6" },
-      { name: "Ex Color  TT6", price: 0, trim: ["tt6"], serial: "ec7" },
-      { name: "ExColor  TT7", price: 0, trim: ["tt7"], serial: "ec8" },
+      {
+        name: "Crystal Pearl Black",
+        price: 0,
+        trim: ["tt1", "tt2"],
+        serial: "ec2",
+        action: (vehicle, groupType, groupName, serial) =>
+          exteriorColorAction(vehicle, groupType, groupName, serial),
+      },
+      {
+        name: "Lunar Silver Metallic",
+        price: 0,
+        trim: ["tt1", "tt2", "tt3"],
+        serial: "ec3",
+        action: (vehicle, groupType, groupName, serial) =>
+          exteriorColorAction(vehicle, groupType, groupName, serial),
+      },
+      {
+        name: "Meteorite Gray Metallic",
+        price: 0,
+        trim: ["tt1", "tt2", "tt3"],
+        serial: "ec4",
+        action: (vehicle, groupType, groupName, serial) =>
+          exteriorColorAction(vehicle, groupType, groupName, serial),
+      },
+      {
+        name: "Rallye Red",
+        price: 0,
+        trim: ["tt1", "tt2", "tt4"],
+        serial: "ec5",
+        action: (vehicle, groupType, groupName, serial) =>
+          exteriorColorAction(vehicle, groupType, groupName, serial),
+      },
+      {
+        name: "Morning Mist Metallic",
+        price: 0,
+        trim: ["tt1", "tt2", "tt5"],
+        serial: "ec6",
+        action: (vehicle, groupType, groupName, serial) =>
+          exteriorColorAction(vehicle, groupType, groupName, serial),
+      },
+      {
+        name: "Platinum Pearl White",
+        price: 0,
+        trim: ["tt1", "tt2", "tt6"],
+        serial: "ec7",
+        action: (vehicle, groupType, groupName, serial) =>
+          exteriorColorAction(vehicle, groupType, groupName, serial),
+      },
+      {
+        name: "ExColor  TT7",
+        price: 0,
+        trim: ["tt7"],
+        serial: "ec8",
+        action: (vehicle, groupType, groupName, serial) =>
+          exteriorColorAction(vehicle, groupType, groupName, serial),
+      },
     ],
   },
   {
     name: "Interior Color",
     type: "Single",
-    choices: [
-      { name: "Interior Color TT1", price: 0, trim: ["tt1"], serial: "ic1" },
-      { name: "Interior Color TT2", price: 0, trim: ["tt1"], serial: "ic2" },
+    choicesAvailable: [
+      {
+        name: "Black Cloth",
+        price: 0,
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5"],
+        serial: "icsa1",
+      },
+      { name: "Gray Cloth", price: 0, trim: ["ctt2"], serial: "icsa2" }, //Conditional option
       { name: "Interior Color TT3", price: 0, trim: ["tt3"], serial: "ic3" },
       { name: "Interior Color  TT4", price: 0, trim: ["tt4"], serial: "ic4" },
       { name: "Interior Color TT5", price: 0, trim: ["tt5"], serial: "ic5" },
@@ -235,7 +242,7 @@ export const dummyOptionsData = [
   {
     name: "Wheels",
     type: "Single",
-    choices: [
+    choicesAvailable: [
       { name: "Wheels TT1", price: 0, trim: ["tt1", "tt2"], serial: "w1" },
       { name: "Wheels TT2", price: 0, trim: ["tt1", "tt2"], serial: "w2" },
       { name: "Wheels TT3", price: 0, trim: ["tt3"], serial: "w3" },
@@ -248,7 +255,7 @@ export const dummyOptionsData = [
   {
     name: "Packages",
     type: "Multiple",
-    choices: [
+    choicesAvailable: [
       {
         name: "All-Season Protection Package I",
         price: 420,
@@ -279,7 +286,7 @@ export const dummyOptionsData = [
   {
     name: "Exterior Accessories",
     type: "Multiple",
-    choices: [
+    choicesAvailable: [
       {
         name: "Body Side Molding",
         price: 242,
@@ -307,7 +314,7 @@ export const dummyOptionsData = [
   {
     name: "Interior Accessories",
     type: "Multiple",
-    choices: [
+    choicesAvailable: [
       {
         name: "All Season Floor Mats",
         price: 183,
@@ -341,7 +348,7 @@ export const dummyOptionsData = [
   {
     name: "Electronic Accessories",
     type: "Multiple",
-    choices: [
+    choicesAvailable: [
       {
         name: "Engine Block Heater",
         price: 90,
@@ -351,3 +358,59 @@ export const dummyOptionsData = [
     ],
   },
 ];
+
+//Helper function to handle any special actions when Exterior Color selected
+function exteriorColorAction(vehicle, groupType, groupName, serial) {
+  //Outer switch to handle specified trim
+  switch (vehicle.selected.trim) {
+    case "Sedan Sport":
+      //For Sedan Sport, the only Interior Color available is Black Cloth
+      //Change the Interior Colors available to be only  Black Cloth
+      vehicle.options.find(
+        (a) => a.name === "Interior Color"
+      ).choicesAvailable = dummyOptionsData
+        .find((e) => e.name === "Interior Color")
+        .choicesAvailable.slice(0, 1);
+      return addOptionSelected(vehicle, groupType, groupName, serial);
+      break;
+    case "Sedan EX":
+      //Only ec7 results in two available options for Interior Color
+      if (serial === "ec7") {
+        //Change the Interior Colors available to be BOTH Gray Cloth & Black Cloth
+        vehicle.options.find(
+          (a) => a.name === "Interior Color"
+        ).choicesAvailable = dummyOptionsData
+          .find((e) => e.name === "Interior Color")
+          .choicesAvailable.slice(0, 2);
+        return addOptionSelected(vehicle, groupType, groupName, serial);
+      } else {
+        //Change the Interior Colors available to be only  Black Cloth
+        vehicle.options.find(
+          (a) => a.name === "Interior Color"
+        ).choicesAvailable = dummyOptionsData
+          .find((e) => e.name === "Interior Color")
+          .choicesAvailable.slice(0, 1);
+        return addOptionSelected(vehicle, groupType, groupName, serial);
+      }
+      break;
+    case "Sedan Touring":
+      return addOptionSelected(vehicle, groupType, groupName, serial);
+
+      break;
+    case "Hatchback Sport":
+      return addOptionSelected(vehicle, groupType, groupName, serial);
+      break;
+    case "Hatcback EX-L":
+      return addOptionSelected(vehicle, groupType, groupName, serial);
+      break;
+    case "Hatchbac Sport Touring":
+      return addOptionSelected(vehicle, groupType, groupName, serial);
+      break;
+    case "Si":
+      return addOptionSelected(vehicle, groupType, groupName, serial);
+      break;
+    case "Type R":
+      return addOptionSelected(vehicle, groupType, groupName, serial);
+      break;
+  }
+}

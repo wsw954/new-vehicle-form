@@ -59,7 +59,6 @@ const reducer = (vehicle, action) => {
         action.payload.trimSelected,
         action.payload.serial
       );
-
       return {
         ...vehicle,
         options: optionsData.available, //Update options available, per trim selected
@@ -69,6 +68,7 @@ const reducer = (vehicle, action) => {
           options: optionsData.selected, //Reset to default
         },
       };
+
       break;
     case ACTIONS.OPTION_SELECTED:
       var dataFile = require("../../data/" +
@@ -77,13 +77,12 @@ const reducer = (vehicle, action) => {
         vehicle.selected.model.toLowerCase() +
         "/options");
 
-      var updatedVehicle = dataFile.optionSelected(
+      var updatedVehicle = dataFile.handleOptionSelected(
         vehicle,
         action.payload.groupName,
-        action.payload.name,
         action.payload.serial
       );
-
+      console.log(updatedVehicle);
       return updatedVehicle;
       break;
     default:
