@@ -82,8 +82,12 @@ const reducer = (vehicle, action) => {
         action.payload.groupName,
         action.payload.serial
       );
-      console.log(updatedVehicle);
-      return updatedVehicle;
+      vehicle = updatedVehicle;
+      return {
+        ...vehicle,
+        options: updatedVehicle.options,
+        selected: updatedVehicle.selected,
+      };
       break;
     default:
       return { vehicle };

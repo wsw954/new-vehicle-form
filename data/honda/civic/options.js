@@ -53,7 +53,6 @@ export const handleOptionSelected = (vehicle, groupName, serial) => {
       groupName,
       serial
     );
-    console.log("Line 54 in data/civic/options, special action required");
   } else {
     updatedVehicle = addOptionSelected(
       vehicle,
@@ -61,7 +60,6 @@ export const handleOptionSelected = (vehicle, groupName, serial) => {
       groupName,
       serial
     );
-    console.log("Line 62 in data/civic/options, no special action required");
   }
   return updatedVehicle;
 };

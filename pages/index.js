@@ -60,7 +60,6 @@ export default function Home() {
 
   //Helper function
   const handleOptionSelected = (groupName, name, serial) => {
-    // console.log(vehicle.selected);
     //Add code to handle option selected
     dispatch({
       type: "OPTION_SELECTED",

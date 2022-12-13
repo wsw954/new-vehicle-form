@@ -18,7 +18,7 @@ export default function DropDropdown({
     onChange(event.target.value);
   };
 
-  //Customize Dropdown, relevant to vehicle variable
+  //Customize Dropdown, relevant to vehicle variable being handled
   switch (name) {
     case "Make":
       initialValue = vehicle.selected.make;
@@ -57,13 +57,16 @@ export default function DropDropdown({
 
       break;
     default:
-      // console.log(
-      //   vehicle.selected.options.find((e) => e.groupName === name)
-      //     .choicesSelected.length > 0
-      // );
-      // console.log(vehicle);
-      initialValue =
-        vehicle.selected.trims === "" ? vehicle.selected.options[0].name : "";
+      //Handles vehicle options selection
+      if (
+        vehicle.selected.options.find((o) => o.groupName === name)
+          .choicesSelected.length > 0
+      ) {
+        initialValue = vehicle.selected.options.find(
+          (o) => o.groupName === name
+        ).choicesSelected[0].name;
+      }
+
       choiceOptions = choices.map((choice, index) => (
         <option
           key={uuidv4({ index })}
