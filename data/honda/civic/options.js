@@ -69,6 +69,7 @@ function addOptionSelected(vehicle, optionType, groupName, serial) {
   var updatedVehicle = vehicle;
   switch (optionType) {
     case "Single":
+      console.log(serial);
       //Change the selected option for vehicle to be
       updatedVehicle.selected.options.find(
         (os) => os.groupName === groupName
@@ -106,46 +107,34 @@ export const dummyOptionsData = [
     type: "Single",
     choicesAvailable: [
       {
-        name: "Powertrain for TT1",
+        name: "2.0L 4-Cyl 158hp Engine w/CVT",
         price: 0,
         trim: ["tt1", "tt2"],
         serial: "pw1",
       },
       {
-        name: "Powertrain for TT2",
+        name: "1.5L Turbo 4-Cyl 180hp Engine w/CVT",
         price: 0,
-        trim: ["tt2"],
+        trim: ["tt2", "tt4", "tt5", "tt6"],
         serial: "pw2",
       },
       {
-        name: "Powertrain for TT3",
+        name: "2.0L 4-Cyl Engine w/ 6MT",
         price: 0,
-        trim: ["tt3"],
+        trim: ["tt4", "tt6"],
         serial: "pw3",
       },
       {
-        name: "Powertrain TT4",
+        name: "1.5L Turbo 4-Cyl 200hp w/ 6MT",
         price: 0,
-        trim: ["tt4"],
+        trim: ["tt7"],
         serial: "pw4",
       },
       {
-        name: "Powertrain TT5",
+        name: "2.0L Turbo 4-Cyl 315hp w/ 6MT",
         price: 0,
-        trim: ["tt5"],
+        trim: ["tt8"],
         serial: "pw5",
-      },
-      {
-        name: "powertrain TT6",
-        price: 0,
-        trim: ["tt6"],
-        serial: "pw6",
-      },
-      {
-        name: "powertrain TT7",
-        price: 0,
-        trim: ["tt7"],
-        serial: "pw7",
       },
     ],
   },
@@ -156,7 +145,7 @@ export const dummyOptionsData = [
       {
         name: "Aegean Blue Metallic",
         price: 0,
-        trim: ["tt1", "tt2"],
+        trim: ["tt1", "tt2", "tt3", "tt7"],
         serial: "ec1",
         action: (vehicle, groupType, groupName, serial) =>
           exteriorColorAction(vehicle, groupType, groupName, serial),
@@ -164,7 +153,7 @@ export const dummyOptionsData = [
       {
         name: "Crystal Pearl Black",
         price: 0,
-        trim: ["tt1", "tt2"],
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ec2",
         action: (vehicle, groupType, groupName, serial) =>
           exteriorColorAction(vehicle, groupType, groupName, serial),
@@ -172,7 +161,7 @@ export const dummyOptionsData = [
       {
         name: "Lunar Silver Metallic",
         price: 0,
-        trim: ["tt1", "tt2", "tt3"],
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6"],
         serial: "ec3",
         action: (vehicle, groupType, groupName, serial) =>
           exteriorColorAction(vehicle, groupType, groupName, serial),
@@ -180,7 +169,7 @@ export const dummyOptionsData = [
       {
         name: "Meteorite Gray Metallic",
         price: 0,
-        trim: ["tt1", "tt2", "tt3"],
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6"],
         serial: "ec4",
         action: (vehicle, groupType, groupName, serial) =>
           exteriorColorAction(vehicle, groupType, groupName, serial),
@@ -188,32 +177,65 @@ export const dummyOptionsData = [
       {
         name: "Rallye Red",
         price: 0,
-        trim: ["tt1", "tt2", "tt4"],
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ec5",
         action: (vehicle, groupType, groupName, serial) =>
           exteriorColorAction(vehicle, groupType, groupName, serial),
       },
       {
-        name: "Morning Mist Metallic",
-        price: 0,
-        trim: ["tt1", "tt2", "tt5"],
+        name: "Blazing Orange Pearl",
+        price: 395,
+        trim: ["tt7"],
         serial: "ec6",
         action: (vehicle, groupType, groupName, serial) =>
           exteriorColorAction(vehicle, groupType, groupName, serial),
       },
       {
-        name: "Platinum Pearl White",
-        price: 0,
-        trim: ["tt1", "tt2", "tt6"],
+        name: "Boost Blue Pearl",
+        price: 395,
+        trim: ["tt5", "tt6", "tt8"],
         serial: "ec7",
         action: (vehicle, groupType, groupName, serial) =>
           exteriorColorAction(vehicle, groupType, groupName, serial),
       },
       {
-        name: "ExColor  TT7",
-        price: 0,
-        trim: ["tt7"],
+        name: "Championship White",
+        price: 395,
+        trim: ["tt8"],
         serial: "ec8",
+        action: (vehicle, groupType, groupName, serial) =>
+          exteriorColorAction(vehicle, groupType, groupName, serial),
+      },
+      {
+        name: "Morning Mist Metallic",
+        price: 395,
+        trim: ["tt2", "tt3"],
+        serial: "ec9",
+        action: (vehicle, groupType, groupName, serial) =>
+          exteriorColorAction(vehicle, groupType, groupName, serial),
+      },
+
+      {
+        name: "Platinum Pearl White",
+        price: 395,
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt4", "tt5", "tt6", "tt7"],
+        serial: "ec10",
+        action: (vehicle, groupType, groupName, serial) =>
+          exteriorColorAction(vehicle, groupType, groupName, serial),
+      },
+      {
+        name: "Smoky Mauve Pearl",
+        price: 395,
+        trim: ["tt4", "tt6"],
+        serial: "ec11",
+        action: (vehicle, groupType, groupName, serial) =>
+          exteriorColorAction(vehicle, groupType, groupName, serial),
+      },
+      {
+        name: "Sonic Gray Pearl",
+        price: 395,
+        trim: ["tt1", "tt5", "tt6", "tt7", "tt8"],
+        serial: "ec12",
         action: (vehicle, groupType, groupName, serial) =>
           exteriorColorAction(vehicle, groupType, groupName, serial),
       },
@@ -226,28 +248,75 @@ export const dummyOptionsData = [
       {
         name: "Black Cloth",
         price: 0,
-        trim: ["tt1", "tt2", "tt3", "tt4", "tt5"],
-        serial: "icsa1",
+        trim: ["tt1", "tt2", "tt4"],
+        serial: "ic1",
       },
-      { name: "Gray Cloth", price: 0, trim: ["ctt2"], serial: "icsa2" }, //Conditional option
-      { name: "Interior Color TT3", price: 0, trim: ["tt3"], serial: "ic3" },
-      { name: "Interior Color  TT4", price: 0, trim: ["tt4"], serial: "ic4" },
-      { name: "Interior Color TT5", price: 0, trim: ["tt5"], serial: "ic5" },
-      { name: "Interior Color  TT6", price: 0, trim: ["tt6"], serial: "ic6" },
-      { name: "Interior Color  TT7", price: 0, trim: ["tt7"], serial: "ic7" },
+      { name: "Gray Cloth", price: 0, trim: ["tt2"], serial: "ic2" },
+
+      { name: "Black Leather", price: 0, trim: ["tt3", "tt5"], serial: "ic3" },
+
+      { name: "Gray Leather", price: 0, trim: ["tt3", "tt6"], serial: "ic4" },
+
+      { name: "Black & Red Cloth", price: 0, trim: ["tt7"], serial: "ic5" },
+      {
+        name: "Red/Black Suede-Effect Fabric",
+        price: 0,
+        trim: ["tt8"],
+        serial: "ic6",
+      },
     ],
   },
   {
     name: "Wheels",
     type: "Single",
     choicesAvailable: [
-      { name: "Wheels TT1", price: 0, trim: ["tt1", "tt2"], serial: "w1" },
-      { name: "Wheels TT2", price: 0, trim: ["tt1", "tt2"], serial: "w2" },
-      { name: "Wheels TT3", price: 0, trim: ["tt3"], serial: "w3" },
-      { name: "Wheels  TT4", price: 0, trim: ["tt4"], serial: "w4" },
-      { name: "Wheels TT5", price: 0, trim: ["tt5"], serial: "w5" },
-      { name: "Wheels  TT6", price: 0, trim: ["tt6"], serial: "w6" },
-      { name: "Wheels  TT7", price: 0, trim: ["tt7"], serial: "w7" },
+      {
+        name: "18-Inch Gloss-Black Alloy Wheels",
+        price: 0,
+        trim: ["tt1", "tt4"],
+        serial: "w1",
+      },
+
+      {
+        name: "18-Inch Alloy Wheels",
+        price: 0,
+        trim: ["tt3", "tt6"],
+        serial: "w2",
+      },
+
+      {
+        name: "17-Inch Alloy Wheels",
+        price: 0,
+        trim: ["tt2", "tt5"],
+        serial: "w3",
+      },
+
+      {
+        name: "18-Inch Black Alloy Wheels",
+        price: 1708,
+        trim: ["tt1", "tt3", "tt4", "tt6", "tt7"],
+        serial: "w4",
+      },
+      {
+        name: "18-Inch Matte Black Alloy Wheels",
+        price: 0,
+        trim: ["tt7"],
+        serial: "w5",
+      },
+
+      {
+        name: "19-Inch Matte Black Alloy Wheels",
+        price: 0,
+        trim: ["tt8"],
+        serial: "w6",
+      },
+
+      {
+        name: "19-Inch Forged Alloy Wheels",
+        price: 3100,
+        trim: ["tt8"],
+        serial: "w7",
+      },
     ],
   },
   {
@@ -257,27 +326,62 @@ export const dummyOptionsData = [
       {
         name: "All-Season Protection Package I",
         price: 420,
-        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
+        trim: ["tt1", "tt2", "tt3"],
         serial: "pk1",
+      },
+      {
+        name: "All-Season Protection Package I",
+        price: 415,
+        trim: ["tt4", "tt5", "tt6"],
+        serial: "pk2",
       },
       {
         name: "All-Season Protection Package II",
         price: 370,
-        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
-        serial: "pk2",
+        trim: ["tt1", "tt2", "tt3"],
+        serial: "pk3",
       },
-      ,
+      {
+        name: "All-Season Protection Package II",
+        price: 367,
+        trim: ["tt4", "tt5", "tt6"],
+        serial: "pk4",
+      },
       {
         name: "HPD Package",
         price: 1452,
-        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
-        serial: "pk3",
+        trim: ["tt1", "tt2", "tt3"],
+        serial: "pk5",
+      },
+      {
+        name: "HPD Package",
+        price: 1130,
+        trim: ["tt7"],
+        serial: "pk6",
+      },
+      {
+        name: "HPD Package",
+        price: 799,
+        trim: ["tt4", "tt5", "tt6"],
+        serial: "pk7",
       },
       {
         name: "Protection Package",
         price: 300,
-        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
-        serial: "pk4",
+        trim: ["tt1", "tt2", "tt3", "tt7"],
+        serial: "pk8",
+      },
+      {
+        name: "Protection Package I",
+        price: 295,
+        trim: ["tt4", "tt5", "tt6"],
+        serial: "pk9",
+      },
+      {
+        name: "Protection Film Package",
+        price: 150,
+        trim: ["tt8"],
+        serial: "pk10",
       },
     ],
   },
@@ -372,8 +476,8 @@ function exteriorColorAction(vehicle, groupType, groupName, serial) {
       return addOptionSelected(vehicle, groupType, groupName, serial);
       break;
     case "Sedan EX":
-      //Only ec7 results in two available options for Interior Color
-      if (serial === "ec7") {
+      //Only ec9 results in two available options for Interior Color
+      if (serial === "ec10") {
         //Change the Interior Colors available to be BOTH Gray Cloth & Black Cloth
         vehicle.options.find(
           (a) => a.name === "Interior Color"

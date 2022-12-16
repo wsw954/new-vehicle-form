@@ -20,7 +20,13 @@ export default function Options({ vehicle, onChange }) {
                 vehicle={vehicle}
                 choices={element.choicesAvailable}
                 onChange={onChange}
-                firstDisabled={false}
+                firstDisabled={
+                  vehicle.selected.options.find(
+                    (o) => o.groupName === element.name
+                  ).choicesSelected.length > 0
+                    ? true
+                    : false
+                } //Checks if an option from this group was selected, disables if true, enabled if false
               ></Dropdown>
               <br></br>
               <br></br>
