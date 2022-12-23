@@ -9,98 +9,6 @@ export const trims = [
   { name: "Type R", price: 42895, serial: "tt8" },
 ];
 
-//Retrieve options available, as well as default options selected
-export const trimSelected = (trim, serialSelected) => {
-  //Retrieve all options available, per trim selected
-  var optionsAvailable = dummyOptionsData.map((option) => {
-    return {
-      ...option,
-      choicesAvailable: option.choicesAvailable.filter((choice) =>
-        choice.trim.includes(serialSelected)
-      ),
-    };
-  });
-  //Create default selected object, w/ blank choicesSelected
-  var optionsSelected = dummyOptionsData.map((option) => {
-    return { groupName: option.name, choicesSelected: [] };
-  });
-
-  var optionsData = {
-    available: optionsAvailable,
-    selected: optionsSelected,
-  };
-  return optionsData;
-};
-
-//Test function
-export const handleOptionSelected = (vehicle, groupName, serial) => {
-  //Create local var to store current vehicle info
-  var updatedVehicle = vehicle;
-
-  //Retrieve the option group data
-  var optionGroup = dummyOptionsData.find((e) => e.name === groupName);
-
-  //Retrieve the actual option selected
-  var optionSelected = optionGroup.choicesAvailable.find(
-    (c) => c.serial === serial
-  );
-  //Check if any special action required for the option selected
-  if (optionSelected.hasOwnProperty("action")) {
-    //Adjust vehicle for the special action required for this option selection
-    updatedVehicle = optionSelected.action(
-      vehicle,
-      optionGroup.type,
-      groupName,
-      serial
-    );
-  } else {
-    updatedVehicle = addOptionSelected(
-      vehicle,
-      optionGroup.type,
-      groupName,
-      serial
-    );
-  }
-  return updatedVehicle;
-};
-
-//Helper function
-function addOptionSelected(vehicle, optionType, groupName, serial) {
-  var updatedVehicle = vehicle;
-  switch (optionType) {
-    case "Single":
-      console.log(serial);
-      //Change the selected option for vehicle to be
-      updatedVehicle.selected.options.find(
-        (os) => os.groupName === groupName
-      ).choicesSelected = addSingleOption(groupName, serial);
-      break;
-    case "Multiple":
-      console.log("Add option to vehicle.selected.groupName.choices[x]");
-      break;
-  }
-
-  return updatedVehicle;
-}
-
-//Helper Function
-function addSingleOption(groupName, serial) {
-  return [
-    dummyOptionsData
-      .find((e) => e.name === groupName)
-      .choicesAvailable.find((c) => c.serial === serial),
-  ];
-}
-
-//Placeholder function for
-function addMultipleOption(groupName, serial) {
-  return [
-    dummyOptionsData
-      .find((e) => e.name === groupName)
-      .choicesAvailable.find((c) => c.serial === serial),
-  ];
-}
-
 export const dummyOptionsData = [
   {
     name: "Powertrain",
@@ -390,27 +298,213 @@ export const dummyOptionsData = [
     type: "Multiple",
     choicesAvailable: [
       {
-        name: "Body Side Molding",
-        price: 242,
-        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
+        name: "Bike Attachment-Frame Mount",
+        price: 211,
+        trim: ["tt4", "tt5", "tt6", "tt8"],
         serial: "ea1",
       },
       {
-        name: "Decklid Spoiler",
-        price: 322,
+        name: "Body Side Molding",
+        price: 242,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
         serial: "ea2",
       },
-      { name: "Door Edge Film", price: 54, trim: ["tt1"], serial: "ea3" },
-      { name: "Door Edge Guard", price: 124, trim: ["tt1"], serial: "ea4" },
-      { name: "Door Handle Film", price: 54, trim: ["tt1"], serial: "ea5" },
-      { name: "Ext Accs TT1", price: 0, trim: ["tt1"], serial: "ea6" },
-      { name: "Ext Accs TT2", price: 0, trim: ["tt1"], serial: "ea7" },
-      { name: "Ext Accs TT3", price: 0, trim: ["tt3"], serial: "ea8" },
-      { name: "Ext Accs  TT4", price: 0, trim: ["tt4"], serial: "ea9" },
-      { name: "Ext Accs TT5", price: 0, trim: ["tt5"], serial: "ea10" },
-      { name: "Ext Accs  TT6", price: 0, trim: ["tt6"], serial: "ea11" },
-      { name: "Ext Accs  TT7", price: 0, trim: ["tt7"], serial: "ea12" },
+      {
+        name: "Car Cover",
+        price: 375,
+        trim: ["tt8"],
+        serial: "e3",
+      },
+
+      {
+        name: "Decklid Spoiler-HPD",
+        price: 322,
+        trim: ["tt1", "tt2", "tt3"],
+        serial: "ea4",
+      },
+      {
+        name: "Door Edge Film",
+        price: 54,
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
+        serial: "ea5",
+      },
+      {
+        name: "Door Edge Guard",
+        price: 124,
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
+        serial: "ea6",
+      },
+      {
+        name: "Door Handle Film",
+        price: 54,
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
+        serial: "ea7",
+      },
+      {
+        name: "Door Visors",
+        price: 227,
+        trim: ["tt8"],
+        serial: "ea8",
+      },
+
+      {
+        name: "Door Visors-Black",
+        price: 231,
+        trim: ["tt1", "tt4", "tt7"],
+        serial: "ea9",
+      },
+      {
+        name: "Door Visors-Chrome",
+        price: 231,
+        trim: ["tt2", "tt3", "tt5", "tt6"],
+        serial: "ea10",
+      },
+      {
+        name: "Emblem-HPD",
+        price: 43,
+        trim: ["tt4", "tt5", "tt6", "tt7"],
+        serial: "ea11",
+      },
+      {
+        name: "Emblems, Front & Rear-H-Mark",
+        price: 113,
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
+        serial: "ea12",
+      },
+      {
+        name: "Emblem, Sport-Gloss Black",
+        price: 40,
+        trim: ["tt1", "tt4"],
+        serial: "ea13",
+      },
+      {
+        name: "Kayak Attachment",
+        price: 264,
+        trim: ["tt4", "tt5", "tt6", "tt8"],
+        serial: "ea14",
+      },
+      {
+        name: "Moonroof Visor",
+        price: 167,
+        trim: ["tt2", "tt3", "tt5", "tt6", "tt7"],
+        serial: "ea15",
+      },
+      {
+        name: "Rear Bumper Applique",
+        price: 76,
+        trim: ["tt1", "tt2", "tt3", "tt7"],
+        serial: "ea16",
+      },
+      {
+        name: "Rear Bumper Protector",
+        price: 95,
+        trim: ["tt4", "tt5", "tt6"],
+        serial: "ea17",
+      },
+      {
+        name: "Roof Basket",
+        price: 404,
+        trim: ["tt4", "tt5", "tt6", "tt8"],
+        serial: "ea18",
+      },
+
+      {
+        name: "Roof Box-Midsize",
+        price: 555,
+        trim: ["tt4", "tt5", "tt6", "tt8"],
+        serial: "ea19",
+      },
+      {
+        name: "Roof Box-Short",
+        price: 523,
+        trim: ["tt4", "tt5", "tt6", "tt8"],
+        serial: "ea20",
+      },
+      {
+        name: "Roof Rack",
+        price: 399,
+        trim: ["tt4", "tt5", "tt6", "tt8"],
+        serial: "ea21",
+      },
+      {
+        name: "Ski/Snowboard Attachment",
+        price: 262,
+        trim: ["tt4", "tt5", "tt6", "tt8"],
+        serial: "ea22",
+      },
+      {
+        name: "Surf/Paddleboard Attachment",
+        price: 169,
+        trim: ["tt4", "tt5", "tt6", "tt8"],
+        serial: "ea23",
+      },
+      {
+        name: "Splash Guard Set",
+        price: 113,
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
+        serial: "ea24",
+      },
+      {
+        name: "Tailgate Spoiler-HPD",
+        price: 399,
+        trim: ["tt4", "tt5", "tt6"],
+        serial: "ea25",
+      },
+
+      {
+        name: "Underbody Spoiler-HPD Front",
+        price: 357,
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
+        serial: "ea26",
+      },
+      {
+        name: "Underbody Spoiler-HPD Rear",
+        price: 322,
+        trim: ["tt1", "tt2", "tt3", "tt7"],
+        serial: "ea27",
+      },
+      {
+        name: "Underbody Spoiler-HPD Side",
+        price: 408,
+        trim: ["tt1", "tt2", "tt3", "tt7"],
+        serial: "ea28",
+      },
+      {
+        name: "Valve Stem Caps",
+        price: 113,
+        trim: ["tt4", "tt5", "tt6", "tt7"],
+        serial: "ea29",
+      },
+      {
+        name: "Wheel Locks-Black",
+        price: 92,
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
+        serial: "ea30",
+      },
+      {
+        name: "Wheel Locks-Chrome",
+        price: 63,
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
+        serial: "ea16",
+      },
+      {
+        name: "Wheel Lug Nuts-Black",
+        price: 51,
+        trim: ["tt1", "tt2", "tt3"],
+        serial: "ea31",
+      },
+      {
+        name: "Wheel Lug Nuts-Black",
+        price: 190,
+        trim: ["tt4", "tt5", "tt6", "tt7"],
+        serial: "ea32",
+      },
+      {
+        name: "Wing Spoiler-Carbon Fiber",
+        price: 2250,
+        trim: ["tt8"],
+        serial: "ea33",
+      },
     ],
   },
   {
@@ -420,31 +514,99 @@ export const dummyOptionsData = [
       {
         name: "All Season Floor Mats",
         price: 183,
-        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ia1",
       },
       {
-        name: "Body Side Moulding",
-        price: 242,
-        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
+        name: "Cargo Hook",
+        price: 14,
+        trim: ["tt1", "tt2", "tt3", "tt7"],
         serial: "ia2",
       },
-      { name: "Cargo Hook", price: 14, trim: ["tt1"], serial: "ia3" },
-      { name: "Cargo Net", price: 54, trim: ["tt1"], serial: "ia4" },
-      { name: "Carpet Floor Mats", price: 194, trim: ["tt1"], serial: "ia5" },
+      {
+        name: "Cargo Net",
+        price: 54,
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
+        serial: "ia3",
+      },
+      {
+        name: "Cargo Tray",
+        price: 121,
+        trim: ["tt4", "tt5", "tt6", "tt8"],
+        serial: "ia3",
+      },
+      {
+        name: "Cargo Tray Dividers",
+        price: 65,
+        trim: ["tt4", "tt5", "tt6", "tt8"],
+        serial: "ia3",
+      },
+      {
+        name: "Contoured High-Wall Carpet Floor Mats",
+        price: 194,
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
+        serial: "ia4",
+      },
       {
         name: "Door Sill Protection Film",
         price: 108,
-        trim: ["tt1"],
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
         serial: "ia6",
       },
-      { name: "Int Accs TT1", price: 0, trim: ["tt1"], serial: "ia7" },
-      { name: "Int Accs TT2", price: 0, trim: ["tt1"], serial: "ia8" },
-      { name: "Int Accs TT3", price: 0, trim: ["tt3"], serial: "ia9" },
-      { name: "Int Accs  TT4", price: 0, trim: ["tt4"], serial: "ia10" },
-      { name: "Int Accs TT5", price: 0, trim: ["tt5"], serial: "ia11" },
-      { name: "Int Accs  TT6", price: 0, trim: ["tt6"], serial: "ia12" },
-      { name: "int Accs  TT7", price: 0, trim: ["tt7"], serial: "ia13" },
+      {
+        name: "Door Sill Trim Illuminated",
+        price: 322,
+        trim: ["tt4", "tt5", "tt6", "tt7", "tt8"],
+        serial: "ia6",
+      },
+      {
+        name: "First Aid Kit",
+        price: 34,
+        trim: ["tt1", "tt2", "tt3"],
+        serial: "ia7",
+      },
+      {
+        name: "Illuminated Door Sill Trim-Red",
+        price: 322,
+        trim: ["tt1", "tt2", "tt3"],
+        serial: "ia8",
+      },
+      {
+        name: "Rear Passenger Window Shades",
+        price: 188,
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
+        serial: "ia9",
+      },
+      {
+        name: "Seat Back Protectors",
+        price: 106,
+        trim: ["tt4", "tt5", "tt6", "tt8"],
+        serial: "ia6",
+      },
+      {
+        name: "Shift Knob",
+        price: 225,
+        trim: ["tt8"],
+        serial: "ia6",
+      },
+      {
+        name: "Steering Wheel-Alcantara",
+        price: 400,
+        trim: ["tt8"],
+        serial: "ia6",
+      },
+      {
+        name: "Trunk Tray",
+        price: 124,
+        trim: ["tt1", "tt2", "tt3", "tt7"],
+        serial: "ia10",
+      },
+      {
+        name: "Trunk Tray Dividers",
+        price: 65,
+        trim: ["tt1", "tt2", "tt3", "tt7"],
+        serial: "ia11",
+      },
     ],
   },
   {
@@ -454,12 +616,116 @@ export const dummyOptionsData = [
       {
         name: "Engine Block Heater",
         price: 90,
-        trim: ["tt1"],
+        trim: ["tt1", "tt2", "tt3", "tt4", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "elec1",
       },
     ],
   },
 ];
+
+//Retrieve options available, as well as default options selected
+export const trimSelected = (trim, serialSelected) => {
+  //Retrieve all options available, per trim selected
+  var optionsAvailable = dummyOptionsData.map((option) => {
+    return {
+      ...option,
+      choicesAvailable: option.choicesAvailable.filter((choice) =>
+        choice.trim.includes(serialSelected)
+      ),
+    };
+  });
+  //Create default selected object, w/ blank choicesSelected
+  var optionsSelected = dummyOptionsData.map((option) => {
+    return { groupName: option.name, choicesSelected: [] };
+  });
+
+  var optionsData = {
+    available: optionsAvailable,
+    selected: optionsSelected,
+  };
+  return optionsData;
+};
+
+//Test function
+export const handleOptionSelected = (vehicle, groupName, serial) => {
+  console.log(groupName + "--" + serial);
+  //Create local var to store current vehicle info
+  var updatedVehicle = { ...vehicle };
+
+  //Retrieve the option group data
+  var optionGroup = dummyOptionsData.find((e) => e.name === groupName);
+
+  //Retrieve the actual option selected
+  var optionSelected = optionGroup.choicesAvailable.find(
+    (c) => c.serial === serial
+  );
+  //Check if any special action required for the option selected
+  if ("action" in optionSelected) {
+    //Adjust vehicle for the special action required for this option selection
+    updatedVehicle = optionSelected.action(
+      vehicle,
+      optionGroup.type,
+      groupName,
+      serial
+    );
+  } else {
+    updatedVehicle = addOptionSelected(
+      vehicle,
+      optionGroup.type,
+      groupName,
+      serial
+    );
+  }
+  return updatedVehicle;
+};
+
+//Test function
+function addOptionSelected(vehicle, optionType, groupName, serial) {
+  const updatedVehicle = { ...vehicle };
+  const optionGroup = updatedVehicle.selected.options.find(
+    (os) => os.groupName === groupName
+  );
+
+  switch (optionType) {
+    case "Single":
+      optionGroup.choicesSelected = addSingleOption(groupName, serial);
+      break;
+    case "Multiple":
+      // Check if object with serial value already exists in array
+      const objectExists = optionGroup.choicesSelected.some(
+        (choice) => choice.serial === serial
+      );
+      if (!objectExists) {
+        optionGroup.choicesSelected = [
+          ...optionGroup.choicesSelected,
+          dummyOptionsData
+            .find((e) => e.name === groupName)
+            .choicesAvailable.find((c) => c.serial === serial),
+        ];
+      }
+      break;
+  }
+  console.log(updatedVehicle);
+  return updatedVehicle;
+}
+
+//Use a Map to store the option groups and choices available, so that you can look up these values more efficiently
+const optionGroups = new Map(dummyOptionsData.map((e) => [e.name, e]));
+
+//Helper Function
+function addSingleOption(groupName, serial) {
+  const optionsGroup = optionGroups.get(groupName);
+  return [optionsGroup.choicesAvailable.find((c) => c.serial === serial)];
+}
+
+//Placeholder function for
+function addMultipleOption(groupName, serial) {
+  return [
+    dummyOptionsData
+      .find((e) => e.name === groupName)
+      .choicesAvailable.find((c) => c.serial === serial),
+  ];
+}
 
 //Helper function to handle any special actions when Exterior Color selected
 function exteriorColorAction(vehicle, groupType, groupName, serial) {
