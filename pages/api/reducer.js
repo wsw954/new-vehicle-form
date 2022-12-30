@@ -53,7 +53,7 @@ const reducer = (vehicle, action) => {
         vehicle.selected.make.toLowerCase() +
         "/" +
         vehicle.selected.model.toLowerCase() +
-        "/options");
+        "/validate");
       //Retrieve options available per trim, as well as default options selected
       var optionsData = dataFile.trimSelected(
         action.payload.trimSelected,
@@ -75,7 +75,7 @@ const reducer = (vehicle, action) => {
         vehicle.selected.make.toLowerCase() +
         "/" +
         vehicle.selected.model.toLowerCase() +
-        "/options");
+        "/validate");
 
       var updatedVehicle = dataFile.handleOptionSelected(
         vehicle,

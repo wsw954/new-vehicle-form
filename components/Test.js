@@ -10,10 +10,8 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
     <div key={index}>
       <input
         type="checkbox"
-        // Set the checked attribute based on whether the current checkbox element is in the choicesSelected array
-        checked={choicesSelected.some(
-          (selectedChoice) => selectedChoice.serial === choice.serial
-        )}
+        value={choicesSelected.length > 0 ? choicesSelected[0].name : ""}
+        name={name}
         // Use the map method to attach the onChange event handler to each checkbox element
         onChange={(event) =>
           onChange(

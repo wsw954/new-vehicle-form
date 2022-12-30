@@ -9,7 +9,7 @@ export const trims = [
   { name: "Type R", price: 42895, serial: "tt8" },
 ];
 
-export const dummyOptionsData = [
+export const modelOptions = [
   {
     name: "Powertrain",
     type: "Single",
@@ -55,72 +55,63 @@ export const dummyOptionsData = [
         price: 0,
         trim: ["tt1", "tt2", "tt3", "tt7"],
         serial: "ec1",
-        action: (vehicle, groupType, groupName, serial) =>
-          exteriorColorAction(vehicle, groupType, groupName, serial),
+        action: true,
       },
       {
         name: "Crystal Pearl Black",
         price: 0,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ec2",
-        action: (vehicle, groupType, groupName, serial) =>
-          exteriorColorAction(vehicle, groupType, groupName, serial),
+        action: true,
       },
       {
         name: "Lunar Silver Metallic",
         price: 0,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6"],
         serial: "ec3",
-        action: (vehicle, groupType, groupName, serial) =>
-          exteriorColorAction(vehicle, groupType, groupName, serial),
+        action: true,
       },
       {
         name: "Meteorite Gray Metallic",
         price: 0,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6"],
         serial: "ec4",
-        action: (vehicle, groupType, groupName, serial) =>
-          exteriorColorAction(vehicle, groupType, groupName, serial),
+        action: true,
       },
       {
         name: "Rallye Red",
         price: 0,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ec5",
-        action: (vehicle, groupType, groupName, serial) =>
-          exteriorColorAction(vehicle, groupType, groupName, serial),
+        action: true,
       },
       {
         name: "Blazing Orange Pearl",
         price: 395,
         trim: ["tt7"],
         serial: "ec6",
-        action: (vehicle, groupType, groupName, serial) =>
-          exteriorColorAction(vehicle, groupType, groupName, serial),
+        action: true,
       },
       {
         name: "Boost Blue Pearl",
         price: 395,
         trim: ["tt5", "tt6", "tt8"],
         serial: "ec7",
-        action: (vehicle, groupType, groupName, serial) =>
-          exteriorColorAction(vehicle, groupType, groupName, serial),
+        action: true,
       },
       {
         name: "Championship White",
         price: 395,
         trim: ["tt8"],
         serial: "ec8",
-        action: (vehicle, groupType, groupName, serial) =>
-          exteriorColorAction(vehicle, groupType, groupName, serial),
+        action: true,
       },
       {
         name: "Morning Mist Metallic",
         price: 395,
         trim: ["tt2", "tt3"],
         serial: "ec9",
-        action: (vehicle, groupType, groupName, serial) =>
-          exteriorColorAction(vehicle, groupType, groupName, serial),
+        action: true,
       },
 
       {
@@ -128,24 +119,21 @@ export const dummyOptionsData = [
         price: 395,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt4", "tt5", "tt6", "tt7"],
         serial: "ec10",
-        action: (vehicle, groupType, groupName, serial) =>
-          exteriorColorAction(vehicle, groupType, groupName, serial),
+        action: true,
       },
       {
         name: "Smoky Mauve Pearl",
         price: 395,
         trim: ["tt4", "tt6"],
         serial: "ec11",
-        action: (vehicle, groupType, groupName, serial) =>
-          exteriorColorAction(vehicle, groupType, groupName, serial),
+        action: true,
       },
       {
         name: "Sonic Gray Pearl",
         price: 395,
         trim: ["tt1", "tt5", "tt6", "tt7", "tt8"],
         serial: "ec12",
-        action: (vehicle, groupType, groupName, serial) =>
-          exteriorColorAction(vehicle, groupType, groupName, serial),
+        action: true,
       },
     ],
   },
@@ -622,163 +610,3 @@ export const dummyOptionsData = [
     ],
   },
 ];
-
-//Retrieve options available, as well as default options selected
-export const trimSelected = (trim, serialSelected) => {
-  //Retrieve all options available, per trim selected
-  var optionsAvailable = dummyOptionsData.map((option) => {
-    return {
-      ...option,
-      choicesAvailable: option.choicesAvailable.filter((choice) =>
-        choice.trim.includes(serialSelected)
-      ),
-    };
-  });
-  //Create default selected object, w/ blank choicesSelected
-  var optionsSelected = dummyOptionsData.map((option) => {
-    return { groupName: option.name, choicesSelected: [] };
-  });
-
-  var optionsData = {
-    available: optionsAvailable,
-    selected: optionsSelected,
-  };
-  return optionsData;
-};
-
-//Test function
-export const handleOptionSelected = (vehicle, groupName, serial) => {
-  console.log(groupName + "--" + serial);
-  //Create local var to store current vehicle info
-  var updatedVehicle = { ...vehicle };
-
-  //Retrieve the option group data
-  var optionGroup = dummyOptionsData.find((e) => e.name === groupName);
-
-  //Retrieve the actual option selected
-  var optionSelected = optionGroup.choicesAvailable.find(
-    (c) => c.serial === serial
-  );
-  //Check if any special action required for the option selected
-  if ("action" in optionSelected) {
-    //Adjust vehicle for the special action required for this option selection
-    updatedVehicle = optionSelected.action(
-      vehicle,
-      optionGroup.type,
-      groupName,
-      serial
-    );
-  } else {
-    updatedVehicle = addOptionSelected(
-      vehicle,
-      optionGroup.type,
-      groupName,
-      serial
-    );
-  }
-  return updatedVehicle;
-};
-
-//Test function
-function addOptionSelected(vehicle, optionType, groupName, serial) {
-  const updatedVehicle = { ...vehicle };
-  const optionGroup = updatedVehicle.selected.options.find(
-    (os) => os.groupName === groupName
-  );
-
-  switch (optionType) {
-    case "Single":
-      optionGroup.choicesSelected = addSingleOption(groupName, serial);
-      break;
-    case "Multiple":
-      // Check if object with serial value already exists in array
-      const objectExists = optionGroup.choicesSelected.some(
-        (choice) => choice.serial === serial
-      );
-      if (!objectExists) {
-        optionGroup.choicesSelected = [
-          ...optionGroup.choicesSelected,
-          dummyOptionsData
-            .find((e) => e.name === groupName)
-            .choicesAvailable.find((c) => c.serial === serial),
-        ];
-      }
-      break;
-  }
-  console.log(updatedVehicle);
-  return updatedVehicle;
-}
-
-//Use a Map to store the option groups and choices available, so that you can look up these values more efficiently
-const optionGroups = new Map(dummyOptionsData.map((e) => [e.name, e]));
-
-//Helper Function
-function addSingleOption(groupName, serial) {
-  const optionsGroup = optionGroups.get(groupName);
-  return [optionsGroup.choicesAvailable.find((c) => c.serial === serial)];
-}
-
-//Placeholder function for
-function addMultipleOption(groupName, serial) {
-  return [
-    dummyOptionsData
-      .find((e) => e.name === groupName)
-      .choicesAvailable.find((c) => c.serial === serial),
-  ];
-}
-
-//Helper function to handle any special actions when Exterior Color selected
-function exteriorColorAction(vehicle, groupType, groupName, serial) {
-  //Outer switch to handle specified trim
-  switch (vehicle.selected.trim) {
-    case "Sedan Sport":
-      //For Sedan Sport, the only Interior Color available is Black Cloth
-      //Change the Interior Colors available to be only  Black Cloth
-      vehicle.options.find(
-        (a) => a.name === "Interior Color"
-      ).choicesAvailable = dummyOptionsData
-        .find((e) => e.name === "Interior Color")
-        .choicesAvailable.slice(0, 1);
-      return addOptionSelected(vehicle, groupType, groupName, serial);
-      break;
-    case "Sedan EX":
-      //Only ec9 results in two available options for Interior Color
-      if (serial === "ec10") {
-        //Change the Interior Colors available to be BOTH Gray Cloth & Black Cloth
-        vehicle.options.find(
-          (a) => a.name === "Interior Color"
-        ).choicesAvailable = dummyOptionsData
-          .find((e) => e.name === "Interior Color")
-          .choicesAvailable.slice(0, 2);
-        return addOptionSelected(vehicle, groupType, groupName, serial);
-      } else {
-        //Change the Interior Colors available to be only  Black Cloth
-        vehicle.options.find(
-          (a) => a.name === "Interior Color"
-        ).choicesAvailable = dummyOptionsData
-          .find((e) => e.name === "Interior Color")
-          .choicesAvailable.slice(0, 1);
-        return addOptionSelected(vehicle, groupType, groupName, serial);
-      }
-      break;
-    case "Sedan Touring":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
-
-      break;
-    case "Hatchback Sport":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
-      break;
-    case "Hatcback EX-L":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
-      break;
-    case "Hatchbac Sport Touring":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
-      break;
-    case "Si":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
-      break;
-    case "Type R":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
-      break;
-  }
-}
