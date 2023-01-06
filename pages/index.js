@@ -59,14 +59,13 @@ export default function Home() {
   };
 
   //Helper function
-  const handleOptionSelected = (groupName, name, serial) => {
+  const handleOptionSelected = (selected, deselected) => {
     //Add code to handle option selected
     dispatch({
       type: "OPTION_SELECTED",
       payload: {
-        groupName: groupName,
-        name: name,
-        serial: serial,
+        selected: selected,
+        deselected: deselected,
       },
     });
   };

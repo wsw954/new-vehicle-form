@@ -20,13 +20,12 @@ export const trimSelected = (trim, serialSelected) => {
     available: optionsAvailable,
     selected: optionsSelected,
   };
-  console.log("Line 23 in data/honda/civic/validate");
+
   return optionsData;
 };
 
 //Helper function
 export const handleOptionSelected = (vehicle, groupName, serial) => {
-  console.log(groupName + "--" + serial);
   //Create local var to store current vehicle info
   var updatedVehicle = { ...vehicle };
 
@@ -57,7 +56,7 @@ export const handleOptionSelected = (vehicle, groupName, serial) => {
   return updatedVehicle;
 };
 
-//Test function
+//Add option selected
 function addOptionSelected(vehicle, optionType, groupName, serial) {
   const updatedVehicle = { ...vehicle };
   const optionGroup = updatedVehicle.selected.options.find(

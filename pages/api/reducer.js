@@ -79,10 +79,11 @@ const reducer = (vehicle, action) => {
 
       var updatedVehicle = dataFile.handleOptionSelected(
         vehicle,
-        action.payload.groupName,
-        action.payload.serial
+        action.payload.selected,
+        action.payload.deselected
       );
       vehicle = updatedVehicle;
+
       return {
         ...vehicle,
         options: updatedVehicle.options,

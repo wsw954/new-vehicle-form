@@ -27,21 +27,42 @@ export const trimSelected = (trim, serialSelected) => {
   return optionsData;
 };
 
-export const handleOptionSelected = (vehicle, groupName, serial) => {
-  // Retrieve the option group data
-  const optionGroup = optionGroups.get(groupName);
-  // Retrieve the actual option selected
+export const handleOptionSelected = (vehicle, selected, deselected) => {
+  //Retrieve the option group data
+  const optionGroup = optionGroups.get(selected.groupName);
+  // // Retrieve the actual option selected
   const optionSelected = optionGroup.choicesAvailable.find(
-    (c) => c.serial === serial
+    (c) => c.serial === selected.serial
   );
 
-  // Check if any special action required for the option selected
   if ("action" in optionSelected) {
     // Adjust vehicle for the special action required for this option selection
-    return specialActionHandler(vehicle, optionGroup.type, groupName, serial);
+    return specialAddActionHandler(
+      vehicle,
+      optionGroup.type,
+      selected.groupName,
+      selected.serial
+    );
   } else {
-    return addOptionSelected(vehicle, optionGroup.type, groupName, serial);
+    return addOptionSelected(
+      vehicle,
+      optionGroup.type,
+      selected.groupName,
+      selected.serial
+    );
   }
+
+  // if (deselected.name != "") {
+  //   // Adjust vehicle for the special action required for this option selection
+  //   return specialDeleteActionHandler(
+  //     vehicle,
+  //     optionGroup.type,
+  //     groupName,
+  //     serial
+  //   );
+  // } else {
+  //   return deleteOptionSelected(vehicle, optionGroup.type, groupName, serial);
+  // }
 };
 
 function addOptionSelected(vehicle, optionType, groupName, serial) {
@@ -73,14 +94,29 @@ function addOptionSelected(vehicle, optionType, groupName, serial) {
   return updatedVehicle;
 }
 
+function deleteOptionSelected(vehicle, optionType, groupName, serial) {
+  //Yet to fill in appropriat code here
+  const updatedVehicle = { ...vehicle };
+
+  return updatedVehicle;
+}
+
 //Helper Function
 function addSingleOption(groupName, serial) {
   const optionsGroup = optionGroups.get(groupName);
+
+  return [optionsGroup.choicesAvailable.find((c) => c.serial === serial)];
+}
+
+//Helper Function
+function deleteSingleOption(groupName, serial) {
+  const optionsGroup = optionGroups.get(groupName);
+
   return [optionsGroup.choicesAvailable.find((c) => c.serial === serial)];
 }
 
 //Handle all options w/ special actions
-function specialActionHandler(vehicle, groupType, groupName, serial) {
+function specialAddActionHandler(vehicle, groupType, groupName, serial) {
   switch (groupName) {
     case "Powertrain":
       return addOptionSelected(vehicle, groupType, groupName, serial);
@@ -104,6 +140,12 @@ function specialActionHandler(vehicle, groupType, groupName, serial) {
       return addOptionSelected(vehicle, groupType, groupName, serial);
       break;
   }
+}
+
+//Handle all options w/ special actions
+function specialDeleteActionHandler(vehicle, groupType, groupName, serial) {
+  //Yet to fill in appropriate code here
+  return vehicle;
 }
 
 //Helper function to handle any special actions when Exterior Color selected

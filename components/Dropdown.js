@@ -57,6 +57,11 @@ export default function DropDropdown({
 
       break;
     default:
+      var deselected = {
+        groupName: "",
+        name: "",
+        serial: "",
+      };
       //Handles vehicle options selection
       if (
         vehicle.selected.options.find((o) => o.groupName === name)
@@ -65,6 +70,12 @@ export default function DropDropdown({
         initialValue = vehicle.selected.options.find(
           (o) => o.groupName === name
         ).choicesSelected[0].name;
+        deselected = {
+          groupName: name,
+          name: initialValue,
+          serial: vehicle.selected.options.find((o) => o.groupName === name)
+            .choicesSelected[0].serial,
+        };
       }
 
       choiceOptions = choices.map((choice, index) => (
@@ -78,11 +89,22 @@ export default function DropDropdown({
           {choice.name + "-price-$" + choice.price}
         </option>
       ));
+
       handleChange = (event) => {
+        if (
+          vehicle.selected.options.find((o) => o.groupName === name)
+            .choicesSelected.length === 0
+        ) {
+        }
+
         onChange(
-          event.target.selectedOptions[0].getAttribute("data-option-group"),
-          event.target.value,
-          event.target.selectedOptions[0].getAttribute("data-serial")
+          {
+            groupName:
+              event.target.selectedOptions[0].getAttribute("data-option-group"),
+            name: event.target.value,
+            serial: event.target.selectedOptions[0].getAttribute("data-serial"),
+          },
+          deselected
         );
       };
       break;
