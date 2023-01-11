@@ -1,7 +1,7 @@
 import { modelOptions } from "/data/honda/civic/options";
 
 //Use a Map to store the option groups and choices available, so that you can look up these values more efficiently
-const optionGroups = new Map(modelOptions.map((e) => [e.name, e]));
+const optionGrpAvailable = new Map(modelOptions.map((e) => [e.name, e]));
 
 //Retrieve options available, as well as default options selected
 export const trimSelected = (trim, serialSelected) => {
@@ -27,70 +27,68 @@ export const trimSelected = (trim, serialSelected) => {
   return optionsData;
 };
 
-export const handleOptionSelected = (vehicle, selected, deselected) => {
-  //Retrieve the option group data
-  const optionGroup = optionGroups.get(selected.groupName);
-  // // Retrieve the actual option selected
-  const optionSelected = optionGroup.choicesAvailable.find(
-    (c) => c.serial === selected.serial
-  );
+//Main function to handle an option selection/deselection
+export const handleOptionSelected = (
+  vehicle,
+  optionType,
+  selected,
+  deselected
+) => {
+  if (optionType.optionType === "Single") {
+    const optionGroup = optionGrpAvailable.get(selected.groupName);
+    //Retrieve the actual option selected
+    const optionSelected = optionGroup.choicesAvailable.find(
+      (c) => c.serial === selected.serial
+    );
 
-  if ("action" in optionSelected) {
-    // Adjust vehicle for the special action required for this option selection
-    return specialAddActionHandler(
-      vehicle,
-      optionGroup.type,
-      selected.groupName,
-      selected.serial
-    );
-  } else {
-    return addOptionSelected(
-      vehicle,
-      optionGroup.type,
-      selected.groupName,
-      selected.serial
-    );
+    if ("action" in optionSelected) {
+      // Adjust vehicle for the special action required for this option selection
+      return specialAddActionHandler(
+        vehicle,
+        selected.groupName,
+        selected.serial
+      );
+    } else {
+      return addSingleOption(vehicle, optionGroup.name, optionSelected.serial);
+    }
+  } else if (optionType === "Multiple" && selected.name != "") {
+    return addMultipleOption(vehicle, groupName, serial);
   }
-
-  // if (deselected.name != "") {
-  //   // Adjust vehicle for the special action required for this option selection
-  //   return specialDeleteActionHandler(
-  //     vehicle,
-  //     optionGroup.type,
-  //     groupName,
-  //     serial
-  //   );
-  // } else {
-  //   return deleteOptionSelected(vehicle, optionGroup.type, groupName, serial);
-  // }
 };
 
-function addOptionSelected(vehicle, optionType, groupName, serial) {
+//Handles option of type Single
+function addSingleOption(vehicle, groupName, serial) {
   const updatedVehicle = { ...vehicle };
   const optionGroup = updatedVehicle.selected.options.find(
     (os) => os.groupName === groupName
   );
+  optionGroup.choicesSelected = [
+    optionGrpAvailable
+      .get(groupName)
+      .choicesAvailable.find((c) => c.serial === serial),
+  ];
 
-  switch (optionType) {
-    case "Single":
-      optionGroup.choicesSelected = addSingleOption(groupName, serial);
-      break;
-    case "Multiple":
-      // Check if object with serial value already exists in array
-      const objectExists = optionGroup.choicesSelected.some(
-        (choice) => choice.serial === serial
-      );
-      if (!objectExists) {
-        optionGroup.choicesSelected = [
-          ...optionGroup.choicesSelected,
-          modelOptions
-            .find((e) => e.name === groupName)
-            .choicesAvailable.find((c) => c.serial === serial),
-        ];
-      }
-      break;
+  return updatedVehicle;
+}
+
+//Handles option of type Multiple
+function addMultipleOption(vehicle, groupName, serial) {
+  const updatedVehicle = { ...vehicle };
+  const optionGroup = updatedVehicle.selected.options.find(
+    (os) => os.groupName === groupName
+  );
+  // Check if object with serial value already exists in array
+  const objectExists = optionGroup.choicesSelected.some(
+    (choice) => choice.serial === serial
+  );
+  if (!objectExists) {
+    optionGroup.choicesSelected = [
+      ...optionGroup.choicesSelected,
+      modelOptions
+        .find((e) => e.name === groupName)
+        .choicesAvailable.find((c) => c.serial === serial),
+    ];
   }
-
   return updatedVehicle;
 }
 
@@ -102,42 +100,35 @@ function deleteOptionSelected(vehicle, optionType, groupName, serial) {
 }
 
 //Helper Function
-function addSingleOption(groupName, serial) {
-  const optionsGroup = optionGroups.get(groupName);
-
-  return [optionsGroup.choicesAvailable.find((c) => c.serial === serial)];
-}
-
-//Helper Function
 function deleteSingleOption(groupName, serial) {
-  const optionsGroup = optionGroups.get(groupName);
+  const optionsGroup = optionGrpAvailable.get(groupName);
 
   return [optionsGroup.choicesAvailable.find((c) => c.serial === serial)];
 }
 
 //Handle all options w/ special actions
-function specialAddActionHandler(vehicle, groupType, groupName, serial) {
+function specialAddActionHandler(vehicle, groupName, serial) {
   switch (groupName) {
     case "Powertrain":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
+      return addSingleOption(vehicle, groupName, serial);
       break;
     case "Exterior Color":
-      return exteriorColorAction(vehicle, groupType, groupName, serial);
+      return exteriorColorAction(vehicle, groupName, serial);
       break;
     case "Interior Color":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
+      return addSingleOption(vehicle, groupName, serial);
       break;
     case "Wheels":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
+      return addSingleOption(vehicle, groupName, serial);
       break;
     case "Packages":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
+      return addSingleOption(vehicle, groupName, serial);
       break;
     case "Exterior Accessories":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
+      return addSingleOption(vehicle, groupName, serial);
       break;
     case "Interior Accessories":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
+      return addSingleOption(vehicle, groupName, serial);
       break;
   }
 }
@@ -149,7 +140,7 @@ function specialDeleteActionHandler(vehicle, groupType, groupName, serial) {
 }
 
 //Helper function to handle any special actions when Exterior Color selected
-function exteriorColorAction(vehicle, groupType, groupName, serial) {
+function exteriorColorAction(vehicle, groupName, serial) {
   //Outer switch to handle specified trim
   switch (vehicle.selected.trim) {
     case "Sedan Sport":
@@ -160,7 +151,7 @@ function exteriorColorAction(vehicle, groupType, groupName, serial) {
       ).choicesAvailable = modelOptions
         .find((e) => e.name === "Interior Color")
         .choicesAvailable.slice(0, 1);
-      return addOptionSelected(vehicle, groupType, groupName, serial);
+      return addSingleOption(vehicle, groupName, serial);
       break;
     case "Sedan EX":
       //Only ec10 results in two available options for Interior Color
@@ -171,7 +162,7 @@ function exteriorColorAction(vehicle, groupType, groupName, serial) {
         ).choicesAvailable = modelOptions
           .find((e) => e.name === "Interior Color")
           .choicesAvailable.slice(0, 2);
-        return addOptionSelected(vehicle, groupType, groupName, serial);
+        return addSingleOption(vehicle, groupName, serial);
       } else {
         //Change the Interior Colors available to be only  Black Cloth
         vehicle.options.find(
@@ -179,27 +170,27 @@ function exteriorColorAction(vehicle, groupType, groupName, serial) {
         ).choicesAvailable = modelOptions
           .find((e) => e.name === "Interior Color")
           .choicesAvailable.slice(0, 1);
-        return addOptionSelected(vehicle, groupType, groupName, serial);
+        return addSingleOption(vehicle, groupName, serial);
       }
       break;
     case "Sedan Touring":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
+      return addSingleOption(vehicle, groupName, serial);
 
       break;
     case "Hatchback Sport":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
+      return addSingleOption(vehicle, groupName, serial);
       break;
     case "Hatcback EX-L":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
+      return addSingleOption(vehicle, groupName, serial);
       break;
     case "Hatchback Sport Touring":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
+      return addSingleOption(vehicle, groupName, serial);
       break;
     case "Si":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
+      return addSingleOption(vehicle, groupName, serial);
       break;
     case "Type R":
-      return addOptionSelected(vehicle, groupType, groupName, serial);
+      return addSingleOption(vehicle, groupName, serial);
       break;
   }
 }

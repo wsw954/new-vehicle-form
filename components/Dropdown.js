@@ -62,7 +62,7 @@ export default function DropDropdown({
         name: "",
         serial: "",
       };
-      //Handles vehicle options selection
+      //Assigns value for deselected option
       if (
         vehicle.selected.options.find((o) => o.groupName === name)
           .choicesSelected.length > 0
@@ -91,13 +91,8 @@ export default function DropDropdown({
       ));
 
       handleChange = (event) => {
-        if (
-          vehicle.selected.options.find((o) => o.groupName === name)
-            .choicesSelected.length === 0
-        ) {
-        }
-
         onChange(
+          { optionType: "Single" },
           {
             groupName:
               event.target.selectedOptions[0].getAttribute("data-option-group"),

@@ -6,18 +6,52 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
     (o) => o.groupName === name
   );
   const choicesSelected = optionGroup.choicesSelected;
+  var deselected = {
+    groupName: "",
+    name: "",
+    serial: "",
+  };
 
   // Use the useState hook to store the state of the checkbox
   const [isChecked, setIsChecked] = useState(false);
 
+  // const handleChange = (event) => {
+  //   // Update the value of the isChecked state variable based on the checked attribute of the checkbox
+  //   setIsChecked(!isChecked);
+  //   onChange(
+  //     {
+  //       groupName: event.target.getAttribute("data-option-group"),
+  //       name: event.target.value,
+  //       serial: event.target.getAttribute("data-serial"),
+  //     },
+  //     { groupName: "", name: "", serial: "" }
+  //   );
+  // };
   const handleChange = (event) => {
-    // Update the value of the isChecked state variable based on the checked attribute of the checkbox
-    setIsChecked(!isChecked);
-    onChange(
-      event.target.getAttribute("data-option-group"),
-      event.target.value,
-      event.target.getAttribute("data-serial")
-    );
+    if (!isChecked) {
+      onChange(
+        { optionType: "Multiple" },
+        {
+          groupName: event.target.getAttribute("data-option-group"),
+          name: event.target.value,
+          serial: event.target.getAttribute("data-serial"),
+        },
+        deselected
+      );
+      setIsChecked(true);
+    } else {
+      onChange(
+        {
+          deselected,
+        },
+        {
+          groupName: event.target.getAttribute("data-option-group"),
+          name: event.target.value,
+          serial: event.target.getAttribute("data-serial"),
+        }
+      );
+      setIsChecked(false);
+    }
   };
 
   // Use the index of the element in the array as the key
