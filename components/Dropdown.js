@@ -57,26 +57,18 @@ export default function DropDropdown({
 
       break;
     default:
-      var deselected = {
-        groupName: "",
-        name: "",
-        serial: "",
+      //Generate object of prior selected option
+      var unselected = {
+        groupName: vehicle.selected.options.find((o) => o.groupName === name)
+          ?.groupName,
+        name: vehicle.selected.options.find((o) => o.groupName === name)
+          ?.choicesSelected[0]?.name,
+        serial: vehicle.selected.options.find((o) => o.groupName === name)
+          ?.choicesSelected[0]?.serial,
       };
-      //Assigns value for deselected option
-      if (
-        vehicle.selected.options.find((o) => o.groupName === name)
-          .choicesSelected.length > 0
-      ) {
-        initialValue = vehicle.selected.options.find(
-          (o) => o.groupName === name
-        ).choicesSelected[0].name;
-        deselected = {
-          groupName: name,
-          name: initialValue,
-          serial: vehicle.selected.options.find((o) => o.groupName === name)
-            .choicesSelected[0].serial,
-        };
-      }
+      //Assign initialValue
+      initialValue = vehicle.selected.options.find((o) => o.groupName === name)
+        ?.choicesSelected[0]?.name;
 
       choiceOptions = choices.map((choice, index) => (
         <option
@@ -99,7 +91,7 @@ export default function DropDropdown({
             name: event.target.value,
             serial: event.target.selectedOptions[0].getAttribute("data-serial"),
           },
-          deselected
+          unselected
         );
       };
       break;

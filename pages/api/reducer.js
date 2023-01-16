@@ -82,10 +82,10 @@ const reducer = (vehicle, action) => {
         vehicle,
         action.payload.optionType,
         action.payload.selected,
-        action.payload.deselected
+        action.payload.unselected
       );
 
-      // vehicle = updatedVehicle;
+      console.log(action.payload);
 
       return {
         ...vehicle,

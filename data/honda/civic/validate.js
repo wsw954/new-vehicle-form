@@ -32,15 +32,14 @@ export const handleOptionSelected = (
   vehicle,
   optionType,
   selected,
-  deselected
+  unselected
 ) => {
-  if (optionType.optionType === "Single") {
-    const optionGroup = optionGrpAvailable.get(selected.groupName);
-    //Retrieve the actual option selected
-    const optionSelected = optionGroup.choicesAvailable.find(
-      (c) => c.serial === selected.serial
-    );
+  const optionGroup = optionGrpAvailable.get(selected.groupName);
+  const optionSelected = optionGroup.choicesAvailable.find(
+    (c) => c.serial === selected.serial
+  );
 
+  if (optionType.optionType === "Single") {
     if ("action" in optionSelected) {
       // Adjust vehicle for the special action required for this option selection
       return specialAddActionHandler(
@@ -51,8 +50,17 @@ export const handleOptionSelected = (
     } else {
       return addSingleOption(vehicle, optionGroup.name, optionSelected.serial);
     }
-  } else if (optionType === "Multiple" && selected.name != "") {
-    return addMultipleOption(vehicle, groupName, serial);
+  } else if (optionType.optionType === "Multiple" && unselected.name === "") {
+    console.log("Line 54 in validate");
+    console.log(unselected);
+    return addMultipleOption(vehicle, optionGroup.name, optionSelected.serial);
+  } else if (optionType.optionType === "Multiple" && unselected.name != "") {
+    console.log("Line 56 in validate");
+    return deleteOptionSelected(
+      vehicle,
+      optionGroup.name,
+      optionSelected.serial
+    );
   }
 };
 
@@ -89,12 +97,25 @@ function addMultipleOption(vehicle, groupName, serial) {
         .choicesAvailable.find((c) => c.serial === serial),
     ];
   }
+
   return updatedVehicle;
 }
 
-function deleteOptionSelected(vehicle, optionType, groupName, serial) {
-  //Yet to fill in appropriat code here
+function deleteOptionSelected(vehicle, groupName, serial) {
+  console.log("Line 102 in validate");
   const updatedVehicle = { ...vehicle };
+  const optionGroup = updatedVehicle.selected.options.find(
+    (os) => os.groupName === groupName
+  );
+  // Check if object with serial value already exists in array
+  const objectExists = optionGroup.choicesSelected.some(
+    (choice) => choice.serial === serial
+  );
+  if (objectExists) {
+    optionGroup.choicesSelected = optionGroup.choicesSelected.filter(
+      (choice) => choice.serial !== serial
+    );
+  }
 
   return updatedVehicle;
 }
@@ -164,7 +185,7 @@ function exteriorColorAction(vehicle, groupName, serial) {
           .choicesAvailable.slice(0, 2);
         return addSingleOption(vehicle, groupName, serial);
       } else {
-        //Change the Interior Colors available to be only  Black Cloth
+        //Changes the Interior Colors available to be only  Black Cloth
         vehicle.options.find(
           (a) => a.name === "Interior Color"
         ).choicesAvailable = modelOptions

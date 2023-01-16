@@ -147,7 +147,7 @@ export const modelOptions = [
         trim: ["tt1", "tt2", "tt4"],
         serial: "ic1",
       },
-      { name: "Gray Cloth", price: 0, trim: ["tt2"], serial: "ic2" },
+      { name: "Gray Cloth", price: 0, trim: [], serial: "ic2" },
 
       { name: "Black Leather", price: 0, trim: ["tt3", "tt5"], serial: "ic3" },
 
