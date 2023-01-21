@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
   // Find the choicesSelected array and store it in a variable
@@ -6,22 +6,17 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
     (o) => o.groupName === name
   );
   const choicesSelected = optionGroup.choicesSelected;
-  var deselected = {
-    groupName: "",
-    name: "",
-    serial: "",
-  };
-
-  // Use the useState hook to store the state of the checkbox
-  const [isChecked, setIsChecked] = useState(false);
 
   const handleChange = (event) => {
-    // Get the checked status and value of the checkbox
-    const { checked, value } = event.target;
-
+    // console.log(choicesSelected);
     // Pass the checked status and value as parameters to the onChange callback function
-    onChange(checked, value);
-    setIsChecked(toggle);
+    onChange({
+      optionType: "Multiple",
+      groupName: event.target.getAttribute("data-option-group"),
+      name: event.target.value,
+      serial: event.target.getAttribute("data-serial"),
+      checked: event.target.checked,
+    });
   };
 
   // Use the index of the element in the array as the key

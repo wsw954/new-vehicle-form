@@ -59,14 +59,12 @@ export default function Home() {
   };
 
   //Helper function
-  const handleOptionSelected = (optionType, selected, unselected) => {
+  const handleOptionSelected = (optionDetail) => {
     //Add code to handle option selected
     dispatch({
       type: "OPTION_SELECTED",
       payload: {
-        optionType: optionType,
-        selected: selected,
-        unselected: unselected,
+        optionDetail,
       },
     });
   };

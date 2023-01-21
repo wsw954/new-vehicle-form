@@ -83,16 +83,14 @@ export default function DropDropdown({
       ));
 
       handleChange = (event) => {
-        onChange(
-          { optionType: "Single" },
-          {
-            groupName:
-              event.target.selectedOptions[0].getAttribute("data-option-group"),
-            name: event.target.value,
-            serial: event.target.selectedOptions[0].getAttribute("data-serial"),
-          },
-          unselected
-        );
+        onChange({
+          optionType: "Single",
+          groupName:
+            event.target.selectedOptions[0].getAttribute("data-option-group"),
+          name: event.target.value,
+          serial: event.target.selectedOptions[0].getAttribute("data-serial"),
+          unselected: unselected,
+        });
       };
       break;
   }

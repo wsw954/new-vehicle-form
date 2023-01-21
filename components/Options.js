@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import Dropdown from "/components/dropdown.js";
-import CheckBoxGroup2 from "/components/checkboxgroup.js";
+import CheckBoxGroup from "/components/checkboxgroup.js";
 //Call uuidv4, to use to create unique IDs
 uuidv4();
 
@@ -37,12 +37,12 @@ export default function Options({ vehicle, onChange }) {
           //Return CheckBox Group for each Option Group
           optionCheckBoxes.push(
             <div key={uuidv4(element.name)}>
-              <CheckBoxGroup2
+              <CheckBoxGroup
                 name={element.name}
                 vehicle={vehicle}
                 choices={element.choicesAvailable}
                 onChange={onChange}
-              ></CheckBoxGroup2>
+              ></CheckBoxGroup>
               <br></br>
               <br></br>
             </div>
