@@ -1,5 +1,10 @@
 import { modelOptions } from "/data/honda/civic/options";
 
+import {
+  addSpecialAction,
+  deleteSpecialAction,
+} from "/data/honda/civic/action";
+
 //Use a Map to store the option groups and choices available, so that you can look up these values more efficiently
 const optionGrpAvailable = new Map(modelOptions.map((e) => [e.name, e]));
 
@@ -18,7 +23,6 @@ export const trimSelected = (serialSelected) => {
     },
     { available: [], selected: [] }
   );
-
   return optionsData;
 };
 
@@ -33,41 +37,64 @@ export const handleOptionSelected = (vehicle, optionDetail) => {
   }
 };
 
-//Handles options selected from Dropdown
-function addSingleOption(vehicle, { groupName, serial }) {
-  const updatedVehicle = { ...vehicle };
-  const optionGroup = optionGrpAvailable.get(groupName);
-  const optionSelected = optionGroup.choicesAvailable.find(
-    (c) => c.serial === serial
+//Handles a option selected from Dropdown
+function addSingleOption(vehicle, optionDetail) {
+  let updatedVehicle = { ...vehicle };
+  const choicesAvailable = optionGrpAvailable.get(
+    optionDetail.groupName
+  ).choicesAvailable;
+  let optionSelected = choicesAvailable.find(
+    (c) => c.serial === optionDetail.serial
   );
-
+  let optionUnselected = null;
+  if (optionDetail.unselected.name != null) {
+    optionUnselected = choicesAvailable.find(
+      (c) => c.serial === optionDetail.unselected.serial
+    );
+  }
+  if ("action" in optionSelected) {
+    updatedVehicle = addSpecialAction(updatedVehicle, optionDetail);
+  }
+  if (optionUnselected && "action" in optionUnselected) {
+    updatedVehicle = deleteSpecialAction(vehicle, optionDetail);
+  }
   updatedVehicle.selected.options.find(
-    (os) => os.groupName === groupName
+    (os) => os.groupName === optionDetail.groupName
   ).choicesSelected = [optionSelected];
   return updatedVehicle;
 }
 
-function handleMultipleOption(vehicle, { groupName, serial, checked }) {
-  const updatedVehicle = { ...vehicle };
-  const optionGroup = updatedVehicle.selected.options.find(
-    (os) => os.groupName === groupName
+//Handles options selected from checkboxes
+function handleMultipleOption(vehicle, optionDetail) {
+  let updatedVehicle = { ...vehicle };
+  //Get the entire group for the option available
+  const optionGroup = optionGrpAvailable.get(optionDetail.groupName);
+  //Get the current entire group for options selected
+  const optionGroupSelected = updatedVehicle.selected.options.find(
+    (os) => os.groupName === optionDetail.groupName
   );
-  // Check if object with serial value already exists in array
-  const objectExists = optionGroup.choicesSelected.some(
-    (choice) => choice.serial === serial
+  //Get the single selected option
+  const optionSelected = optionGroup.choicesAvailable.find(
+    (c) => c.serial === optionDetail.serial
   );
 
-  if (!objectExists && checked) {
-    optionGroup.choicesSelected = [
-      ...optionGroup.choicesSelected,
-      modelOptions
-        .find((e) => e.name === groupName)
-        .choicesAvailable.find((c) => c.serial === serial),
-    ];
-  } else if (!checked) {
-    optionGroup.choicesSelected = optionGroup.choicesSelected.filter(
-      (choice) => choice.serial !== serial
-    );
+  if (optionDetail.checked) {
+    //Check if any special action required for a checked option
+    if ("action" in optionSelected) {
+      updatedVehicle = addSpecialAction(updatedVehicle, optionDetail);
+    }
+    //Adds the single checked option
+    optionGroupSelected.choicesSelected.push(optionSelected);
+  } else {
+    //Check if any special action for unchecked option
+    if ("action" in optionSelected) {
+      updatedVehicle = deleteSpecialAction(updatedVehicle, optionDetail);
+    }
+    //Removes the unchecked option
+    optionGroupSelected.choicesSelected =
+      optionGroupSelected.choicesSelected.filter(
+        (choice) => choice.serial !== optionSelected.serial
+      );
   }
   return updatedVehicle;
 }

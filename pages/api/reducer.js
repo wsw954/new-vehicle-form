@@ -1,6 +1,4 @@
-// import { options } from "../../data/honda/civic/options";
 import { makes } from "/data/make";
-import { validate } from "/utils/validate";
 
 const ACTIONS = {
   MAKE_SELECTED: "MAKE_SELECTED",

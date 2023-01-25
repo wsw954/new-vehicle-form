@@ -57,14 +57,11 @@ export default function DropDropdown({
 
       break;
     default:
-      //Generate object of prior selected option
       var unselected = {
         groupName: vehicle.selected.options.find((o) => o.groupName === name)
           ?.groupName,
-        name: vehicle.selected.options.find((o) => o.groupName === name)
-          ?.choicesSelected[0]?.name,
-        serial: vehicle.selected.options.find((o) => o.groupName === name)
-          ?.choicesSelected[0]?.serial,
+        name: null,
+        serial: null,
       };
       //Assign initialValue
       initialValue = vehicle.selected.options.find((o) => o.groupName === name)
@@ -83,6 +80,19 @@ export default function DropDropdown({
       ));
 
       handleChange = (event) => {
+        if (event.target.selectedIndex > 0) {
+          unselected = {
+            groupName: vehicle.selected.options.find(
+              (o) => o.groupName === name
+            )?.groupName,
+            name:
+              vehicle.selected.options.find((o) => o.groupName === name)
+                ?.choicesSelected[0]?.name || null,
+            serial:
+              vehicle.selected.options.find((o) => o.groupName === name)
+                ?.choicesSelected[0]?.serial || null,
+          };
+        }
         onChange({
           optionType: "Single",
           groupName:
