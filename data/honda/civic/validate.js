@@ -64,33 +64,30 @@ function addSingleOption(vehicle, optionDetail) {
   return updatedVehicle;
 }
 
-//Handles options selected from checkboxes
 function handleMultipleOption(vehicle, optionDetail) {
   let updatedVehicle = { ...vehicle };
-  //Get the entire group for the option available
   const optionGroup = optionGrpAvailable.get(optionDetail.groupName);
-  //Get the current entire group for options selected
   const optionGroupSelected = updatedVehicle.selected.options.find(
     (os) => os.groupName === optionDetail.groupName
   );
-  //Get the single selected option
   const optionSelected = optionGroup.choicesAvailable.find(
     (c) => c.serial === optionDetail.serial
   );
-
   if (optionDetail.checked) {
-    //Check if any special action required for a checked option
-    if ("action" in optionSelected) {
-      updatedVehicle = addSpecialAction(updatedVehicle, optionDetail);
+    if (
+      !optionGroupSelected.choicesSelected.find(
+        (choice) => choice.serial === optionSelected.serial
+      )
+    ) {
+      if ("action" in optionSelected) {
+        updatedVehicle = addSpecialAction(updatedVehicle, optionDetail);
+      }
+      optionGroupSelected.choicesSelected.push(optionSelected);
     }
-    //Adds the single checked option
-    optionGroupSelected.choicesSelected.push(optionSelected);
   } else {
-    //Check if any special action for unchecked option
     if ("action" in optionSelected) {
       updatedVehicle = deleteSpecialAction(updatedVehicle, optionDetail);
     }
-    //Removes the unchecked option
     optionGroupSelected.choicesSelected =
       optionGroupSelected.choicesSelected.filter(
         (choice) => choice.serial !== optionSelected.serial
