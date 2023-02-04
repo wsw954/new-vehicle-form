@@ -27,7 +27,7 @@ const reducer = (vehicle, action) => {
           options: [], //Reset to default
         },
       };
-      break;
+
     case ACTIONS.MODEL_SELECTED:
       var dataFile = require("../../data/" +
         vehicle.selected.make.toLowerCase() +
@@ -45,7 +45,7 @@ const reducer = (vehicle, action) => {
           options: [], //Reset to default
         },
       };
-      break;
+
     case ACTIONS.TRIM_SELECTED:
       var dataFile = require("../../data/" +
         vehicle.selected.make.toLowerCase() +
@@ -66,8 +66,8 @@ const reducer = (vehicle, action) => {
         },
       };
 
-      break;
     case ACTIONS.OPTION_SELECTED:
+      console.log(vehicle);
       var dataFile = require("../../data/" +
         vehicle.selected.make.toLowerCase() +
         "/" +
@@ -83,7 +83,7 @@ const reducer = (vehicle, action) => {
         options: updatedVehicle.options,
         selected: updatedVehicle.selected,
       };
-      break;
+
     default:
       return { vehicle };
   }
