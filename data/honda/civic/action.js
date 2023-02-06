@@ -3,7 +3,7 @@ import { getComponents } from "/data/honda/civic/components";
 const optionGrpAvailable = new Map(modelOptions.map((e) => [e.name, e]));
 
 //Main handler function
-export const addSpecialAction = (vehicle, optionDetail) => {
+export const addActionHandler = (vehicle, optionDetail) => {
   switch (optionDetail.groupName) {
     case "Powertrain":
       return vehicle;
@@ -24,20 +24,18 @@ export const addSpecialAction = (vehicle, optionDetail) => {
   }
 };
 
-export const deleteSpecialAction = (vehicle, optionDetail) => {
+export const deleteActionHandler = (vehicle, optionDetail) => {
   switch (optionDetail.groupName) {
     case "Powertrain":
       return vehicle;
     case "Exterior Color":
-      console.log("Line 35 in deleteSpecialAction");
       return vehicle;
     case "Interior Color":
       return vehicle;
     case "Wheels":
       return vehicle;
     case "Packages":
-      console.log("Line 40 in action, will have to unselect the components");
-      return vehicle;
+      return packagesDelete(vehicle, optionDetail);
     case "Exterior Accessories":
       return vehicle;
     case "Interior Accessories":
@@ -47,15 +45,24 @@ export const deleteSpecialAction = (vehicle, optionDetail) => {
   }
 };
 
-//
+function optionDeselect(vehicle, optionDetail) {
+  //Get the option choices to deselect
+  //Then deselect
+}
+
+function optionSelect() {}
+
+function optionAvailability() {}
+
+function optionUnvailability() {}
+
 function packagesAdd(vehicle, optionDetail) {
-  //Retrieves the package components stored in separate file
   const packageComponents = getComponents(
     vehicle.selected.trim,
     optionDetail.serial
   );
   const result = [];
-  //Retrieves from main data file, the package components
+
   packageComponents.forEach((component) => {
     const modelOption = optionGrpAvailable.get(component.groupName);
     if (modelOption) {
@@ -69,11 +76,12 @@ function packagesAdd(vehicle, optionDetail) {
           price: choice.price,
           trim: choice.trim,
           serial: choice.serial,
+          package: optionDetail.name,
         });
       }
     }
   });
-  //Adds the components of package selected to the main vehicle state object
+
   vehicle.selected.options.forEach((option) => {
     result.forEach((element) => {
       if (option.groupName === element.groupName) {
@@ -82,9 +90,28 @@ function packagesAdd(vehicle, optionDetail) {
           price: element.price,
           trim: element.trim,
           serial: element.serial,
+          package: element.package,
         });
       }
     });
   });
+  return vehicle;
+}
+
+function packagesDelete(vehicle, optionDetail) {
+  //Retrieves the package components stored in separate file
+  const packageComponents = getComponents(
+    vehicle.selected.trim,
+    optionDetail.serial
+  );
+  for (const component of packageComponents) {
+    const optionGroup = vehicle.selected.options.find(
+      (o) => o.groupName === component.groupName
+    );
+    if (!optionGroup) continue;
+    optionGroup.choicesSelected = optionGroup.choicesSelected.filter(
+      (choice) => choice.serial !== component.serial
+    );
+  }
   return vehicle;
 }

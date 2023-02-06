@@ -74,6 +74,7 @@ export default function DropDropdown({
           data-price={choice.price}
           data-option-group={name}
           data-serial={choice.serial}
+          data-package={choice.package ? choice.package : ""}
         >
           {choice.name + "-price-$" + choice.price}
         </option>

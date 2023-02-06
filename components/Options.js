@@ -12,7 +12,6 @@ export default function Options({ vehicle, onChange }) {
     optionsArray.forEach((element, index) => {
       switch (element.type) {
         case "Single":
-          //Return Dropdowns for each Option Group
           optionDropdowns.push(
             <div key={uuidv4(element.name)}>
               <Dropdown
@@ -26,7 +25,7 @@ export default function Options({ vehicle, onChange }) {
                   ).choicesSelected.length > 0
                     ? true
                     : false
-                } //Checks if an option from this group was selected, disables if true, enabled if false
+                }
               ></Dropdown>
               <br></br>
               <br></br>
@@ -34,7 +33,6 @@ export default function Options({ vehicle, onChange }) {
           );
           break;
         case "Multiple":
-          //Return CheckBox Group for each Option Group
           optionCheckBoxes.push(
             <div key={uuidv4(element.name)}>
               <CheckBoxGroup

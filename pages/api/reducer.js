@@ -67,7 +67,6 @@ const reducer = (vehicle, action) => {
       };
 
     case ACTIONS.OPTION_SELECTED:
-      console.log(vehicle);
       var dataFile = require("../../data/" +
         vehicle.selected.make.toLowerCase() +
         "/" +

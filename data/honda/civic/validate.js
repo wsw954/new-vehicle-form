@@ -1,8 +1,8 @@
 import { modelOptions } from "/data/honda/civic/options";
 
 import {
-  addSpecialAction,
-  deleteSpecialAction,
+  addActionHandler,
+  deleteActionHandler,
 } from "/data/honda/civic/action";
 
 //Use a Map to store the option groups and choices available, so that you can look up these values more efficiently
@@ -37,7 +37,6 @@ export const handleOptionSelected = (vehicle, optionDetail) => {
   }
 };
 
-//Handles a option selected from Dropdown
 function addSingleOption(vehicle, optionDetail) {
   let updatedVehicle = { ...vehicle };
   const choicesAvailable = optionGrpAvailable.get(
@@ -53,10 +52,10 @@ function addSingleOption(vehicle, optionDetail) {
     );
   }
   if ("action" in optionSelected) {
-    updatedVehicle = addSpecialAction(updatedVehicle, optionDetail);
+    updatedVehicle = addActionHandler(updatedVehicle, optionDetail);
   }
   if (optionUnselected && "action" in optionUnselected) {
-    updatedVehicle = deleteSpecialAction(vehicle, optionDetail);
+    updatedVehicle = deleteActionHandler(vehicle, optionDetail);
   }
   updatedVehicle.selected.options.find(
     (os) => os.groupName === optionDetail.groupName
@@ -80,13 +79,13 @@ function handleMultipleOption(vehicle, optionDetail) {
       )
     ) {
       if ("action" in optionSelected) {
-        updatedVehicle = addSpecialAction(updatedVehicle, optionDetail);
+        updatedVehicle = addActionHandler(updatedVehicle, optionDetail);
       }
       optionGroupSelected.choicesSelected.push(optionSelected);
     }
   } else {
     if ("action" in optionSelected) {
-      updatedVehicle = deleteSpecialAction(updatedVehicle, optionDetail);
+      updatedVehicle = deleteActionHandler(updatedVehicle, optionDetail);
     }
     optionGroupSelected.choicesSelected =
       optionGroupSelected.choicesSelected.filter(
