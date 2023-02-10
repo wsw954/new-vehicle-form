@@ -3,6 +3,7 @@ import { modelOptions } from "/data/honda/civic/options";
 import {
   addActionHandler,
   deleteActionHandler,
+  componentActionHandler,
 } from "/data/honda/civic/action";
 
 //Use a Map to store the option groups and choices available, so that you can look up these values more efficiently
@@ -87,9 +88,20 @@ function handleMultipleOption(vehicle, optionDetail) {
     if ("action" in optionSelected) {
       updatedVehicle = deleteActionHandler(updatedVehicle, optionDetail);
     }
+    if (optionDetail.package != null) {
+      //The option unselected is a component of a previously selected package
+      updatedVehicle = componentActionHandler(updatedVehicle, optionDetail);
+      // Remove the parent package from the choicesSelected array
+      const packageGroup = updatedVehicle.selected.options.find(
+        (os) => os.groupName === "Packages"
+      );
+      packageGroup.choicesSelected = packageGroup.choicesSelected.filter(
+        (choice) => choice.serial !== optionDetail.package
+      );
+    }
     optionGroupSelected.choicesSelected =
       optionGroupSelected.choicesSelected.filter(
-        (choice) => choice.serial !== optionSelected.serial
+        (choice) => choice.serial != optionSelected.serial
       );
   }
   return updatedVehicle;

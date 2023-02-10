@@ -11,32 +11,33 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
       name: event.target.value,
       serial: event.target.getAttribute("data-serial"),
       checked: event.target.checked,
+      package: event.target.getAttribute("data-package"),
     });
   };
 
-  const checkBoxOptions = choices.map((choiceAvaiable, index) => (
+  const checkBoxOptions = choices.map((choiceAvailable, index) => (
     <div key={index}>
       <input
         type="checkbox"
         checked={choicesSelected.some(
-          (selectedChoice) => selectedChoice.serial === choiceAvaiable.serial
+          (selectedChoice) => selectedChoice.serial === choiceAvailable.serial
         )}
-        value={choiceAvaiable.name}
-        data-price={choiceAvaiable.price}
+        value={choiceAvailable.name}
+        data-price={choiceAvailable.price}
         data-option-group={name}
-        data-serial={choiceAvaiable.serial}
+        data-serial={choiceAvailable.serial}
         data-package={
           choicesSelected.some(
-            (selectedChoice) => selectedChoice.serial === choiceAvaiable.serial
+            (selectedChoice) => selectedChoice.serial === choiceAvailable.serial
           )
-            ? choicesSelected.find((c) => c.serial === choiceAvaiable.serial)
+            ? choicesSelected.find((c) => c.serial === choiceAvailable.serial)
                 .package
             : ""
         }
         onChange={handleChange}
       ></input>
-      <label htmlFor={choiceAvaiable.name}>
-        {choiceAvaiable.name + "  $" + choiceAvaiable.price}{" "}
+      <label htmlFor={choiceAvailable.name}>
+        {choiceAvailable.name + "  $" + choiceAvailable.price}{" "}
       </label>
     </div>
   ));

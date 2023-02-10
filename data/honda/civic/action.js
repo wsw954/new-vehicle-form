@@ -16,6 +16,7 @@ export const addActionHandler = (vehicle, optionDetail) => {
     case "Packages":
       return packagesAdd(vehicle, optionDetail);
     case "Exterior Accessories":
+      extAccAdd(vehicle, optionDetail);
       return vehicle;
     case "Interior Accessories":
       return vehicle;
@@ -37,12 +38,49 @@ export const deleteActionHandler = (vehicle, optionDetail) => {
     case "Packages":
       return packagesDelete(vehicle, optionDetail);
     case "Exterior Accessories":
-      return vehicle;
+      extAccDelete(vehicle, optionDetail);
+
     case "Interior Accessories":
       return vehicle;
     default:
       return vehicle;
   }
+};
+
+export const componentActionHandler = (vehicle, optionDetail) => {
+  const packageComponents = getComponents(
+    vehicle.selected.trim,
+    optionDetail.package
+  );
+  let updatedSelectedOptions = vehicle.selected.options.map((option) => {
+    if (
+      !packageComponents.some(
+        (component) => component.groupName === option.groupName
+      )
+    ) {
+      return option;
+    }
+
+    return {
+      ...option,
+      choicesSelected: option.choicesSelected.filter(
+        (choice) =>
+          !packageComponents.some(
+            (component) =>
+              component.groupName === option.groupName &&
+              component.serial === choice.serial
+          )
+      ),
+    };
+  });
+  let updatedVehicle = {
+    ...vehicle,
+    selected: {
+      ...vehicle.selected,
+      options: updatedSelectedOptions,
+    },
+  };
+  return updatedVehicle;
 };
 
 function optionDeselect(vehicle, optionDetail) {
@@ -76,7 +114,7 @@ function packagesAdd(vehicle, optionDetail) {
           price: choice.price,
           trim: choice.trim,
           serial: choice.serial,
-          package: optionDetail.name,
+          package: optionDetail.serial,
         });
       }
     }
@@ -113,5 +151,12 @@ function packagesDelete(vehicle, optionDetail) {
       (choice) => choice.serial !== component.serial
     );
   }
+  return vehicle;
+}
+
+function extAccAdd(vehicle, optionDetail) {}
+
+function extAccDelete(vehicle, optionDetail) {
+  console.log("Line  124 in action");
   return vehicle;
 }
