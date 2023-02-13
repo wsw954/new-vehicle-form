@@ -37,6 +37,11 @@ export const getComponents = (vehicleTrim, packageSerial) => {
       break;
     case "pk3":
       components.push({
+        groupName: "Exterior Accessories",
+        name: "Wheel Locks-Chrome",
+        serial: "ea31",
+      });
+      components.push({
         groupName: "Interior Accessories",
         name: "All Season Floor Mats",
         serial: "ia1",
@@ -46,11 +51,7 @@ export const getComponents = (vehicleTrim, packageSerial) => {
         name: "Trunk Tray",
         serial: "ia15",
       });
-      components.push({
-        groupName: "Exterior Accessories",
-        name: "Wheel Locks-Chrome",
-        serial: "ea31",
-      });
+
       break;
     case "pk4":
       components.push({

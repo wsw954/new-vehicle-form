@@ -14,7 +14,9 @@ export const addActionHandler = (vehicle, optionDetail) => {
     case "Wheels":
       return vehicle;
     case "Packages":
-      return packagesAdd(vehicle, optionDetail);
+      vehicle = packagesAction(vehicle, optionDetail);
+      vehicle = packagesAddComponents(vehicle, optionDetail);
+      return vehicle;
     case "Exterior Accessories":
       extAccAdd(vehicle, optionDetail);
       return vehicle;
@@ -36,7 +38,7 @@ export const deleteActionHandler = (vehicle, optionDetail) => {
     case "Wheels":
       return vehicle;
     case "Packages":
-      return packagesDelete(vehicle, optionDetail);
+      return packagesDeleteComponents(vehicle, optionDetail);
     case "Exterior Accessories":
       extAccDelete(vehicle, optionDetail);
 
@@ -47,6 +49,54 @@ export const deleteActionHandler = (vehicle, optionDetail) => {
   }
 };
 
+//Handles special actions for specific sets of packages selected
+function packagesAction(vehicle, optionDetail) {
+  let updatedVehicle = { ...vehicle };
+  let mutuallyExclusivePackages = [];
+  switch (optionDetail.serial) {
+    case "pk1":
+      mutuallyExclusivePackages = ["pk3", "pk8"];
+      mutuallyExclusivePackages.forEach((muExcPackage) => {
+        updatedVehicle = packagesDeleteComponents(updatedVehicle, {
+          serial: muExcPackage,
+        });
+      });
+      updatedVehicle = packageDeleteParentOption(
+        vehicle,
+        mutuallyExclusivePackages
+      );
+
+      return updatedVehicle;
+    case "pk3":
+      mutuallyExclusivePackages = ["pk1", "pk8"];
+      mutuallyExclusivePackages.forEach((option) => {
+        updatedVehicle = packagesDeleteComponents(updatedVehicle, {
+          serial: option,
+        });
+        updatedVehicle = packageDeleteParentOption(
+          vehicle,
+          mutuallyExclusivePackages
+        );
+      });
+      return updatedVehicle;
+    case "pk8":
+      mutuallyExclusivePackages = ["pk1", "pk3"];
+      mutuallyExclusivePackages.forEach((muExcPackage) => {
+        updatedVehicle = packagesDeleteComponents(updatedVehicle, {
+          serial: muExcPackage,
+        });
+      });
+      updatedVehicle = packageDeleteParentOption(
+        vehicle,
+        mutuallyExclusivePackages
+      );
+      return updatedVehicle;
+    default:
+      return updatedVehicle;
+  }
+}
+
+//Handles situations direct unselection of an option is an active component of a package
 export const componentActionHandler = (vehicle, optionDetail) => {
   const packageComponents = getComponents(
     vehicle.selected.trim,
@@ -83,18 +133,7 @@ export const componentActionHandler = (vehicle, optionDetail) => {
   return updatedVehicle;
 };
 
-function optionDeselect(vehicle, optionDetail) {
-  //Get the option choices to deselect
-  //Then deselect
-}
-
-function optionSelect() {}
-
-function optionAvailability() {}
-
-function optionUnvailability() {}
-
-function packagesAdd(vehicle, optionDetail) {
+function packagesAddComponents(vehicle, optionDetail) {
   const packageComponents = getComponents(
     vehicle.selected.trim,
     optionDetail.serial
@@ -136,7 +175,7 @@ function packagesAdd(vehicle, optionDetail) {
   return vehicle;
 }
 
-function packagesDelete(vehicle, optionDetail) {
+function packagesDeleteComponents(vehicle, optionDetail) {
   //Retrieves the package components stored in separate file
   const packageComponents = getComponents(
     vehicle.selected.trim,
@@ -149,6 +188,20 @@ function packagesDelete(vehicle, optionDetail) {
     if (!optionGroup) continue;
     optionGroup.choicesSelected = optionGroup.choicesSelected.filter(
       (choice) => choice.serial !== component.serial
+    );
+  }
+  return vehicle;
+}
+
+function packageDeleteParentOption(vehicle, arr) {
+  const packagesOption = vehicle.selected.options.find(
+    (option) => option.groupName === "Packages"
+  );
+  if (packagesOption) {
+    packagesOption.choicesSelected = packagesOption.choicesSelected.filter(
+      (choice) => {
+        return !arr.includes(choice.serial);
+      }
     );
   }
   return vehicle;
