@@ -37,7 +37,14 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
         onChange={handleChange}
       ></input>
       <label htmlFor={choiceAvailable.name}>
-        {choiceAvailable.name + "  $" + choiceAvailable.price}{" "}
+        {choicesSelected.some(
+          (selectedChoice) =>
+            selectedChoice.serial === choiceAvailable.serial &&
+            name !== "Packages" &&
+            selectedChoice.package
+        )
+          ? choiceAvailable.name + "-Included in Package"
+          : choiceAvailable.name + "  $" + choiceAvailable.price + " "}
       </label>
     </div>
   ));

@@ -1,11 +1,11 @@
 export const trims = [
-  { name: "Sedan Sport", price: 24650, serial: "tt1" },
-  { name: "Sedan EX", price: 26050, serial: "tt2" },
-  { name: "Sedan Touring", price: 29650, serial: "tt3" },
-  { name: "Hatchback Sport", price: 22450, serial: "tt4" },
-  { name: "Hatchback EX-L", price: 27750, serial: "tt5" },
-  { name: "Hatchback Sport Touring", price: 30550, serial: "tt6" },
-  { name: "Si", price: 27300, serial: "tt7" },
+  { name: "Sedan Sport", price: 25050, serial: "tt1" },
+  { name: "Sedan EX", price: 26450, serial: "tt2" },
+  { name: "Sedan Touring", price: 30050, serial: "tt3" },
+  { name: "Hatchback Sport", price: 25850, serial: "tt4" },
+  { name: "Hatchback EX-L", price: 28150, serial: "tt5" },
+  { name: "Hatchback Sport Touring", price: 30950, serial: "tt6" },
+  { name: "Si", price: 28500, serial: "tt7" },
   { name: "Type R", price: 42895, serial: "tt8" },
 ];
 
@@ -23,7 +23,7 @@ export const modelOptions = [
       {
         name: "1.5L Turbo 4-Cyl 180hp Engine w/CVT",
         price: 0,
-        trim: ["tt2", "tt4", "tt5", "tt6"],
+        trim: ["tt2", "tt3", "tt4", "tt5", "tt6"],
         serial: "pw2",
       },
       {
@@ -55,73 +55,79 @@ export const modelOptions = [
         price: 0,
         trim: ["tt1", "tt2", "tt3", "tt7"],
         serial: "ec1",
+        action: true,
       },
       {
         name: "Crystal Pearl Black",
         price: 0,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ec2",
+        action: true,
       },
       {
         name: "Lunar Silver Metallic",
         price: 0,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6"],
         serial: "ec3",
+        action: true,
       },
       {
         name: "Meteorite Gray Metallic",
         price: 0,
-        trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6"],
+        trim: ["tt1", "tt2", "tt3", "tt5", "tt6"],
         serial: "ec4",
+        action: true,
       },
       {
         name: "Rallye Red",
         price: 0,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ec5",
+        action: true,
       },
       {
         name: "Blazing Orange Pearl",
-        price: 395,
+        price: 455,
         trim: ["tt7"],
         serial: "ec6",
       },
       {
         name: "Boost Blue Pearl",
-        price: 395,
-        trim: ["tt5", "tt6", "tt8"],
+        price: 455,
+        trim: ["tt4", "tt6", "tt8"],
         serial: "ec7",
       },
       {
         name: "Championship White",
-        price: 395,
+        price: 455,
         trim: ["tt8"],
         serial: "ec8",
       },
       {
         name: "Morning Mist Metallic",
-        price: 395,
+        price: 455,
         trim: ["tt2", "tt3"],
         serial: "ec9",
+        action: true,
       },
 
       {
         name: "Platinum Pearl White",
-        price: 395,
+        price: 455,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt4", "tt5", "tt6", "tt7"],
         serial: "ec10",
         action: true,
       },
       {
         name: "Smoky Mauve Pearl",
-        price: 395,
-        trim: ["tt4", "tt6"],
+        price: 455,
+        trim: ["tt5", "tt6"],
         serial: "ec11",
       },
       {
         name: "Sonic Gray Pearl",
-        price: 395,
-        trim: ["tt1", "tt5", "tt6", "tt7", "tt8"],
+        price: 455,
+        trim: ["tt1", "tt3", "tt4", "tt6", "tt7", "tt8"],
         serial: "ec12",
         action: true,
       },
@@ -139,9 +145,14 @@ export const modelOptions = [
       },
       { name: "Gray Cloth", price: 0, trim: [], serial: "ic2" },
 
-      { name: "Black Leather", price: 0, trim: ["tt3", "tt5"], serial: "ic3" },
+      {
+        name: "Black Leather",
+        price: 0,
+        trim: ["tt3", "tt5", "tt6"],
+        serial: "ic3",
+      },
 
-      { name: "Gray Leather", price: 0, trim: ["tt3", "tt6"], serial: "ic4" },
+      { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
 
       { name: "Black & Red Cloth", price: 0, trim: ["tt7"], serial: "ic5" },
       {
@@ -337,12 +348,14 @@ export const modelOptions = [
         price: 54,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
         serial: "ea5",
+        action: true,
       },
       {
         name: "Door Edge Guard",
         price: 124,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
         serial: "ea6",
+        action: true,
       },
       {
         name: "Door Handle Film",
@@ -526,6 +539,7 @@ export const modelOptions = [
         price: 183,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ia1",
+        action: true,
       },
       {
         name: "Cargo Hook",
@@ -556,6 +570,7 @@ export const modelOptions = [
         price: 194,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ia6",
+        action: true,
       },
       {
         name: "Door Sill Protection Film",
@@ -631,8 +646,4 @@ export const modelOptions = [
       },
     ],
   },
-];
-
-export const packageComponents = [
-  { trim: "Sedan Sport", packageName: "", components: () => {} },
 ];
