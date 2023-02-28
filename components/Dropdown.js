@@ -10,7 +10,6 @@ export default function DropDropdown({
   onChange,
   firstDisabled,
 }) {
-  //Create global variables
   var choiceOptions = {};
   var initialValue = {};
 
@@ -57,7 +56,12 @@ export default function DropDropdown({
 
       break;
     default:
-      var unselected = {
+      let optionGroup = vehicle.selected.options.find(
+        (o) => o.groupName === name
+      );
+      let choicesSelected = optionGroup.choicesSelected;
+
+      let unselected = {
         groupName: vehicle.selected.options.find((o) => o.groupName === name)
           ?.groupName,
         name: null,
@@ -67,19 +71,36 @@ export default function DropDropdown({
       initialValue = vehicle.selected.options.find((o) => o.groupName === name)
         ?.choicesSelected[0]?.name;
 
-      choiceOptions = choices.map((choice, index) => (
-        <option
-          key={uuidv4({ index })}
-          value={choice.name}
-          data-price={choice.price}
-          data-option-group={name}
-          data-serial={choice.serial}
-          data-package={choice.package ? choice.package : ""}
-        >
-          {choice.name + "-price-$" + choice.price}
-        </option>
-      ));
-
+      choiceOptions = choices.map((choiceAvailable, index) => {
+        return (
+          <option
+            key={uuidv4({ index })}
+            value={choiceAvailable.name}
+            data-price={choiceAvailable.price}
+            data-option-group={name}
+            data-serial={choiceAvailable.serial}
+            data-package={
+              choicesSelected.some(
+                (selectedChoice) =>
+                  selectedChoice.serial === choiceAvailable.serial
+              )
+                ? choicesSelected.find(
+                    (c) => c.serial === choiceAvailable.serial
+                  ).package
+                : ""
+            }
+          >
+            {choicesSelected.some(
+              (selectedChoice) =>
+                selectedChoice.serial === choiceAvailable.serial &&
+                name !== "Packages" &&
+                selectedChoice.package
+            )
+              ? choiceAvailable.name + "-Included in Package"
+              : choiceAvailable.name + "  $" + choiceAvailable.price + " "}
+          </option>
+        );
+      });
       handleChange = (event) => {
         if (event.target.selectedIndex > 0) {
           unselected = {

@@ -193,6 +193,7 @@ export const modelOptions = [
         price: 1708,
         trim: ["tt1", "tt3", "tt4", "tt6", "tt7"],
         serial: "w4",
+        action: true,
       },
       {
         name: "18-Inch Matte Black Alloy Wheels",
@@ -323,6 +324,7 @@ export const modelOptions = [
         price: 211,
         trim: ["tt4", "tt5", "tt6", "tt8"],
         serial: "ea1",
+        action: true,
       },
       {
         name: "Body Side Molding",
@@ -448,6 +450,7 @@ export const modelOptions = [
         price: 399,
         trim: ["tt4", "tt5", "tt6", "tt8"],
         serial: "ea21",
+        action: true,
       },
       {
         name: "Ski/Snowboard Attachment",
@@ -577,12 +580,14 @@ export const modelOptions = [
         price: 108,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
         serial: "ia7",
+        action: true,
       },
       {
         name: "Door Sill Trim Illuminated",
         price: 322,
         trim: ["tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ia8",
+        action: true,
       },
       {
         name: "First Aid Kit",
@@ -595,6 +600,7 @@ export const modelOptions = [
         price: 322,
         trim: ["tt1", "tt2", "tt3"],
         serial: "ia10",
+        action: true,
       },
       {
         name: "Rear Passenger Window Shades",

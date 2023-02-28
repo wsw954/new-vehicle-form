@@ -1,3 +1,8 @@
+import { v4 as uuidv4 } from "uuid";
+
+//Call uuidv4, to use to create unique IDs
+uuidv4();
+
 export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
   const optionGroup = vehicle.selected.options.find(
     (o) => o.groupName === name
@@ -15,39 +20,48 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
     });
   };
 
-  const checkBoxOptions = choices.map((choiceAvailable, index) => (
-    <div key={index}>
-      <input
-        type="checkbox"
-        checked={choicesSelected.some(
-          (selectedChoice) => selectedChoice.serial === choiceAvailable.serial
-        )}
-        value={choiceAvailable.name}
-        data-price={choiceAvailable.price}
-        data-option-group={name}
-        data-serial={choiceAvailable.serial}
-        data-package={
-          choicesSelected.some(
-            (selectedChoice) => selectedChoice.serial === choiceAvailable.serial
-          )
-            ? choicesSelected.find((c) => c.serial === choiceAvailable.serial)
-                .package
-            : ""
+  const checkBoxOptions = choices.map((choiceAvailable, index) => {
+    const packageValue = "";
+    const selectedChoice = {};
+    if (choicesSelected.length > 0) {
+      selectedChoice = choicesSelected.find(
+        (o) => o.serial === choiceAvailable.serial
+      );
+
+      if (selectedChoice !== null && selectedChoice !== undefined) {
+        if (selectedChoice.hasOwnProperty("package")) {
+          packageValue = selectedChoice.package;
         }
-        onChange={handleChange}
-      ></input>
-      <label htmlFor={choiceAvailable.name}>
-        {choicesSelected.some(
-          (selectedChoice) =>
-            selectedChoice.serial === choiceAvailable.serial &&
-            name !== "Packages" &&
-            selectedChoice.package
-        )
-          ? choiceAvailable.name + "-Included in Package"
-          : choiceAvailable.name + "  $" + choiceAvailable.price + " "}
-      </label>
-    </div>
-  ));
+      }
+    }
+
+    return (
+      <div key={uuidv4({ index })}>
+        <input
+          type="checkbox"
+          checked={choicesSelected.some(
+            (selectedChoice) => selectedChoice.serial === choiceAvailable.serial
+          )}
+          value={choiceAvailable.name}
+          data-price={choiceAvailable.price}
+          data-option-group={name}
+          data-serial={choiceAvailable.serial}
+          data-package={packageValue}
+          onChange={handleChange}
+        />
+        <label htmlFor={choiceAvailable.name}>
+          {choicesSelected.some(
+            (selectedChoice) =>
+              selectedChoice.serial === choiceAvailable.serial &&
+              name !== "Packages" &&
+              selectedChoice.package
+          )
+            ? choiceAvailable.name + "-Included in Package"
+            : choiceAvailable.name + "  $" + choiceAvailable.price + " "}
+        </label>
+      </div>
+    );
+  });
 
   return (
     <>
