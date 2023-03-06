@@ -61,7 +61,7 @@ const reducer = (vehicle, action) => {
         options: optionsData.available, //Update options available, per trim selected
         selected: {
           ...vehicle.selected,
-          trim: action.payload.trim, //Update the trim selected
+          trim: { name: action.payload.trim, serial: action.payload.serial }, //Update the trim selected
           options: optionsData.selected, //Reset to default
         },
       };

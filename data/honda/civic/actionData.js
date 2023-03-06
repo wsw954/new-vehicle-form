@@ -18,14 +18,24 @@ export const extraColors = {
   },
 };
 
-export const packageExclusives = {
-  pk1: ["pk3", "pk6", "pk8"],
-  pk3: ["pk1", "pk6", "pk8"],
-  pk6: ["pk1", "pk3", "pk8"],
-  pk8: ["pk1", "pk3", "pk6"],
-  pk2: ["pk4", "pk9"],
-  pk4: ["pk2", "pk9"],
-  pk9: ["pk2", "pk4"],
+export const getExclusiveSiblings = (vehicle, optionDetail) => {
+  const exclusiveArray = packageExclusiveArray[vehicle.selected.trim.name];
+  const siblings = [];
+  if (exclusiveArray.includes(optionDetail.serial)) {
+    siblings = exclusiveArray.filter((item) => item !== optionDetail.serial);
+  }
+  return siblings;
+};
+
+export const packageExclusiveArray = {
+  "Sedan Sport": ["pk1", "pk3", "pk8"],
+  "Sedan EX": ["pk1", "pk3", "pk8"],
+  "Sedan Touring": ["pk1", "pk3", "pk8"],
+  "Hatchback Sport": ["pk1", "pk3", "pk8"],
+  "Hatchback EX-L": ["pk1", "pk3", "pk8"],
+  "Hatchback Sport Touring": ["pk1", "pk3", "pk8"],
+  Si: ["pk1", "pk6", "pk8"],
+  "Type R": [],
 };
 
 export const getComponents = (vehicleTrim, packageSerial) => {
@@ -257,4 +267,14 @@ export const getComponents = (vehicleTrim, packageSerial) => {
   }
 
   return components;
+};
+
+export const exteriorAccessoriesExclusives = {
+  ea5: [{ groupName: "Exterior Accessories", serial: "ea6" }],
+  ea6: [{ groupName: "Exterior Accessories", serial: "ea5" }],
+};
+
+export const exteriorAccessoriesInclusives = {
+  ea1: [{ groupName: "Exterior Accessories", serial: "ea21" }],
+  ea21: [{ groupName: "Exterior Accessories", serial: "ea1" }],
 };

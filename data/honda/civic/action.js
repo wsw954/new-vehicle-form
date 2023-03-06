@@ -1,11 +1,14 @@
-import { modelOptions } from "/data/honda/civic/options";
+import { modelOptions, trims } from "/data/honda/civic/options";
 import {
   extraColors,
   getComponents,
-  packageExclusives,
+  getExclusiveSiblings,
+  exteriorAccessoriesExclusives,
+  exteriorAccessoriesInclusives,
 } from "/data/honda/civic/actionData";
 
 const optionsAvailable = new Map(modelOptions.map((e) => [e.name, e]));
+const trimsAvailable = new Map(trims.map((e) => [e.name, e]));
 
 //Main handler function
 export const addActionHandler = (vehicle, optionDetail) => {
@@ -40,6 +43,7 @@ export const componentActionHandler = (vehicle, optionDetail) => {
     "Packages",
     optionDetail.package
   );
+  //Change the serial in optionDetail to be the serial of the parent package
   let modifiedOptionDetail = { ...optionDetail, serial: optionDetail.package };
   updatedVehicle = deletePackageComponents(vehicle, modifiedOptionDetail);
 
@@ -77,12 +81,37 @@ function addExteriorColor(vehicle, optionDetail) {
 }
 
 function addPackageComponents(vehicle, optionDetail) {
-  //First remove all mutually exclusive packages
-  let updatedVehicle = packagesExclusions(
-    vehicle,
-    optionDetail,
-    packageExclusives
-  );
+  let updatedVehicle = { ...vehicle };
+  const siblings = getExclusiveSiblings(vehicle, optionDetail);
+
+  if (siblings.length > 0) {
+    siblings.forEach((sibling) => {
+      updatedVehicle = removeOptionInChoicesSelected(
+        vehicle,
+        optionDetail.groupName,
+        sibling
+      );
+      const modifiedOptionDetail = { ...optionDetail, serial: sibling };
+      updatedVehicle = deletePackageComponents(vehicle, modifiedOptionDetail);
+    });
+  }
+
+  // if (packageExclusives2[vehicle.selected.trim].includes(optionDetail.serial)) {
+  //   console.log(packageExclusives2[vehicle.selected.trim]);
+  // }
+
+  // if (packageExclusives.hasOwnProperty(optionDetail.serial)) {
+  //   packageExclusives[optionDetail.serial].forEach((exclusiveOption) => {
+  //     updatedVehicle = removeOptionInChoicesSelected(
+  //       vehicle,
+  //       "Packages",
+  //       exclusiveOption
+  //     );
+  //     const modifiedOptionDetail = { ...optionDetail, serial: exclusiveOption };
+  //     updatedVehicle = deletePackageComponents(vehicle, modifiedOptionDetail);
+  //   });
+  // }
+
   const packageComponents = getComponents(
     vehicle.selected.trim,
     optionDetail.serial
@@ -107,8 +136,37 @@ function addPackageComponents(vehicle, optionDetail) {
 }
 
 function addExteriorAccessories(vehicle, optionDetail) {
-  return vehicle;
+  let updatedVehicle = { ...vehicle };
+  if (exteriorAccessoriesExclusives.hasOwnProperty(optionDetail.serial)) {
+    exteriorAccessoriesExclusives[optionDetail.serial].forEach(
+      (exclusiveOption) => {
+        updatedVehicle = removeOptionInChoicesSelected(
+          vehicle,
+          exclusiveOption.groupName,
+          exclusiveOption.serial
+        );
+      }
+    );
+  }
+  if (exteriorAccessoriesInclusives.hasOwnProperty(optionDetail.serial)) {
+    exteriorAccessoriesInclusives[optionDetail.serial].forEach(
+      (exclusiveOption) => {
+        const modelOption = optionsAvailable.get(exclusiveOption.groupName);
+        const choice = modelOption.choicesAvailable.find(
+          (choice) => choice.serial === exclusiveOption.serial
+        );
+        updatedVehicle = addOptionInChoicesSelected(
+          vehicle,
+          exclusiveOption.groupName,
+          choice
+        );
+      }
+    );
+  }
+
+  return updatedVehicle;
 }
+
 function addInteriorAccessories(vehicle, optionDetail) {
   return vehicle;
 }
@@ -134,6 +192,18 @@ function deletePackageComponents(vehicle, optionDetail) {
 }
 
 function deleteExteriorAccessories(vehicle, optionDetail) {
+  let updatedVehicle = { ...vehicle };
+  if (exteriorAccessoriesInclusives.hasOwnProperty(optionDetail.serial)) {
+    exteriorAccessoriesInclusives[optionDetail.serial].forEach(
+      (exclusiveOption) => {
+        updatedVehicle = removeOptionInChoicesSelected(
+          vehicle,
+          exclusiveOption.groupName,
+          exclusiveOption.serial
+        );
+      }
+    );
+  }
   return vehicle;
 }
 
@@ -141,26 +211,48 @@ function deleteInteriorAccessories(vehicle, optionDetail) {
   return vehicle;
 }
 
-function packagesExclusions(vehicle, optionDetail, exclusivity) {
-  let updatedVehicle = { ...vehicle };
-  const exclusives = exclusivity[optionDetail.serial] || [];
+// function packagesExclusions(vehicle, optionDetail, exclusivity) {
+//   let updatedVehicle = { ...vehicle };
+//   const exclusives = exclusivity[optionDetail.serial] || [];
 
-  if (exclusives) {
-    exclusives.forEach((sibling) => {
-      updatedVehicle = deletePackageComponents(updatedVehicle, {
-        ...optionDetail,
-        serial: sibling,
-      });
-      updatedVehicle = removeOptionInChoicesSelected(
-        vehicle,
-        "Packages",
-        sibling
-      );
-    });
-  }
+//   if (exclusives.length > 0) {
+//     exclusives.forEach((sibling) => {
+//       updatedVehicle = deletePackageComponents(updatedVehicle, {
+//         ...optionDetail,
+//         serial: sibling,
+//       });
+//       updatedVehicle = removeOptionInChoicesSelected(
+//         vehicle,
+//         "Packages",
+//         sibling
+//       );
+//     });
+//   }
 
-  return updatedVehicle;
-}
+//   return updatedVehicle;
+// }
+
+// function packagesExclusions(vehicle, optionDetail) {
+//   let updatedVehicle = { ...vehicle };
+//   const exclusives = exclusivity[optionDetail.serial] || [];
+//   console.log(exclusives);
+
+//   if (exclusives.length > 0) {
+//     exclusives.forEach((sibling) => {
+//       updatedVehicle = deletePackageComponents(updatedVehicle, {
+//         ...optionDetail,
+//         serial: sibling,
+//       });
+//       updatedVehicle = removeOptionInChoicesSelected(
+//         vehicle,
+//         "Packages",
+//         sibling
+//       );
+//     });
+//   }
+
+//   return updatedVehicle;
+// }
 
 function clearChoicesSelected(vehicle, optionGroupName) {
   const optionGroup = vehicle.selected.options.find(
