@@ -6,6 +6,8 @@ import {
   componentActionHandler,
 } from "./action";
 
+import { confirmHandler } from "./action2";
+
 //Use a Map to store the option groups and choices available, so that you can look up these values more efficiently
 const optionGrpAvailable = new Map(modelOptions.map((e) => [e.name, e]));
 
@@ -53,7 +55,9 @@ function addSingleOption(vehicle, optionDetail) {
     );
   }
   if ("action" in optionSelected) {
-    updatedVehicle = addActionHandler(updatedVehicle, optionDetail);
+    //Add popup for confirmation
+    updatedVehicle = confirmHandler(updatedVehicle, optionDetail);
+    //   updatedVehicle = addActionHandler(updatedVehicle, optionDetail);
   }
   if (optionUnselected && "action" in optionUnselected) {
     updatedVehicle = deleteActionHandler(vehicle, optionDetail);
@@ -80,9 +84,9 @@ function handleMultipleOption(vehicle, optionDetail) {
       )
     ) {
       if ("action" in optionSelected) {
-        updatedVehicle = addActionHandler(updatedVehicle, optionDetail);
+        updatedVehicle = confirmHandler(updatedVehicle, optionDetail);
       }
-      optionGroupSelected.choicesSelected.push(optionSelected);
+      //   optionGroupSelected.choicesSelected.push(optionSelected);
     }
   } else {
     if ("action" in optionSelected) {
@@ -100,8 +104,3 @@ function handleMultipleOption(vehicle, optionDetail) {
 
   return updatedVehicle;
 }
-
-// function confirmPopYes(vehicle, optionDetail) {
-//   let optionDetail = vehicle.popup.detail;
-//   console.log("Line 105 in validate");
-// }

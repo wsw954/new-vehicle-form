@@ -2,8 +2,10 @@ import styles from "../styles/Home.module.css";
 import { useState, useReducer } from "react";
 import { makes } from "/data/make";
 import reducer from "/pages/api/reducer";
+import reducer2 from "/pages/api/reducer2";
 import Dropdown from "/components/dropdown.js";
 import Options from "/components/options.js";
+import Popup from "../components/Popup";
 import { v4 as uuidv4 } from "uuid";
 
 //Retrieve list of makes for selection
@@ -13,7 +15,7 @@ const makeChoices = makes.map((make) => make);
 uuidv4();
 
 //Set vehicle initial state
-var initialState = {
+let initialState = {
   makes: makes.map((make) => make),
   models: [],
   trims: [],
@@ -24,11 +26,16 @@ var initialState = {
     trim: "",
     options: [],
   },
+  popup: {
+    show: false,
+    message: "",
+    detail: {},
+  },
 };
 
 export default function Home() {
   //Hook to retrieve form choices
-  const [vehicle, dispatch] = useReducer(reducer, initialState);
+  const [vehicle, dispatch] = useReducer(reducer2, initialState);
 
   //Helper function
   const handleMakeSelected = (make) => {
@@ -67,6 +74,19 @@ export default function Home() {
         optionDetail,
       },
     });
+  };
+
+  //Helper function
+  const handleOptionConfirmation = (e) => {
+    e.preventDefault(e); // prevent form submission
+    console.log("Line 79 in index");
+    console.log(e.target);
+    // dispatch({
+    //   type: "OPTION_CONFIRMATION",
+    //   payload: {
+    //     optionDetail,
+    //   },
+    // });
   };
 
   //Handle form submit
@@ -123,12 +143,20 @@ export default function Home() {
                 vehicle={vehicle}
                 onChange={handleOptionSelected}
               ></Options>
+              <br></br>
             </>
           ) : (
             <br></br>
           )}
           <br></br>
-
+          <div>
+            {vehicle.popup.show && (
+              <Popup
+                message={vehicle.popup.message}
+                onConfirm={handleOptionConfirmation}
+              />
+            )}
+          </div>
           <button>Submit</button>
         </form>
       </div>

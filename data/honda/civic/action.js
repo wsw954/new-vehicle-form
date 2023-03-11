@@ -38,6 +38,7 @@ export const deleteActionHandler = (vehicle, optionDetail) => {
 };
 
 export const componentActionHandler = (vehicle, optionDetail) => {
+  console.log("Add popup");
   let updatedVehicle = removeOptionInChoicesSelected(
     vehicle,
     "Packages",
@@ -95,22 +96,6 @@ function addPackageComponents(vehicle, optionDetail) {
       updatedVehicle = deletePackageComponents(vehicle, modifiedOptionDetail);
     });
   }
-
-  // if (packageExclusives2[vehicle.selected.trim].includes(optionDetail.serial)) {
-  //   console.log(packageExclusives2[vehicle.selected.trim]);
-  // }
-
-  // if (packageExclusives.hasOwnProperty(optionDetail.serial)) {
-  //   packageExclusives[optionDetail.serial].forEach((exclusiveOption) => {
-  //     updatedVehicle = removeOptionInChoicesSelected(
-  //       vehicle,
-  //       "Packages",
-  //       exclusiveOption
-  //     );
-  //     const modifiedOptionDetail = { ...optionDetail, serial: exclusiveOption };
-  //     updatedVehicle = deletePackageComponents(vehicle, modifiedOptionDetail);
-  //   });
-  // }
 
   const packageComponents = getComponents(
     vehicle.selected.trim,
@@ -210,49 +195,6 @@ function deleteExteriorAccessories(vehicle, optionDetail) {
 function deleteInteriorAccessories(vehicle, optionDetail) {
   return vehicle;
 }
-
-// function packagesExclusions(vehicle, optionDetail, exclusivity) {
-//   let updatedVehicle = { ...vehicle };
-//   const exclusives = exclusivity[optionDetail.serial] || [];
-
-//   if (exclusives.length > 0) {
-//     exclusives.forEach((sibling) => {
-//       updatedVehicle = deletePackageComponents(updatedVehicle, {
-//         ...optionDetail,
-//         serial: sibling,
-//       });
-//       updatedVehicle = removeOptionInChoicesSelected(
-//         vehicle,
-//         "Packages",
-//         sibling
-//       );
-//     });
-//   }
-
-//   return updatedVehicle;
-// }
-
-// function packagesExclusions(vehicle, optionDetail) {
-//   let updatedVehicle = { ...vehicle };
-//   const exclusives = exclusivity[optionDetail.serial] || [];
-//   console.log(exclusives);
-
-//   if (exclusives.length > 0) {
-//     exclusives.forEach((sibling) => {
-//       updatedVehicle = deletePackageComponents(updatedVehicle, {
-//         ...optionDetail,
-//         serial: sibling,
-//       });
-//       updatedVehicle = removeOptionInChoicesSelected(
-//         vehicle,
-//         "Packages",
-//         sibling
-//       );
-//     });
-//   }
-
-//   return updatedVehicle;
-// }
 
 function clearChoicesSelected(vehicle, optionGroupName) {
   const optionGroup = vehicle.selected.options.find(

@@ -107,6 +107,16 @@
   height: 1em;
   margin-left: 0.5rem;
 }
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
 
 @media (max-width: 600px) {
   .grid {

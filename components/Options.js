@@ -5,8 +5,8 @@ import CheckBoxGroup from "/components/checkboxgroup.js";
 uuidv4();
 
 export default function Options({ vehicle, onChange }) {
-  var optionDropdowns = [];
-  var optionCheckBoxes = [];
+  let optionDropdowns = [];
+  let optionCheckBoxes = [];
 
   function optionBuilder(optionsArray) {
     optionsArray.forEach((element, index) => {
