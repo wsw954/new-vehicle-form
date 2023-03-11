@@ -3,7 +3,7 @@ import { modelOptions } from "/data/honda/civic/options";
 import {
   addActionHandler,
   deleteActionHandler,
-  componentActionHandler,
+  deleteComponentActionHandler,
 } from "./action";
 
 //Use a Map to store the option groups and choices available, so that you can look up these values more efficiently
@@ -64,6 +64,45 @@ function addSingleOption(vehicle, optionDetail) {
   return updatedVehicle;
 }
 
+// function handleMultipleOption(vehicle, optionDetail) {
+//   let updatedVehicle = { ...vehicle };
+//   const optionGroup = optionGrpAvailable.get(optionDetail.groupName);
+//   const optionGroupSelected = updatedVehicle.selected.options.find(
+//     (os) => os.groupName === optionDetail.groupName
+//   );
+//   const optionSelected = optionGroup.choicesAvailable.find(
+//     (c) => c.serial === optionDetail.serial
+//   );
+//   if (
+//     optionDetail.checked &&
+//     !optionGroupSelected.choicesSelected.some(
+//       (choice) => choice.serial === optionSelected.serial
+//     )
+//   ) {
+//     if ("action" in optionSelected) {
+//       updatedVehicle = addActionHandler(updatedVehicle, optionDetail);
+//     }
+//     optionGroupSelected.choicesSelected.push(optionSelected);
+//   } else {
+//     if ("action" in optionSelected) {
+//       updatedVehicle = deleteActionHandler(updatedVehicle, optionDetail);
+//     }
+//     if (optionDetail.package != null) {
+//       //The option unselected is a component of a previously selected package
+//       updatedVehicle = deleteComponentActionHandler(
+//         updatedVehicle,
+//         optionDetail
+//       );
+//     }
+//     optionGroupSelected.choicesSelected =
+//       optionGroupSelected.choicesSelected.filter(
+//         (choice) => choice.serial != optionSelected.serial
+//       );
+//   }
+
+//   return updatedVehicle;
+// }
+
 function handleMultipleOption(vehicle, optionDetail) {
   let updatedVehicle = { ...vehicle };
   const optionGroup = optionGrpAvailable.get(optionDetail.groupName);
@@ -73,35 +112,32 @@ function handleMultipleOption(vehicle, optionDetail) {
   const optionSelected = optionGroup.choicesAvailable.find(
     (c) => c.serial === optionDetail.serial
   );
-  if (optionDetail.checked) {
-    if (
-      !optionGroupSelected.choicesSelected.find(
-        (choice) => choice.serial === optionSelected.serial
-      )
-    ) {
-      if ("action" in optionSelected) {
-        updatedVehicle = addActionHandler(updatedVehicle, optionDetail);
-      }
-      optionGroupSelected.choicesSelected.push(optionSelected);
+
+  if (
+    optionDetail.checked &&
+    !optionGroupSelected.choicesSelected.some(
+      (choice) => choice.serial === optionSelected.serial
+    )
+  ) {
+    if ("action" in optionSelected) {
+      updatedVehicle = addActionHandler(updatedVehicle, optionDetail);
     }
-  } else {
+    optionGroupSelected.choicesSelected.push(optionSelected);
+  } else if (!optionDetail.checked) {
     if ("action" in optionSelected) {
       updatedVehicle = deleteActionHandler(updatedVehicle, optionDetail);
     }
     if (optionDetail.package != null) {
-      //The option unselected is a component of a previously selected package
-      updatedVehicle = componentActionHandler(updatedVehicle, optionDetail);
+      updatedVehicle = deleteComponentActionHandler(
+        updatedVehicle,
+        optionDetail
+      );
     }
     optionGroupSelected.choicesSelected =
       optionGroupSelected.choicesSelected.filter(
-        (choice) => choice.serial != optionSelected.serial
+        (choice) => choice.serial !== optionSelected.serial
       );
   }
 
   return updatedVehicle;
 }
-
-// function confirmPopYes(vehicle, optionDetail) {
-//   let optionDetail = vehicle.popup.detail;
-//   console.log("Line 105 in validate");
-// }

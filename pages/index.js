@@ -2,7 +2,6 @@ import styles from "../styles/Home.module.css";
 import { useState, useReducer } from "react";
 import { makes } from "/data/make";
 import reducer from "/pages/api/reducer";
-import reducer2 from "/pages/api/reducer2";
 import Dropdown from "/components/dropdown.js";
 import Options from "/components/options.js";
 import Popup from "../components/Popup";
@@ -35,7 +34,7 @@ let initialState = {
 
 export default function Home() {
   //Hook to retrieve form choices
-  const [vehicle, dispatch] = useReducer(reducer2, initialState);
+  const [vehicle, dispatch] = useReducer(reducer, initialState);
 
   //Helper function
   const handleMakeSelected = (make) => {
@@ -79,7 +78,6 @@ export default function Home() {
   //Helper function
   const handleOptionConfirmation = (e) => {
     e.preventDefault(e); // prevent form submission
-    console.log("Line 79 in index");
     console.log(e.target);
     // dispatch({
     //   type: "OPTION_CONFIRMATION",

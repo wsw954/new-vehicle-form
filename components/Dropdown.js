@@ -10,10 +10,10 @@ export default function DropDropdown({
   onChange,
   firstDisabled,
 }) {
-  var choiceOptions = {};
-  var initialValue = {};
+  let choiceOptions = {};
+  let initialValue = {};
 
-  var handleChange = (event) => {
+  let handleChange = (event) => {
     onChange(event.target.value);
   };
 

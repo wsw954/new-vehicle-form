@@ -37,8 +37,7 @@ export const deleteActionHandler = (vehicle, optionDetail) => {
   );
 };
 
-export const componentActionHandler = (vehicle, optionDetail) => {
-  console.log("Add popup");
+export const deleteComponentActionHandler = (vehicle, optionDetail) => {
   let updatedVehicle = removeOptionInChoicesSelected(
     vehicle,
     "Packages",
