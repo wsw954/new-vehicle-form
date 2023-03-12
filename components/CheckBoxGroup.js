@@ -17,11 +17,23 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
       serial: event.target.getAttribute("data-serial"),
       checked: event.target.checked,
       package: event.target.getAttribute("data-package"),
+      popup: event.target.getAttribute("data-popup"),
+      action: event.target.getAttribute("data-action"),
     });
   };
 
   const checkBoxOptions = choices.map((choiceAvailable, index) => {
-    const packageValue = "";
+    let packageValue = "";
+    let dataPopup =
+      choiceAvailable.hasOwnProperty("popup") &&
+      typeof choiceAvailable.popup === "boolean"
+        ? choiceAvailable.popup
+        : "";
+    let dataAction =
+      choiceAvailable.hasOwnProperty("action") &&
+      typeof choiceAvailable.action === "boolean"
+        ? choiceAvailable.action
+        : "";
     const selectedChoice = {};
     if (choicesSelected.length > 0) {
       selectedChoice = choicesSelected.find(
@@ -31,6 +43,7 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
       if (selectedChoice !== null && selectedChoice !== undefined) {
         if (selectedChoice.hasOwnProperty("package")) {
           packageValue = selectedChoice.package;
+          dataPopup = selectedChoice.popup;
         }
       }
     }
@@ -47,6 +60,8 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
           data-option-group={name}
           data-serial={choiceAvailable.serial}
           data-package={packageValue}
+          data-popup={dataPopup}
+          data-action={dataAction}
           onChange={handleChange}
         />
         <label htmlFor={choiceAvailable.name}>

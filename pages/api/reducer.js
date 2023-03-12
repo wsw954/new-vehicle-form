@@ -5,11 +5,12 @@ const ACTIONS = {
   MODEL_SELECTED: "MODEL_SELECTED",
   TRIM_SELECTED: "TRIM_SELECTED",
   OPTION_SELECTED: "OPTION_SELECTED",
+  POPUP_SHOW: "POPUP_SHOW",
+  POPUP_CONFIRM: "POPUP_CONFIRM",
 };
 
 const reducer = (vehicle, action) => {
-  //Retrieve the relevant data file per make/model selected
-
+  let updatedVehicle = { ...vehicle };
   switch (action.type) {
     case ACTIONS.MAKE_SELECTED:
       const modelsList = makes.find((obj) => obj.name === action.payload.make);
@@ -29,14 +30,14 @@ const reducer = (vehicle, action) => {
       };
 
     case ACTIONS.MODEL_SELECTED:
-      var dataFile = require("../../data/" +
+      const dataOptions = require("../../data/" +
         vehicle.selected.make.toLowerCase() +
         "/" +
         action.payload.model.toLowerCase() +
         "/options");
       return {
         ...vehicle,
-        trims: dataFile.trims, //Update trims available, per model selected
+        trims: dataOptions.trims, //Update trims available, per model selected
         options: [], //Clear out all prior options available
         selected: {
           ...vehicle.selected,
@@ -47,15 +48,12 @@ const reducer = (vehicle, action) => {
       };
 
     case ACTIONS.TRIM_SELECTED:
-      var dataFile = require("../../data/" +
+      let dataValidate = require("../../data/" +
         vehicle.selected.make.toLowerCase() +
         "/" +
         vehicle.selected.model.toLowerCase() +
         "/validate");
-      //Retrieve options available per trim, as well as default options selected
-
-      var optionsData = dataFile.trimSelected(action.payload.serial);
-
+      const optionsData = dataValidate.trimSelected(action.payload.serial);
       return {
         ...vehicle,
         options: optionsData.available, //Update options available, per trim selected
@@ -65,24 +63,38 @@ const reducer = (vehicle, action) => {
           options: optionsData.selected, //Reset to default
         },
       };
-
     case ACTIONS.OPTION_SELECTED:
-      var dataFile = require("../../data/" +
+      dataValidate = require("../../data/" +
         vehicle.selected.make.toLowerCase() +
         "/" +
         vehicle.selected.model.toLowerCase() +
         "/validate");
-
-      var updatedVehicle = dataFile.handleOptionSelected(
+      updatedVehicle = dataValidate.handleOptionSelected(
         vehicle,
-        action.payload.optionDetail
+        action.payload
       );
+
       return {
         ...vehicle,
         options: updatedVehicle.options,
         selected: updatedVehicle.selected,
       };
-
+    case ACTIONS.POPUP_SHOW:
+      console.log("Line 83 in reducer");
+      return {
+        ...vehicle,
+      };
+    case ACTIONS.POPUP_CONFIRM:
+      updatedVehicle = dataValidate.handleOptionSelected(
+        vehicle,
+        action.payload
+      );
+      return {
+        ...vehicle,
+        options: updatedVehicle.options,
+        selected: updatedVehicle.selected,
+        popup: updatedVehicle.popup,
+      };
     default:
       return { vehicle };
   }

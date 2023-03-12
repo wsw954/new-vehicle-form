@@ -8,7 +8,6 @@ import {
 } from "/data/honda/civic/actionData";
 
 const optionsAvailable = new Map(modelOptions.map((e) => [e.name, e]));
-const trimsAvailable = new Map(trims.map((e) => [e.name, e]));
 
 //Main handler function
 export const addActionHandler = (vehicle, optionDetail) => {
@@ -54,10 +53,9 @@ export const deleteComponentActionHandler = (vehicle, optionDetail) => {
 //Depending on the color chosen, and the trim selected
 function addExteriorColor(vehicle, optionDetail) {
   let updatedVehicle = { ...vehicle };
-
-  if (extraColors[updatedVehicle.selected.trim]) {
+  if (extraColors[updatedVehicle.selected.trim.name]) {
     const color =
-      extraColors[updatedVehicle.selected.trim][optionDetail.serial];
+      extraColors[updatedVehicle.selected.trim.name][optionDetail.serial];
     if (color) {
       updatedVehicle = clearChoicesSelected(
         vehicle,
@@ -72,7 +70,7 @@ function addExteriorColor(vehicle, optionDetail) {
       return removeOptionInChoicesAvailable(
         updatedVehicle,
         extraColors.optionGroupName,
-        extraColors[updatedVehicle.selected.trim]["ec4"]
+        extraColors[updatedVehicle.selected.trim.name]["ec4"]
       );
     }
   } else {
@@ -82,19 +80,19 @@ function addExteriorColor(vehicle, optionDetail) {
 
 function addPackageComponents(vehicle, optionDetail) {
   let updatedVehicle = { ...vehicle };
-  const siblings = getExclusiveSiblings(vehicle, optionDetail);
+  // const siblings = getExclusiveSiblings(vehicle, optionDetail);
 
-  if (siblings.length > 0) {
-    siblings.forEach((sibling) => {
-      updatedVehicle = removeOptionInChoicesSelected(
-        vehicle,
-        optionDetail.groupName,
-        sibling
-      );
-      const modifiedOptionDetail = { ...optionDetail, serial: sibling };
-      updatedVehicle = deletePackageComponents(vehicle, modifiedOptionDetail);
-    });
-  }
+  // if (siblings.length > 0) {
+  //   siblings.forEach((sibling) => {
+  //     updatedVehicle = removeOptionInChoicesSelected(
+  //       vehicle,
+  //       optionDetail.groupName,
+  //       sibling
+  //     );
+  //     const modifiedOptionDetail = { ...optionDetail, serial: sibling };
+  //     updatedVehicle = deletePackageComponents(vehicle, modifiedOptionDetail);
+  //   });
+  // }
 
   const packageComponents = getComponents(
     vehicle.selected.trim,
@@ -107,7 +105,11 @@ function addPackageComponents(vehicle, optionDetail) {
         (choice) => choice.serial === component.serial
       );
       if (choice) {
-        let updatedChoice = { ...choice, package: optionDetail.serial };
+        let updatedChoice = {
+          ...choice,
+          package: optionDetail.serial,
+          popup: true,
+        };
         updatedVehicle = addOptionInChoicesSelected(
           vehicle,
           component.groupName,

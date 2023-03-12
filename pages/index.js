@@ -35,7 +35,7 @@ let initialState = {
 export default function Home() {
   //Hook to retrieve form choices
   const [vehicle, dispatch] = useReducer(reducer, initialState);
-
+  const [showPopup, setShowPopup] = useState(false);
   //Helper function
   const handleMakeSelected = (make) => {
     dispatch({
@@ -64,27 +64,27 @@ export default function Home() {
     });
   };
 
-  //Helper function
-  const handleOptionSelected = (optionDetail) => {
-    //Add code to handle option selected
-    dispatch({
-      type: "OPTION_SELECTED",
-      payload: {
-        optionDetail,
-      },
-    });
+  const handleOptionSelection = (optionDetail) => {
+    console.log(vehicle.popup);
+    if (vehicle.popup.show) {
+      dispatch({
+        type: "POPUP_SHOW",
+        payload: optionDetail,
+      });
+      setShowPopup(true);
+    } else {
+      dispatch({ type: "OPTION_SELECTED", payload: optionDetail });
+    }
   };
 
   //Helper function
-  const handleOptionConfirmation = (e) => {
+  const handleOptionConfirmation = (optionDetail) => {
     e.preventDefault(e); // prevent form submission
-    console.log(e.target);
-    // dispatch({
-    //   type: "OPTION_CONFIRMATION",
-    //   payload: {
-    //     optionDetail,
-    //   },
-    // });
+
+    dispatch({
+      type: "POPUP_CONFIRM",
+      payload: optionDetail,
+    });
   };
 
   //Handle form submit
@@ -139,7 +139,7 @@ export default function Home() {
             <>
               <Options
                 vehicle={vehicle}
-                onChange={handleOptionSelected}
+                onChange={handleOptionSelection}
               ></Options>
               <br></br>
             </>
@@ -148,10 +148,11 @@ export default function Home() {
           )}
           <br></br>
           <div>
-            {vehicle.popup.show && (
+            {showPopup && (
               <Popup
                 message={vehicle.popup.message}
                 onConfirm={handleOptionConfirmation}
+                onCancel={() => setShowPopup(false)}
               />
             )}
           </div>

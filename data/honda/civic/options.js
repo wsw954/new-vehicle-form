@@ -193,7 +193,6 @@ export const modelOptions = [
         price: 1708,
         trim: ["tt1", "tt3", "tt4", "tt6", "tt7"],
         serial: "w4",
-        action: true,
       },
       {
         name: "18-Inch Matte Black Alloy Wheels",
@@ -226,6 +225,7 @@ export const modelOptions = [
         price: 420,
         trim: ["tt1", "tt2", "tt3", "tt7"],
         serial: "pk1",
+        popup: false,
         action: true,
       },
       {
@@ -233,6 +233,7 @@ export const modelOptions = [
         price: 415,
         trim: ["tt4", "tt5", "tt6"],
         serial: "pk2",
+        popup: false,
         action: true,
       },
       {
@@ -240,6 +241,7 @@ export const modelOptions = [
         price: 370,
         trim: ["tt1", "tt2", "tt3", "tt7"],
         serial: "pk3",
+        popup: true,
         action: true,
       },
       {
@@ -247,6 +249,7 @@ export const modelOptions = [
         price: 367,
         trim: ["tt4", "tt5", "tt6"],
         serial: "pk4",
+        popup: true,
         action: true,
       },
       {
@@ -261,6 +264,7 @@ export const modelOptions = [
         price: 1130,
         trim: ["tt7"],
         serial: "pk6",
+        popup: true,
         action: true,
       },
       {
@@ -275,6 +279,7 @@ export const modelOptions = [
         price: 300,
         trim: ["tt1", "tt2", "tt3", "tt7"],
         serial: "pk8",
+        popup: true,
         action: true,
       },
       {
@@ -282,6 +287,7 @@ export const modelOptions = [
         price: 295,
         trim: ["tt4", "tt5", "tt6"],
         serial: "pk9",
+        popup: true,
         action: true,
       },
       {
@@ -311,6 +317,7 @@ export const modelOptions = [
         price: 150,
         trim: ["tt8"],
         serial: "pk13",
+        popup: true,
         action: true,
       },
     ],
@@ -324,6 +331,7 @@ export const modelOptions = [
         price: 211,
         trim: ["tt4", "tt5", "tt6", "tt8"],
         serial: "ea1",
+        popup: true,
         action: true,
       },
       {
@@ -350,6 +358,7 @@ export const modelOptions = [
         price: 54,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
         serial: "ea5",
+        popup: false,
         action: true,
       },
       {
@@ -357,6 +366,7 @@ export const modelOptions = [
         price: 124,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
         serial: "ea6",
+        popup: false,
         action: true,
       },
       {
@@ -450,6 +460,7 @@ export const modelOptions = [
         price: 399,
         trim: ["tt4", "tt5", "tt6", "tt8"],
         serial: "ea21",
+        popup: true,
         action: true,
       },
       {
@@ -542,6 +553,7 @@ export const modelOptions = [
         price: 183,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ia1",
+        popup: true,
         action: true,
       },
       {
@@ -573,6 +585,7 @@ export const modelOptions = [
         price: 194,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ia6",
+        popup: true,
         action: true,
       },
       {
@@ -580,6 +593,7 @@ export const modelOptions = [
         price: 108,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
         serial: "ia7",
+        popup: true,
         action: true,
       },
       {
@@ -587,6 +601,7 @@ export const modelOptions = [
         price: 322,
         trim: ["tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ia8",
+        popup: true,
         action: true,
       },
       {
@@ -600,6 +615,7 @@ export const modelOptions = [
         price: 322,
         trim: ["tt1", "tt2", "tt3"],
         serial: "ia10",
+        popup: true,
         action: true,
       },
       {

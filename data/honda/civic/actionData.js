@@ -1,3 +1,4 @@
+//This object stores the extra Interior Colors available, dependent on the trim selected & specific Exterior Colors chosen
 export const extraColors = {
   optionGroupName: "Interior Color",
   "Sedan EX": {
