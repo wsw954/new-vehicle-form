@@ -65,7 +65,6 @@ export default function Home() {
   };
 
   const handleOptionSelection = (optionDetail) => {
-    console.log(vehicle.popup);
     if (vehicle.popup.show) {
       dispatch({
         type: "POPUP_SHOW",

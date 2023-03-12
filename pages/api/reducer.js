@@ -73,7 +73,7 @@ const reducer = (vehicle, action) => {
         vehicle,
         action.payload
       );
-
+      console.log(updatedVehicle);
       return {
         ...vehicle,
         options: updatedVehicle.options,

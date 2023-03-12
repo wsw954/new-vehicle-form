@@ -37,7 +37,7 @@ export const handleOptionSelected = (vehicle, optionDetail) => {
     case "Single":
       return addSingleOption(vehicle, optionDetail);
     case "Multiple":
-      return testFunction(vehicle, optionDetail);
+      return handleMultipleOption(vehicle, optionDetail);
     default:
       return vehicle;
   }
@@ -69,77 +69,7 @@ function addSingleOption(vehicle, optionDetail) {
   return updatedVehicle;
 }
 
-// function handleMultipleOption2(vehicle, optionDetail) {
-//   let updatedVehicle = { ...vehicle };
-//   const optionGroup = optionGrpAvailable.get(optionDetail.groupName);
-//   const optionGroupSelected = updatedVehicle.selected.options.find(
-//     (os) => os.groupName === optionDetail.groupName
-//   );
-//   const optionSelected = optionGroup.choicesAvailable.find(
-//     (c) => c.serial === optionDetail.serial
-//   );
-
-//   if (
-//     optionDetail.checked &&
-//     !optionGroupSelected.choicesSelected.some(
-//       (choice) => choice.serial === optionSelected.serial
-//     )
-//   ) {
-//     console.log(optionDetail);
-//     updatedVehicle = addActionHandler(updatedVehicle, optionDetail);
-
-//     optionGroupSelected.choicesSelected.push(optionSelected);
-//   } else if (!optionDetail.checked) {
-//     updatedVehicle = deleteActionHandler(updatedVehicle, optionDetail);
-
-//     if (optionDetail.package != null) {
-//       updatedVehicle = deleteComponentActionHandler(
-//         updatedVehicle,
-//         optionDetail
-//       );
-//     }
-//     optionGroupSelected.choicesSelected =
-//       optionGroupSelected.choicesSelected.filter(
-//         (choice) => choice.serial !== optionSelected.serial
-//       );
-//   }
-
-//   return updatedVehicle;
-// }
-
-// function handleMultipleOption(vehicle, optionDetail) {
-//   let updatedVehicle = { ...vehicle };
-//   const optionGroup = optionGrpAvailable.get(optionDetail.groupName);
-//   const optionGroupSelected = updatedVehicle.selected.options.find(
-//     (os) => os.groupName === optionDetail.groupName
-//   );
-//   const optionSelected = optionGroup.choicesAvailable.find(
-//     (c) => c.serial === optionDetail.serial
-//   );
-
-//   if (
-//     optionDetail.checked &&
-//     !optionGroupSelected.choicesSelected.some(
-//       (choice) => choice.serial === optionSelected.serial
-//     )
-//   ) {
-//     if (optionDetail.popup) {
-//       return (updatedVehicle = addOptionPopupMessageHandler(
-//         vehicle,
-//         optionDetail
-//       ));
-//     }
-//     optionGroupSelected.choicesSelected =
-//       optionGroupSelected.choicesSelected.filter(
-//         (choice) => choice.serial !== optionSelected.serial
-//       );
-//   } else if ("action" in optionGroupSelected) {
-//     updatedVehicle = addActionHandler(vehicle, optionDetail);
-//   }
-//   return updatedVehicle;
-// }
-
-function testFunction(vehicle, optionDetail) {
+function handleMultipleOption(vehicle, optionDetail) {
   let updatedVehicle = { ...vehicle };
   const optionGroup = optionGrpAvailable.get(optionDetail.groupName);
   const optionGroupSelected = updatedVehicle.selected.options.find(
@@ -148,33 +78,28 @@ function testFunction(vehicle, optionDetail) {
   const optionSelected = optionGroup.choicesAvailable.find(
     (c) => c.serial === optionDetail.serial
   );
-  //Run different conditional statements
-  // console.log(optionDetail);
+
   if (optionDetail.checked) {
-    // console.log(optionDetail.popup);
     if (!optionDetail.popup) {
-      console.log("Line 156 in validate popup is false");
-      // updatedVehicle = addOptionPopUpMessageHandler(vehicle, optionDetail);
       return updatedVehicle;
     }
     if ("action" in optionSelected) {
-      console.log("Line 161 in validate action in optionSelected");
       updatedVehicle = addActionHandler(vehicle, optionDetail);
     }
     optionGroupSelected.choicesSelected.push(optionSelected);
   } else {
     if (optionDetail.popup) {
-      console.log("Line 167 in validate popup is false");
-      updatedVehicle = deleteOptionPopupMessageHandler(vehicle, optionDetail);
-      return updatedVehicle;
+      return deleteOptionPopupMessageHandler(vehicle, optionDetail);
     }
     if ("action" in optionSelected) {
       updatedVehicle = deleteActionHandler(vehicle, optionDetail);
     }
+
     optionGroupSelected.choicesSelected =
       optionGroupSelected.choicesSelected.filter(
         (choice) => choice.serial !== optionSelected.serial
       );
   }
+
   return updatedVehicle;
 }
