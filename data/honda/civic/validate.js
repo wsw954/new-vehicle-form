@@ -7,6 +7,7 @@ import {
 } from "./action";
 
 import {
+  popupMessageHandler,
   addOptionPopUpMessageHandler,
   deleteOptionPopupMessageHandler,
 } from "./popup";
@@ -71,35 +72,70 @@ function addSingleOption(vehicle, optionDetail) {
 
 function handleMultipleOption(vehicle, optionDetail) {
   let updatedVehicle = { ...vehicle };
-  const optionGroup = optionGrpAvailable.get(optionDetail.groupName);
+  const { groupName, serial, checked, popup, action } = optionDetail;
+  // Find the option group and selected option for this option detail.
+  const optionGroup = optionGrpAvailable.get(groupName);
   const optionGroupSelected = updatedVehicle.selected.options.find(
-    (os) => os.groupName === optionDetail.groupName
+    (os) => os.groupName === groupName
   );
+  // Find the option in the available choices for this option group.
   const optionSelected = optionGroup.choicesAvailable.find(
-    (c) => c.serial === optionDetail.serial
+    (c) => c.serial === serial
   );
-
-  if (optionDetail.checked) {
-    if (!optionDetail.popup) {
-      return updatedVehicle;
-    }
-    if ("action" in optionSelected) {
+  //If the option requires a popup confirmation, load the popup info
+  if (popup) {
+    console.log("Line 88 in handleMultipleOption");
+    console.log(checked);
+    return popupMessageHandler(vehicle, optionDetail);
+  }
+  // Handle the option depending on whether it is being checked or unchecked.
+  if (checked) {
+    // If the option is not a popup and has an action, perform the action.
+    if (action) {
       updatedVehicle = addActionHandler(vehicle, optionDetail);
     }
-    optionGroupSelected.choicesSelected.push(optionSelected);
-  } else {
-    if (optionDetail.popup) {
-      return deleteOptionPopupMessageHandler(vehicle, optionDetail);
+    // Add the selected option to the selected choices if it doesn't already exist.
+    if (!optionGroupSelected.choicesSelected.includes(optionSelected)) {
+      optionGroupSelected.choicesSelected.push(optionSelected);
     }
+  } else {
+    // If the option has an action, perform the action and update the vehicle.
     if ("action" in optionSelected) {
       updatedVehicle = deleteActionHandler(vehicle, optionDetail);
     }
-
+    // Remove the selected option from the selected choices.
     optionGroupSelected.choicesSelected =
       optionGroupSelected.choicesSelected.filter(
         (choice) => choice.serial !== optionSelected.serial
       );
   }
-
   return updatedVehicle;
 }
+
+export const handlePopupConfirm = (vehicle, optionDetail) => {
+  let updatedVehicle = { ...vehicle };
+  const {
+    groupName,
+    serial,
+    checked,
+    package: packageID,
+    action,
+  } = optionDetail;
+  switch (optionDetail.optionType) {
+    case "Single":
+      return updatedVehicle;
+    case "Multiple":
+      if (checked) {
+        console.log("Add the Option, clicked on");
+      } else {
+        if (packageID != "") {
+          updatedVehicle = deleteComponentActionHandler(vehicle, optionDetail);
+        }
+        console.log("Remove the Option clicked on");
+      }
+
+      return updatedVehicle;
+    default:
+      return updatedVehicle;
+  }
+};

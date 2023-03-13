@@ -5,8 +5,8 @@ const ACTIONS = {
   MODEL_SELECTED: "MODEL_SELECTED",
   TRIM_SELECTED: "TRIM_SELECTED",
   OPTION_SELECTED: "OPTION_SELECTED",
-  POPUP_SHOW: "POPUP_SHOW",
   POPUP_CONFIRM: "POPUP_CONFIRM",
+  POPUP_CANCEL: "POPUP_CANCEL",
 };
 
 const reducer = (vehicle, action) => {
@@ -73,27 +73,37 @@ const reducer = (vehicle, action) => {
         vehicle,
         action.payload
       );
-      console.log(updatedVehicle);
+
       return {
         ...vehicle,
         options: updatedVehicle.options,
         selected: updatedVehicle.selected,
-      };
-    case ACTIONS.POPUP_SHOW:
-      console.log("Line 83 in reducer");
-      return {
-        ...vehicle,
       };
     case ACTIONS.POPUP_CONFIRM:
-      updatedVehicle = dataValidate.handleOptionSelected(
-        vehicle,
-        action.payload
-      );
+      dataValidate = require("../../data/" +
+        vehicle.selected.make.toLowerCase() +
+        "/" +
+        vehicle.selected.model.toLowerCase() +
+        "/validate");
+      updatedVehicle = dataValidate.handlePopupConfirm(vehicle, action.payload);
       return {
         ...vehicle,
         options: updatedVehicle.options,
         selected: updatedVehicle.selected,
-        popup: updatedVehicle.popup,
+        popup: {
+          show: false,
+          message: "",
+          detail: {},
+        },
+      };
+    case ACTIONS.POPUP_CANCEL:
+      return {
+        ...vehicle,
+        popup: {
+          show: false,
+          message: "",
+          detail: {},
+        },
       };
     default:
       return { vehicle };

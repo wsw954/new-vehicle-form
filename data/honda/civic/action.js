@@ -162,19 +162,20 @@ function deleteExteriorColor(vehicle, optionDetail) {
 }
 
 function deletePackageComponents(vehicle, optionDetail) {
+  let updatedVehicle = { ...vehicle };
   const packageComponents = getComponents(
     vehicle.selected.trim,
     optionDetail.serial
   );
   packageComponents.forEach((option) => {
-    vehicle = removeOptionInChoicesSelected(
+    updatedVehicle = removeOptionInChoicesSelected(
       vehicle,
       option.groupName,
       option.serial
     );
   });
 
-  return vehicle;
+  return updatedVehicle;
 }
 
 function deleteExteriorAccessories(vehicle, optionDetail) {

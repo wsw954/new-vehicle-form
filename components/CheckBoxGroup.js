@@ -10,6 +10,10 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
   const choicesSelected = optionGroup.choicesSelected;
 
   const handleChange = (event) => {
+    const actionAttr = event.target.getAttribute("data-action");
+    const actionValue = actionAttr === "true";
+    const popupAttr = event.target.getAttribute("data-popup");
+    const popupValue = popupAttr === "true";
     onChange({
       optionType: "Multiple",
       groupName: event.target.getAttribute("data-option-group"),
@@ -17,8 +21,8 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
       serial: event.target.getAttribute("data-serial"),
       checked: event.target.checked,
       package: event.target.getAttribute("data-package"),
-      popup: event.target.getAttribute("data-popup"),
-      action: event.target.getAttribute("data-action"),
+      popup: popupValue,
+      action: actionValue,
     });
   };
 
@@ -28,12 +32,12 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
       choiceAvailable.hasOwnProperty("popup") &&
       typeof choiceAvailable.popup === "boolean"
         ? choiceAvailable.popup
-        : "";
+        : false;
     let dataAction =
       choiceAvailable.hasOwnProperty("action") &&
       typeof choiceAvailable.action === "boolean"
         ? choiceAvailable.action
-        : "";
+        : false;
     const selectedChoice = {};
     if (choicesSelected.length > 0) {
       selectedChoice = choicesSelected.find(
@@ -60,7 +64,7 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
           data-option-group={name}
           data-serial={choiceAvailable.serial}
           data-package={packageValue}
-          data-popup={dataPopup}
+          data-popup={JSON.stringify(dataPopup)}
           data-action={dataAction}
           onChange={handleChange}
         />

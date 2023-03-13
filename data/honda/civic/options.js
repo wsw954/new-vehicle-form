@@ -241,7 +241,7 @@ export const modelOptions = [
         price: 370,
         trim: ["tt1", "tt2", "tt3", "tt7"],
         serial: "pk3",
-        popup: true,
+        popup: false,
         action: true,
       },
       {
@@ -249,7 +249,7 @@ export const modelOptions = [
         price: 367,
         trim: ["tt4", "tt5", "tt6"],
         serial: "pk4",
-        popup: true,
+        popup: false,
         action: true,
       },
       {
@@ -279,7 +279,7 @@ export const modelOptions = [
         price: 300,
         trim: ["tt1", "tt2", "tt3", "tt7"],
         serial: "pk8",
-        popup: true,
+        popup: false,
         action: true,
       },
       {
@@ -287,7 +287,7 @@ export const modelOptions = [
         price: 295,
         trim: ["tt4", "tt5", "tt6"],
         serial: "pk9",
-        popup: true,
+        popup: false,
         action: true,
       },
       {
@@ -317,7 +317,7 @@ export const modelOptions = [
         price: 150,
         trim: ["tt8"],
         serial: "pk13",
-        popup: true,
+        popup: false,
         action: true,
       },
     ],
@@ -553,7 +553,7 @@ export const modelOptions = [
         price: 183,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ia1",
-        popup: true,
+        popup: false,
         action: true,
       },
       {
@@ -585,7 +585,7 @@ export const modelOptions = [
         price: 194,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ia6",
-        popup: true,
+        popup: false,
         action: true,
       },
       {
@@ -593,7 +593,7 @@ export const modelOptions = [
         price: 108,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
         serial: "ia7",
-        popup: true,
+        popup: false,
         action: true,
       },
       {
@@ -601,7 +601,7 @@ export const modelOptions = [
         price: 322,
         trim: ["tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ia8",
-        popup: true,
+        popup: false,
         action: true,
       },
       {
@@ -615,7 +615,7 @@ export const modelOptions = [
         price: 322,
         trim: ["tt1", "tt2", "tt3"],
         serial: "ia10",
-        popup: true,
+        popup: false,
         action: true,
       },
       {

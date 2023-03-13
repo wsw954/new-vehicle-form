@@ -35,7 +35,6 @@ let initialState = {
 export default function Home() {
   //Hook to retrieve form choices
   const [vehicle, dispatch] = useReducer(reducer, initialState);
-  const [showPopup, setShowPopup] = useState(false);
   //Helper function
   const handleMakeSelected = (make) => {
     dispatch({
@@ -65,27 +64,26 @@ export default function Home() {
   };
 
   const handleOptionSelection = (optionDetail) => {
-    if (vehicle.popup.show) {
-      dispatch({
-        type: "POPUP_SHOW",
-        payload: optionDetail,
-      });
-      setShowPopup(true);
-    } else {
-      dispatch({ type: "OPTION_SELECTED", payload: optionDetail });
-    }
+    dispatch({
+      type: "OPTION_SELECTED",
+      payload: optionDetail,
+    });
   };
 
   //Helper function
-  const handleOptionConfirmation = (optionDetail) => {
-    e.preventDefault(e); // prevent form submission
-
+  const handlePopupConfirm = (event, optionDetail) => {
+    event.preventDefault();
     dispatch({
       type: "POPUP_CONFIRM",
       payload: optionDetail,
     });
   };
-
+  const handlePopupCancel = (optionDetail) => {
+    dispatch({
+      type: "POPUP_CANCEL",
+      payload: optionDetail,
+    });
+  };
   //Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault(e);
@@ -146,15 +144,20 @@ export default function Home() {
             <br></br>
           )}
           <br></br>
-          <div>
-            {showPopup && (
-              <Popup
-                message={vehicle.popup.message}
-                onConfirm={handleOptionConfirmation}
-                onCancel={() => setShowPopup(false)}
-              />
+          <>
+            {vehicle.popup.show ? (
+              <fieldset>
+                <Popup
+                  message={vehicle.popup.message}
+                  detail={vehicle.popup.detail}
+                  onConfirm={handlePopupConfirm}
+                  onCancel={handlePopupCancel}
+                ></Popup>
+              </fieldset>
+            ) : (
+              <br></br>
             )}
-          </div>
+          </>
           <button>Submit</button>
         </form>
       </div>
