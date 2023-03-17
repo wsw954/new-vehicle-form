@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-
 //Call uuidv4, to use to create unique IDs
 uuidv4();
 
@@ -60,18 +59,36 @@ export default function DropDropdown({
         (o) => o.groupName === name
       );
       let choicesSelected = optionGroup.choicesSelected;
+      // let selectedChoice = {};
 
       let unselected = {
+        optionType: "Single",
         groupName: vehicle.selected.options.find((o) => o.groupName === name)
           ?.groupName,
         name: null,
         serial: null,
+        action: false,
+        package: null,
+        popup: false,
       };
       //Assign initialValue
-      initialValue = vehicle.selected.options.find((o) => o.groupName === name)
-        ?.choicesSelected[0]?.name;
+      initialValue = choicesSelected[0]?.name;
 
       choiceOptions = choices.map((choiceAvailable, index) => {
+        let dataPopup = choiceAvailable.popup ?? false;
+        let dataAction = choiceAvailable.action ?? false;
+        let packageValue = "";
+
+        if (choicesSelected.length > 0) {
+          const selectedChoice = choicesSelected.find(
+            (o) => o.serial === choiceAvailable.serial
+          );
+          if (selectedChoice) {
+            packageValue = selectedChoice.package;
+            dataPopup = selectedChoice.popup ?? false;
+          }
+        }
+
         return (
           <option
             key={uuidv4({ index })}
@@ -79,16 +96,9 @@ export default function DropDropdown({
             data-price={choiceAvailable.price}
             data-option-group={name}
             data-serial={choiceAvailable.serial}
-            data-package={
-              choicesSelected.some(
-                (selectedChoice) =>
-                  selectedChoice.serial === choiceAvailable.serial
-              )
-                ? choicesSelected.find(
-                    (c) => c.serial === choiceAvailable.serial
-                  ).package
-                : ""
-            }
+            data-action={JSON.stringify(dataAction)}
+            data-package={packageValue}
+            data-popup={JSON.stringify(dataPopup)}
           >
             {choicesSelected.some(
               (selectedChoice) =>
@@ -102,8 +112,17 @@ export default function DropDropdown({
         );
       });
       handleChange = (event) => {
+        let actionValue = false;
+        let popupValue = false;
+
         if (event.target.selectedIndex > 0) {
+          const actionAttr = event.target.getAttribute("data-action");
+          actionValue = actionAttr === "true";
+          const popupAttr = event.target.getAttribute("data-popup");
+          popupValue = popupAttr === "true";
+
           unselected = {
+            optionType: "Single",
             groupName: vehicle.selected.options.find(
               (o) => o.groupName === name
             )?.groupName,
@@ -113,6 +132,15 @@ export default function DropDropdown({
             serial:
               vehicle.selected.options.find((o) => o.groupName === name)
                 ?.choicesSelected[0]?.serial || null,
+            action:
+              event.target.selectedOptions[0].getAttribute("data-action") ||
+              false,
+            package:
+              vehicle.selected.options.find((o) => o.groupName === name)
+                ?.choicesSelected[0]?.package || null,
+            popup:
+              vehicle.selected.options.find((o) => o.groupName === name)
+                ?.choicesSelected[0]?.popup || false,
           };
         }
         onChange({
@@ -122,6 +150,9 @@ export default function DropDropdown({
           name: event.target.value,
           serial: event.target.selectedOptions[0].getAttribute("data-serial"),
           unselected: unselected,
+          action: actionValue,
+          package: event.target.getAttribute("data-package"),
+          popup: popupValue,
         });
       };
       break;

@@ -4,10 +4,10 @@ import { v4 as uuidv4 } from "uuid";
 uuidv4();
 
 export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
-  const optionGroup = vehicle.selected.options.find(
+  const selectedOptionGroup = vehicle.selected.options.find(
     (o) => o.groupName === name
   );
-  const choicesSelected = optionGroup.choicesSelected;
+  const choicesSelected = selectedOptionGroup.choicesSelected;
 
   const handleChange = (event) => {
     const actionAttr = event.target.getAttribute("data-action");
@@ -20,9 +20,9 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
       name: event.target.value,
       serial: event.target.getAttribute("data-serial"),
       checked: event.target.checked,
+      action: actionValue,
       package: event.target.getAttribute("data-package"),
       popup: popupValue,
-      action: actionValue,
     });
   };
 
@@ -63,9 +63,9 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
           data-price={choiceAvailable.price}
           data-option-group={name}
           data-serial={choiceAvailable.serial}
+          data-action={dataAction}
           data-package={packageValue}
           data-popup={JSON.stringify(dataPopup)}
-          data-action={dataAction}
           onChange={handleChange}
         />
         <label htmlFor={choiceAvailable.name}>
@@ -75,8 +75,8 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
               name !== "Packages" &&
               selectedChoice.package
           )
-            ? choiceAvailable.name + "-Included in Package"
-            : choiceAvailable.name + "  $" + choiceAvailable.price + " "}
+            ? `${choiceAvailable.name}-Included in Package`
+            : `${choiceAvailable.name}  $${choiceAvailable.price} `}
         </label>
       </div>
     );

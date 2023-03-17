@@ -46,6 +46,9 @@ export const handleOptionSelected = (vehicle, optionDetail) => {
 
 function addSingleOption(vehicle, optionDetail) {
   let updatedVehicle = { ...vehicle };
+  const { groupName, serial, checked, popup, action, unselected } =
+    optionDetail;
+  console.log(optionDetail);
   const choicesAvailable = optionGrpAvailable.get(
     optionDetail.groupName
   ).choicesAvailable;
@@ -84,8 +87,6 @@ function handleMultipleOption(vehicle, optionDetail) {
   );
   //If the option requires a popup confirmation, load the popup info
   if (popup) {
-    console.log("Line 88 in handleMultipleOption");
-    console.log(checked);
     return popupMessageHandler(vehicle, optionDetail);
   }
   // Handle the option depending on whether it is being checked or unchecked.

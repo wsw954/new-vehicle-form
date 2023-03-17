@@ -113,6 +113,12 @@ export const getComponents = (vehicleTrim, packageSerial) => {
       break;
     case "pk5":
       components.push({
+        groupName: "Powertrain",
+        name: "1.5L Turbo 4-Cyl 180hp Engine w/CVT", //Experimental component to test Dropdown data-package functionality
+        serial: "pw2",
+      });
+
+      components.push({
         groupName: "Exterior Accessories",
         name: "Decklid Spoiler-HPD",
         serial: "ea4",

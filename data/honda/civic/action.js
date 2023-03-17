@@ -80,19 +80,6 @@ function addExteriorColor(vehicle, optionDetail) {
 
 function addPackageComponents(vehicle, optionDetail) {
   let updatedVehicle = { ...vehicle };
-  // const siblings = getExclusiveSiblings(vehicle, optionDetail);
-
-  // if (siblings.length > 0) {
-  //   siblings.forEach((sibling) => {
-  //     updatedVehicle = removeOptionInChoicesSelected(
-  //       vehicle,
-  //       optionDetail.groupName,
-  //       sibling
-  //     );
-  //     const modifiedOptionDetail = { ...optionDetail, serial: sibling };
-  //     updatedVehicle = deletePackageComponents(vehicle, modifiedOptionDetail);
-  //   });
-  // }
 
   const packageComponents = getComponents(
     vehicle.selected.trim,
