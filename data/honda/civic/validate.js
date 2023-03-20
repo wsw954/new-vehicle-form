@@ -7,8 +7,7 @@ import {
 } from "./action";
 
 import {
-  popupMessageHandler,
-  addOptionPopUpMessageHandler,
+  addOptionPopupMessageHandler,
   deleteOptionPopupMessageHandler,
 } from "./popup";
 
@@ -85,12 +84,12 @@ function handleMultipleOption(vehicle, optionDetail) {
   const optionSelected = optionGroup.choicesAvailable.find(
     (c) => c.serial === serial
   );
-  //If the option requires a popup confirmation, load the popup info
-  if (popup) {
-    return popupMessageHandler(vehicle, optionDetail);
-  }
+
   // Handle the option depending on whether it is being checked or unchecked.
   if (checked) {
+    if (popup) {
+      return addOptionPopupMessageHandler(vehicle, optionDetail);
+    }
     // If the option is not a popup and has an action, perform the action.
     if (action) {
       updatedVehicle = addActionHandler(vehicle, optionDetail);
@@ -100,6 +99,9 @@ function handleMultipleOption(vehicle, optionDetail) {
       optionGroupSelected.choicesSelected.push(optionSelected);
     }
   } else {
+    if (popup) {
+      return deleteOptionPopupMessageHandler(vehicle, optionDetail);
+    }
     // If the option has an action, perform the action and update the vehicle.
     if ("action" in optionSelected) {
       updatedVehicle = deleteActionHandler(vehicle, optionDetail);
