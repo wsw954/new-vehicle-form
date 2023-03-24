@@ -1,3 +1,6 @@
+import { modelOptions, trims } from "/data/honda/civic/options";
+const optionsAvailable = new Map(modelOptions.map((e) => [e.name, e]));
+
 //This object stores the extra Interior Colors available, dependent on the trim selected & specific Exterior Colors chosen
 export const extraColors = {
   optionGroupName: "Interior Color",
@@ -17,6 +20,44 @@ export const extraColors = {
     ec4: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
     ec10: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
   },
+};
+
+export const exteriorColorAction = (vehicle, optionDetail) => {
+  const trim = vehicle.selected.trim.name;
+  const exteriorColorChosen = optionDetail.name;
+  const interiorColorsAvailable = optionsAvailable.get("Interior Color");
+  // Define exterior color array and interior color name based on trim level
+  let exteriorColorArray, interiorColorName;
+  switch (trim) {
+    case "Sedan EX":
+      exteriorColorArray = ["Meteorite Gray Metallic", "Platinum Pearl White"];
+      interiorColorName = "Gray Cloth";
+      break;
+    case "Sedan Touring":
+    case "Hatchback EX-L":
+    case "Hatchback Sport Touring":
+      exteriorColorArray = ["Meteorite Gray Metallic", "Platinum Pearl White"];
+      interiorColorName = "Gray Leather";
+      break;
+    default:
+      exteriorColorArray = [];
+  }
+  let additionalInteriorColor = {
+    groupName: "Interior Color",
+    colors: exteriorColorArray.includes(exteriorColorChosen)
+      ? interiorColorsAvailable.choicesAvailable.find(
+          (element) => element.name === interiorColorName
+        )
+      : {},
+    chosen: {},
+  };
+  let intColorChosen = vehicle.selected.options.find(
+    (option) => option.groupName === "Interior Color"
+  ).choicesSelected;
+  if (intColorChosen?.length === 1) {
+    additionalInteriorColor.chosen = intColorChosen[0];
+  }
+  return additionalInteriorColor;
 };
 
 export const getExclusiveSiblings = (vehicle, optionDetail) => {

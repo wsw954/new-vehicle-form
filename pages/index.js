@@ -79,7 +79,6 @@ export default function Home() {
     });
   };
   const handlePopupCancel = (optionDetail) => {
-    console.log("line 82 in index.js");
     dispatch({
       type: "POPUP_CANCEL",
       payload: optionDetail,

@@ -1,6 +1,6 @@
 import { modelOptions, trims } from "/data/honda/civic/options";
 import {
-  extraColors,
+  exteriorColorAction,
   getComponents,
   getExclusiveSiblings,
   exteriorAccessoriesExclusives,
@@ -9,27 +9,36 @@ import {
 
 const optionsAvailable = new Map(modelOptions.map((e) => [e.name, e]));
 
+function defaultHandler(vehicle, optionDetail) {
+  console.log("Default handler called, since no special function required");
+  return vehicle;
+}
+
+const addFunctionMap = {
+  addPowertrain: addPowertrain,
+  addExteriorColor: addExteriorColor,
+  addPackages: addPackages,
+  addExteriorAccessories: addExteriorAccessories,
+  addInteriorAccessories: addInteriorAccessories,
+};
+
+const deleteFunctionMap = {
+  deletePackages: deletePackages,
+  deleteExteriorAccessories: deleteExteriorAccessories,
+  deleteInteriorAccessories: deleteInteriorAccessories,
+};
+
 const addOptionFunctionMap = modelOptions.reduce((acc, option) => {
-  try {
-    let functionName = `add${option.name.split(" ").join("")}`;
-    const fn = eval(functionName);
-    acc[option.name] = (vehicle, optionDetail) => fn(vehicle, optionDetail);
-  } catch (e) {
-    console.error("Add Function for " + option.name + " is not defined");
-    acc[option.name] = (vehicle, optionDetail) => vehicle;
-  }
+  let functionName = `add${option.name.split(" ").join("")}`;
+  const fn = addFunctionMap[functionName] || defaultHandler;
+  acc[option.name] = (vehicle, optionDetail) => fn(vehicle, optionDetail);
   return acc;
 }, {});
 
 const deleteOptionFunctionMap = modelOptions.reduce((acc, option) => {
-  try {
-    let functionName = `delete${option.name.split(" ").join("")}`;
-    const fn = eval(functionName);
-    acc[option.name] = (vehicle, optionDetail) => fn(vehicle, optionDetail);
-  } catch (e) {
-    console.error("Delete Function for " + option.name + " is not defined");
-    acc[option.name] = (vehicle, optionDetail) => vehicle;
-  }
+  let functionName = `delete${option.name.split(" ").join("")}`;
+  const fn = deleteFunctionMap[functionName] || defaultHandler;
+  acc[option.name] = (vehicle, optionDetail) => fn(vehicle, optionDetail);
   return acc;
 }, {});
 
@@ -49,55 +58,33 @@ export const deleteActionHandler = (vehicle, optionDetail) => {
 };
 
 function addPowertrain(vehicle, optionDetail) {
-  console.log("Line 52 in action, Powertrain generic add action function");
   return vehicle;
 }
 
-//The exterior color selection has some effect on the interior color choices available
-//Depending on the color chosen, and the trim selected
 function addExteriorColor(vehicle, optionDetail) {
-  let updatedVehicle = { ...vehicle };
-  if (extraColors[updatedVehicle.selected.trim.name]) {
-    const color =
-      extraColors[updatedVehicle.selected.trim.name][optionDetail.serial];
-    if (color) {
-      updatedVehicle = clearChoicesSelected(
-        vehicle,
-        extraColors.optionGroupName
-      );
-      return addOptionInChoicesAvailable(
-        updatedVehicle,
-        extraColors.optionGroupName,
-        color
-      );
-    } else {
-      return removeOptionInChoicesAvailable(
-        updatedVehicle,
-        extraColors.optionGroupName,
-        extraColors[updatedVehicle.selected.trim.name]["ec4"]
+  let additionalInteriorColor = exteriorColorAction(vehicle, optionDetail);
+  const { colors, groupName } = additionalInteriorColor;
+  if (Object.keys(colors).length > 0) {
+    const updatedVehicle = clearChoicesSelected(vehicle, groupName);
+    return addOptionInChoicesAvailable(updatedVehicle, groupName, colors);
+  } else {
+    let optionGroup = vehicle.options.find(
+      (option) => option.name === additionalInteriorColor.groupName
+    );
+    if (optionGroup) {
+      optionGroup.choicesAvailable = filterChoicesAvailableByTrim(
+        optionGroup,
+        vehicle.selected.trim.serial
       );
     }
-  } else {
-    return updatedVehicle;
   }
-}
-
-function addInteriorColor(vehicle, optionDetail) {
-  console.log("Line 57 in action, Interior Color generic ADD action function");
-  return vehicle;
-}
-
-function addWheels(vehicle, optionDetail) {
-  console.log("Line 62 in action, Wheels generic ADD action function");
   return vehicle;
 }
 
 function addPackages(vehicle, optionDetail) {
+  const { groupName, serial, checked, popup, action } = optionDetail;
   let updatedVehicle = { ...vehicle };
-  const packageComponents = getComponents(
-    vehicle.selected.trim,
-    optionDetail.serial
-  );
+  const packageComponents = getComponents(vehicle.selected.trim, serial);
   packageComponents.forEach((component) => {
     const modelOption = optionsAvailable.get(component.groupName);
     if (modelOption) {
@@ -107,7 +94,8 @@ function addPackages(vehicle, optionDetail) {
       if (choice) {
         let updatedChoice = {
           ...choice,
-          package: optionDetail.serial,
+          package: serial,
+          action: true,
           popup: true,
         };
         updatedVehicle = addOptionInChoicesSelected(
@@ -118,6 +106,8 @@ function addPackages(vehicle, optionDetail) {
       }
     }
   });
+  const siblings = getExclusiveSiblings(vehicle, optionDetail);
+
   return updatedVehicle;
 }
 
@@ -154,32 +144,6 @@ function addExteriorAccessories(vehicle, optionDetail) {
 
 function addInteriorAccessories(vehicle, optionDetail) {
   console.log("Line 156 in action, Interior Accessories ADD action function");
-  return vehicle;
-}
-
-function addElectronicAccessories(vehicle, optionDetail) {
-  console.log(
-    "Line 161 in action, Electronic Accessories generic ADD action function"
-  );
-  return vehicle;
-}
-
-function deletePowertrain(vehicle, optionDetail) {
-  console.log("Line 72 in action, Powertrain generic DELETE action function");
-  return vehicle;
-}
-
-function deleteExteriorColor(vehicle, optionDetail) {
-  console.log("Line 173 in action, generic DELETE action function");
-  return vehicle;
-}
-function deleteInteriorColor(vehicle, optionDetail) {
-  console.log("Line 80 Interior Color generic DELETE action function");
-  return vehicle;
-}
-
-function deleteWheels(vehicle, optionDetail) {
-  console.log("Line 85, Wheels generic DELETE action function");
   return vehicle;
 }
 
@@ -220,11 +184,10 @@ function deleteInteriorAccessories(vehicle, optionDetail) {
   return vehicle;
 }
 
-function deleteElectronicAccessories(vehicle, optionDetail) {
-  console.log(
-    "Line 96 in action, Electronic Accessories generic DELETE action function"
+function filterChoicesAvailableByTrim(optionGroup, trimSerial) {
+  return optionGroup.choicesAvailable.filter((option) =>
+    option.trim.includes(trimSerial)
   );
-  return vehicle;
 }
 
 function clearChoicesSelected(vehicle, optionGroupName) {

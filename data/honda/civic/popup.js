@@ -23,9 +23,9 @@ const addOptionPopupFunctionMap = modelOptions.reduce((acc, option) => {
   return acc;
 }, {});
 
-const deletedOptionPopupFunctionMap = modelOptions.reduce((acc, option) => {
+const deleteOptionPopupFunctionMap = modelOptions.reduce((acc, option) => {
   try {
-    let functionName = `add${option.name.split(" ").join("")}Message`;
+    let functionName = `delete${option.name.split(" ").join("")}Message`;
     const fn = eval(functionName);
     acc[option.name] = (vehicle, optionDetail) => fn(vehicle, optionDetail);
   } catch (e) {
@@ -48,12 +48,135 @@ export const addOptionPopupMessageHandler = (vehicle, optionDetail) => {
 
 export const deleteOptionPopupMessageHandler = (vehicle, optionDetail) => {
   return (
-    addOptionPopupFunctionMap[optionDetail.groupName]?.(
+    deleteOptionPopupFunctionMap[optionDetail.groupName]?.(
       vehicle,
       optionDetail
     ) || vehicle
   );
 };
+
+function addPowertrainMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 60 in popup, ADD Powertrain generic popup Message function"
+  );
+  return vehicle;
+}
+
+function addExteriorColorMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 67 in popup, ADD Exterior Color generic popup Message function"
+  );
+  return vehicle;
+}
+
+function addInteriorColorMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 74 in popup, ADD Interior Color generic popup Message function"
+  );
+  return vehicle;
+}
+
+function addWheelsMessage(vehicle, optionDetail) {
+  console.log("Line 80 in popup, ADD Wheels generic popup Message function");
+  return vehicle;
+}
+
+function addPackagesMessage(vehicle, optionDetail) {
+  let updatedVehicle = { ...vehicle };
+  const packageOption = optionsAvailable.get(optionDetail.groupName);
+  const siblings = getExclusiveSiblings(vehicle, optionDetail);
+  if (siblings.length > 0) {
+    //For each sibling, check if it is in the vehicle.selected.options
+    //If not selected
+  }
+  return vehicle;
+}
+// function deletePackageMessage(vehicle, optionDetail) {
+//   let updatedVehicle = { ...vehicle };
+//   const packageOption = optionsAvailable.get(optionDetail.groupName);
+//   const siblings = getExclusiveSiblings(vehicle, optionDetail);
+//   if (siblings.length > 0) {
+//     //For each sibling, check if it is in the vehicle.selected.options
+//     //If not selected
+//   }
+//   return vehicle;
+// }
+
+function addExteriorAccessoriesMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 85 in popup, ADD Exterior Accessories generic popup Message function"
+  );
+  return vehicle;
+}
+function addInteriorAccessoriesMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 92 in popup, ADD Interior Accessories generic popup Message function"
+  );
+  return vehicle;
+}
+
+function addElectronicAccessoriesMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 99 in popup, ADD Electronic Accessories generic popup Message function"
+  );
+  return vehicle;
+}
+
+function deletePowertrainMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 106 in popup, DELETE Powertrain generic popup Message function"
+  );
+  return vehicle;
+}
+
+function deleteExteriorColorMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 113 in popup, DELETE Exterior Color generic popup Message function"
+  );
+  return vehicle;
+}
+
+function deleteInteriorColorMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 120 in popup, DELETE Interior Color generic popup Message function"
+  );
+  return vehicle;
+}
+
+function deleteWheelsMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 127 in popup, DELETE Interior Color generic popup Message function"
+  );
+  return vehicle;
+}
+
+function deletePackagesMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 134 in popup, DELETE Packages generic popup Message function"
+  );
+  return vehicle;
+}
+
+function deleteExteriorAccessoriesMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 141 in popup, DELETE Exterior Accessories generic popup Message function"
+  );
+  return vehicle;
+}
+
+function deleteInteriorAccessoriesMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 148 in popup, DELETE Interior Accessories generic popup Message function"
+  );
+  return vehicle;
+}
+
+function deleteElectronicAccessoriesMessage(vehicle, optionDetail) {
+  console.log(
+    "Line 155 in popup, DELETE Electronic Accessories generic popup Message function"
+  );
+  return vehicle;
+}
 
 // export const popupMessageHandler = (vehicle, optionDetail) => {
 //   const {
@@ -101,27 +224,6 @@ export const deleteOptionPopupMessageHandler = (vehicle, optionDetail) => {
 //     vehicle
 //   );
 // };
-
-function addPackagesMessage(vehicle, optionDetail) {
-  let updatedVehicle = { ...vehicle };
-  const packageOption = optionsAvailable.get(optionDetail.groupName);
-  const siblings = getExclusiveSiblings(vehicle, optionDetail);
-  if (siblings.length > 0) {
-    //For each sibling, check if it is in the vehicle.selected.options
-    //If not selected
-  }
-  return vehicle;
-}
-function deletePackageMessage(vehicle, optionDetail) {
-  let updatedVehicle = { ...vehicle };
-  const packageOption = optionsAvailable.get(optionDetail.groupName);
-  const siblings = getExclusiveSiblings(vehicle, optionDetail);
-  if (siblings.length > 0) {
-    //For each sibling, check if it is in the vehicle.selected.options
-    //If not selected
-  }
-  return vehicle;
-}
 
 function deleteComponentMessage(vehicle, optionDetail) {
   let newpopup = vehicle.popup;

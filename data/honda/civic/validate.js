@@ -47,7 +47,6 @@ function addSingleOption(vehicle, optionDetail) {
   let updatedVehicle = { ...vehicle };
   const { groupName, serial, checked, popup, action, unselected } =
     optionDetail;
-  console.log(optionDetail);
   const choicesAvailable = optionGrpAvailable.get(
     optionDetail.groupName
   ).choicesAvailable;

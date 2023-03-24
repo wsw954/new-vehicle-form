@@ -35,7 +35,7 @@ export default function DropDropdown({
       ));
       break;
     case "Trim":
-      initialValue = vehicle.selected.trim;
+      initialValue = vehicle.selected.trim.name;
       choiceOptions = vehicle.trims.map((choice, index) => (
         <option
           key={uuidv4({ index })}

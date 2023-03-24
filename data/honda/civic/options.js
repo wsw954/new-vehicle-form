@@ -24,7 +24,6 @@ export const modelOptions = [
         name: "1.5L Turbo 4-Cyl 180hp Engine w/CVT",
         price: 0,
         trim: ["tt2", "tt3", "tt4", "tt5", "tt6"],
-        action: true,
         serial: "pw2",
       },
       {
@@ -265,7 +264,7 @@ export const modelOptions = [
         price: 1130,
         trim: ["tt7"],
         serial: "pk6",
-        popup: true,
+        popup: false,
         action: true,
       },
       {
@@ -273,6 +272,7 @@ export const modelOptions = [
         price: 799,
         trim: ["tt4", "tt5", "tt6"],
         serial: "pk7",
+        popup: false,
         action: true,
       },
       {
