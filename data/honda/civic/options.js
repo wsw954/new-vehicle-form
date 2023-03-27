@@ -257,6 +257,7 @@ export const modelOptions = [
         price: 1452,
         trim: ["tt1", "tt2", "tt3"],
         serial: "pk5",
+        popup: false,
         action: true,
       },
       {

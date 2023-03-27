@@ -1,39 +1,45 @@
 import { modelOptions, trims } from "/data/honda/civic/options";
 import {
-  extraColors,
   getComponents,
-  getExclusiveSiblings,
+  getPackageExclusiveSiblings,
   exteriorAccessoriesExclusives,
   exteriorAccessoriesInclusives,
 } from "/data/honda/civic/actionData";
 
 const optionsAvailable = new Map(modelOptions.map((e) => [e.name, e]));
 
+function defaultHandler(vehicle, optionDetail) {
+  console.log(
+    "Default Popup handler called, since no special function required"
+  );
+  return vehicle;
+}
+
+const addFunctionMap = {
+  addPowertrain: addPowertrainMessage,
+  addPackagesMessage: addPackagesMessage,
+  addExteriorAccessoriesMessage: addExteriorAccessoriesMessage,
+  addInteriorAccessoriesMessage: addInteriorAccessoriesMessage,
+};
+
+const deleteFunctionMap = {
+  deletePowertrainMessage: deletePowertrainMessage,
+  deletePackages: deletePackagesMessage,
+  deleteExteriorAccessories: deleteExteriorAccessoriesMessage,
+  deleteInteriorAccessories: deleteInteriorAccessoriesMessage,
+};
+
 const addOptionPopupFunctionMap = modelOptions.reduce((acc, option) => {
-  try {
-    let functionName = `add${option.name.split(" ").join("")}Message`;
-    const fn = eval(functionName);
-    acc[option.name] = (vehicle, optionDetail) => fn(vehicle, optionDetail);
-  } catch (e) {
-    console.error(
-      "Add Option Popup Function for " + option.name + " is not defined"
-    );
-    acc[option.name] = (vehicle, optionDetail) => vehicle;
-  }
+  let functionName = `add${option.name.split(" ").join("")}Message`;
+  const fn = addFunctionMap[functionName] || defaultHandler;
+  acc[option.name] = (vehicle, optionDetail) => fn(vehicle, optionDetail);
   return acc;
 }, {});
 
 const deleteOptionPopupFunctionMap = modelOptions.reduce((acc, option) => {
-  try {
-    let functionName = `delete${option.name.split(" ").join("")}Message`;
-    const fn = eval(functionName);
-    acc[option.name] = (vehicle, optionDetail) => fn(vehicle, optionDetail);
-  } catch (e) {
-    console.error(
-      "DELETE Option Popup Function for " + option.name + " is not defined"
-    );
-    acc[option.name] = (vehicle, optionDetail) => vehicle;
-  }
+  let functionName = `delete${option.name.split(" ").join("")}Message`;
+  const fn = deleteFunctionMap[functionName] || defaultHandler;
+  acc[option.name] = (vehicle, optionDetail) => fn(vehicle, optionDetail);
   return acc;
 }, {});
 
@@ -62,45 +68,29 @@ function addPowertrainMessage(vehicle, optionDetail) {
   return vehicle;
 }
 
-function addExteriorColorMessage(vehicle, optionDetail) {
-  console.log(
-    "Line 67 in popup, ADD Exterior Color generic popup Message function"
-  );
-  return vehicle;
-}
-
-function addInteriorColorMessage(vehicle, optionDetail) {
-  console.log(
-    "Line 74 in popup, ADD Interior Color generic popup Message function"
-  );
-  return vehicle;
-}
-
-function addWheelsMessage(vehicle, optionDetail) {
-  console.log("Line 80 in popup, ADD Wheels generic popup Message function");
-  return vehicle;
-}
-
 function addPackagesMessage(vehicle, optionDetail) {
+  const { groupName } = optionDetail;
   let updatedVehicle = { ...vehicle };
-  const packageOption = optionsAvailable.get(optionDetail.groupName);
-  const siblings = getExclusiveSiblings(vehicle, optionDetail);
+
+  const siblings = getPackageExclusiveSiblings(vehicle, optionDetail);
   if (siblings.length > 0) {
-    //For each sibling, check if it is in the vehicle.selected.options
-    //If not selected
+    const selectedPackages = updatedVehicle.selected.options.find(
+      (o) => o.groupName === groupName
+    );
+    siblings.forEach((sibling) => {
+      selectedPackages.choicesSelected.forEach((p) => {
+        if (p.serial === sibling) {
+          updatedVehicle.popup = {
+            show: true,
+            message: "This will remove " + p.name,
+            detail: optionDetail,
+          };
+        }
+      });
+    });
   }
-  return vehicle;
+  return updatedVehicle;
 }
-// function deletePackageMessage(vehicle, optionDetail) {
-//   let updatedVehicle = { ...vehicle };
-//   const packageOption = optionsAvailable.get(optionDetail.groupName);
-//   const siblings = getExclusiveSiblings(vehicle, optionDetail);
-//   if (siblings.length > 0) {
-//     //For each sibling, check if it is in the vehicle.selected.options
-//     //If not selected
-//   }
-//   return vehicle;
-// }
 
 function addExteriorAccessoriesMessage(vehicle, optionDetail) {
   console.log(
@@ -115,37 +105,9 @@ function addInteriorAccessoriesMessage(vehicle, optionDetail) {
   return vehicle;
 }
 
-function addElectronicAccessoriesMessage(vehicle, optionDetail) {
-  console.log(
-    "Line 99 in popup, ADD Electronic Accessories generic popup Message function"
-  );
-  return vehicle;
-}
-
 function deletePowertrainMessage(vehicle, optionDetail) {
   console.log(
     "Line 106 in popup, DELETE Powertrain generic popup Message function"
-  );
-  return vehicle;
-}
-
-function deleteExteriorColorMessage(vehicle, optionDetail) {
-  console.log(
-    "Line 113 in popup, DELETE Exterior Color generic popup Message function"
-  );
-  return vehicle;
-}
-
-function deleteInteriorColorMessage(vehicle, optionDetail) {
-  console.log(
-    "Line 120 in popup, DELETE Interior Color generic popup Message function"
-  );
-  return vehicle;
-}
-
-function deleteWheelsMessage(vehicle, optionDetail) {
-  console.log(
-    "Line 127 in popup, DELETE Interior Color generic popup Message function"
   );
   return vehicle;
 }
@@ -170,60 +132,6 @@ function deleteInteriorAccessoriesMessage(vehicle, optionDetail) {
   );
   return vehicle;
 }
-
-function deleteElectronicAccessoriesMessage(vehicle, optionDetail) {
-  console.log(
-    "Line 155 in popup, DELETE Electronic Accessories generic popup Message function"
-  );
-  return vehicle;
-}
-
-// export const popupMessageHandler = (vehicle, optionDetail) => {
-//   const {
-//     groupName,
-//     serial,
-//     checked,
-//     package: packageID,
-//     popup,
-//     action,
-//   } = optionDetail;
-//   if (!checked) {
-//     if (packageID != "") {
-//       return deleteComponentMessage(vehicle, optionDetail);
-//     }
-//     return vehicle;
-//   } else {
-//     const optionFunctionMap = {
-//       "Exterior Color": addExteriorColor,
-//       Packages: addPackageComponents,
-//       "Exterior Accessories": addExteriorAccessories,
-//       "Interior Accessories": addInteriorAccessories,
-//     };
-
-//     return vehicle;
-//   }
-// };
-
-// export const addOptionPopUpMessageHandler = (vehicle, optionDetail) => {
-//   const optionFunctionMap = {
-//     Packages: addPackagesMessage,
-//   };
-//   return (
-//     optionFunctionMap[optionDetail.groupName]?.(vehicle, optionDetail) ||
-//     vehicle
-//   );
-// };
-
-// export const deleteOptionPopupMessageHandler = (vehicle, optionDetail) => {
-//   const optionFunctionMap = {
-//     Packages: deletePackageMessage,
-//   };
-
-//   return (
-//     optionFunctionMap[optionDetail.groupName]?.(vehicle, optionDetail) ||
-//     vehicle
-//   );
-// };
 
 function deleteComponentMessage(vehicle, optionDetail) {
   let newpopup = vehicle.popup;

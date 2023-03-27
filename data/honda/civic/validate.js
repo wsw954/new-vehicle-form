@@ -127,8 +127,21 @@ export const handlePopupConfirm = (vehicle, optionDetail) => {
     case "Single":
       return updatedVehicle;
     case "Multiple":
+      const optionGroup = optionGrpAvailable.get(groupName);
+      const optionGroupSelected = updatedVehicle.selected.options.find(
+        (os) => os.groupName === groupName
+      );
+      // Find the option in the available choices for this option group.
+      const optionSelected = optionGroup.choicesAvailable.find(
+        (c) => c.serial === serial
+      );
       if (checked) {
-        console.log("Add the Option, clicked on");
+        if (action) {
+          updatedVehicle = addActionHandler(vehicle, optionDetail);
+        }
+        if (!optionGroupSelected.choicesSelected.includes(optionSelected)) {
+          optionGroupSelected.choicesSelected.push(optionSelected);
+        }
       } else {
         if (packageID != "") {
           updatedVehicle = deleteComponentActionHandler(vehicle, optionDetail);

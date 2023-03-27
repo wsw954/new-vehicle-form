@@ -2,25 +2,25 @@ import { modelOptions, trims } from "/data/honda/civic/options";
 const optionsAvailable = new Map(modelOptions.map((e) => [e.name, e]));
 
 //This object stores the extra Interior Colors available, dependent on the trim selected & specific Exterior Colors chosen
-export const extraColors = {
-  optionGroupName: "Interior Color",
-  "Sedan EX": {
-    ec4: { name: "Gray Cloth", price: 0, trim: [], serial: "ic2" },
-    ec10: { name: "Gray Cloth", price: 0, trim: [], serial: "ic2" },
-  },
-  "Sedan Touring": {
-    ec4: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
-    ec10: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
-  },
-  "Hatchback EX-L": {
-    ec4: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
-    ec10: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
-  },
-  "Hatchback Sport Touring": {
-    ec4: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
-    ec10: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
-  },
-};
+// export const extraColors = {
+//   optionGroupName: "Interior Color",
+//   "Sedan EX": {
+//     ec4: { name: "Gray Cloth", price: 0, trim: [], serial: "ic2" },
+//     ec10: { name: "Gray Cloth", price: 0, trim: [], serial: "ic2" },
+//   },
+//   "Sedan Touring": {
+//     ec4: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
+//     ec10: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
+//   },
+//   "Hatchback EX-L": {
+//     ec4: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
+//     ec10: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
+//   },
+//   "Hatchback Sport Touring": {
+//     ec4: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
+//     ec10: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
+//   },
+// };
 
 export const exteriorColorAction = (vehicle, optionDetail) => {
   const trim = vehicle.selected.trim.name;
@@ -60,7 +60,7 @@ export const exteriorColorAction = (vehicle, optionDetail) => {
   return additionalInteriorColor;
 };
 
-export const getExclusiveSiblings = (vehicle, optionDetail) => {
+export const getPackageExclusiveSiblings = (vehicle, optionDetail) => {
   const exclusiveArray = packageExclusiveArray[vehicle.selected.trim.name];
   const siblings = [];
   if (exclusiveArray.includes(optionDetail.serial)) {
@@ -73,11 +73,15 @@ export const packageExclusiveArray = {
   "Sedan Sport": ["pk1", "pk3", "pk8"],
   "Sedan EX": ["pk1", "pk3", "pk8"],
   "Sedan Touring": ["pk1", "pk3", "pk8"],
-  "Hatchback Sport": ["pk1", "pk3", "pk8"],
-  "Hatchback EX-L": ["pk1", "pk3", "pk8"],
-  "Hatchback Sport Touring": ["pk1", "pk3", "pk8"],
+  "Hatchback Sport": ["pk2", "pk4", "pk9"],
+  "Hatchback EX-L": ["pk2", "pk4", "pk9"],
+  "Hatchback Sport Touring": ["pk2", "pk4", "pk9"],
   Si: ["pk1", "pk6", "pk8"],
   "Type R": [],
+};
+
+export const markPopupTrue = (choicesAvailable) => {
+  return choicesAvailable;
 };
 
 export const getComponents = (vehicleTrim, packageSerial) => {

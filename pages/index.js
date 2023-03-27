@@ -1,5 +1,5 @@
 import styles from "../styles/Home.module.css";
-import { useState, useReducer } from "react";
+import { useReducer } from "react";
 import { makes } from "/data/make";
 import reducer from "/pages/api/reducer";
 import Dropdown from "/components/dropdown.js";
@@ -78,6 +78,7 @@ export default function Home() {
       payload: optionDetail,
     });
   };
+
   const handlePopupCancel = (optionDetail) => {
     dispatch({
       type: "POPUP_CANCEL",

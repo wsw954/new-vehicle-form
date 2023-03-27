@@ -73,11 +73,11 @@ const reducer = (vehicle, action) => {
         vehicle,
         action.payload
       );
-
       return {
         ...vehicle,
         options: updatedVehicle.options,
         selected: updatedVehicle.selected,
+        popup: updatedVehicle.popup,
       };
     case ACTIONS.POPUP_CONFIRM:
       dataValidate = require("../../data/" +
