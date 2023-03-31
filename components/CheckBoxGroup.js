@@ -23,6 +23,7 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
       action: actionValue,
       package: event.target.getAttribute("data-package"),
       popup: popupValue,
+      unselected: { name: null, serial: null },
     });
   };
 
@@ -38,7 +39,7 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
       typeof choiceAvailable.action === "boolean"
         ? choiceAvailable.action
         : false;
-    const selectedChoice = {};
+    let selectedChoice = {};
     if (choicesSelected.length > 0) {
       selectedChoice = choicesSelected.find(
         (o) => o.serial === choiceAvailable.serial
@@ -48,6 +49,7 @@ export default function CheckBoxGroup({ name, vehicle, choices, onChange }) {
         if (selectedChoice.hasOwnProperty("package")) {
           packageValue = selectedChoice.package;
           dataPopup = selectedChoice.popup;
+          dataAction = selectedChoice.action;
         }
       }
     }

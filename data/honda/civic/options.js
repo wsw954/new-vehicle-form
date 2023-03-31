@@ -555,8 +555,8 @@ export const modelOptions = [
         price: 183,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ia1",
-        popup: false,
-        action: true,
+        // popup: false,
+        // action: true,
       },
       {
         name: "Cargo Hook",

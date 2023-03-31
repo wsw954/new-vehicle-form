@@ -24,9 +24,9 @@ const addFunctionMap = {
 
 const deleteFunctionMap = {
   deletePowertrainMessage: deletePowertrainMessage,
-  deletePackages: deletePackagesMessage,
-  deleteExteriorAccessories: deleteExteriorAccessoriesMessage,
-  deleteInteriorAccessories: deleteInteriorAccessoriesMessage,
+  deletePackagesMessage: deletePackagesMessage,
+  deleteExteriorAccessoriesMessage: deleteExteriorAccessoriesMessage,
+  deleteInteriorAccessoriesMessage: deleteInteriorAccessoriesMessage,
 };
 
 const addOptionPopupFunctionMap = modelOptions.reduce((acc, option) => {
@@ -120,10 +120,20 @@ function deletePackagesMessage(vehicle, optionDetail) {
 }
 
 function deleteExteriorAccessoriesMessage(vehicle, optionDetail) {
-  console.log(
-    "Line 141 in popup, DELETE Exterior Accessories generic popup Message function"
-  );
-  return vehicle;
+  const { action, groupName, package: packageID, serial } = optionDetail;
+  let updatedVehicle = { ...vehicle };
+  if (packageID != "") {
+    let parentPackage = optionsAvailable
+      .get("Packages")
+      .choicesAvailable.find((choice) => choice.serial === packageID);
+    updatedVehicle.popup = {
+      show: true,
+      message: "This will remove the Package- " + parentPackage.name,
+      detail: optionDetail,
+    };
+  }
+
+  return updatedVehicle;
 }
 
 function deleteInteriorAccessoriesMessage(vehicle, optionDetail) {

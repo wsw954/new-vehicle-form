@@ -1,27 +1,6 @@
 import { modelOptions, trims } from "/data/honda/civic/options";
 const optionsAvailable = new Map(modelOptions.map((e) => [e.name, e]));
 
-//This object stores the extra Interior Colors available, dependent on the trim selected & specific Exterior Colors chosen
-// export const extraColors = {
-//   optionGroupName: "Interior Color",
-//   "Sedan EX": {
-//     ec4: { name: "Gray Cloth", price: 0, trim: [], serial: "ic2" },
-//     ec10: { name: "Gray Cloth", price: 0, trim: [], serial: "ic2" },
-//   },
-//   "Sedan Touring": {
-//     ec4: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
-//     ec10: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
-//   },
-//   "Hatchback EX-L": {
-//     ec4: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
-//     ec10: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
-//   },
-//   "Hatchback Sport Touring": {
-//     ec4: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
-//     ec10: { name: "Gray Leather", price: 0, trim: [], serial: "ic4" },
-//   },
-// };
-
 export const exteriorColorAction = (vehicle, optionDetail) => {
   const trim = vehicle.selected.trim.name;
   const exteriorColorChosen = optionDetail.name;
@@ -80,11 +59,7 @@ export const packageExclusiveArray = {
   "Type R": [],
 };
 
-export const markPopupTrue = (choicesAvailable) => {
-  return choicesAvailable;
-};
-
-export const getComponents = (vehicleTrim, packageSerial) => {
+export const getComponents = (packageSerial) => {
   let components = [];
   switch (packageSerial) {
     case "pk1":
@@ -326,7 +301,4 @@ export const exteriorAccessoriesExclusives = {
   ea6: [{ groupName: "Exterior Accessories", serial: "ea5" }],
 };
 
-export const exteriorAccessoriesInclusives = {
-  ea1: [{ groupName: "Exterior Accessories", serial: "ea21" }],
-  ea21: [{ groupName: "Exterior Accessories", serial: "ea1" }],
-};
+export const exteriorAccessoriesInclusives = {};

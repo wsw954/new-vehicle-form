@@ -161,8 +161,9 @@ function deletePackages(vehicle, optionDetail) {
 }
 
 function deleteExteriorAccessories(vehicle, optionDetail) {
+  const { serial, package: packageID } = optionDetail;
   let updatedVehicle = { ...vehicle };
-  if (exteriorAccessoriesInclusives.hasOwnProperty(optionDetail.serial)) {
+  if (exteriorAccessoriesInclusives.hasOwnProperty(serial)) {
     exteriorAccessoriesInclusives[optionDetail.serial].forEach(
       (exclusiveOption) => {
         updatedVehicle = removeOptionInChoicesSelected(
@@ -173,7 +174,13 @@ function deleteExteriorAccessories(vehicle, optionDetail) {
       }
     );
   }
-  return vehicle;
+  if (packageID) {
+    //Adjust the optionDetail to pass to deletePackages()
+    optionDetail.groupName = "Packages";
+    optionDetail.serial = packageID;
+    updatedVehicle = deletePackages(updatedVehicle, optionDetail);
+  }
+  return updatedVehicle;
 }
 
 function deleteInteriorAccessories(vehicle, optionDetail) {
@@ -257,13 +264,12 @@ function addOptionInChoicesAvailable(vehicle, groupName, choice) {
 
 function addPackageComponents(vehicle, serial) {
   let updatedVehicle = { ...vehicle };
-  const packageComponents = getComponents(vehicle.selected.trim, serial);
+  const packageComponents = getComponents(serial);
 
   packageComponents.forEach((component) => {
-    const modelOption = optionsAvailable.get(component.groupName);
-    const choice = modelOption?.choicesAvailable.find(
-      (choice) => choice.serial === component.serial
-    );
+    let choice = updatedVehicle.options
+      .find((option) => option.name === component.groupName)
+      .choicesAvailable.find((c) => c.serial === component.serial);
     if (choice) {
       const updatedChoice = {
         ...choice,
@@ -271,13 +277,15 @@ function addPackageComponents(vehicle, serial) {
         action: true,
         popup: true,
       };
+
       updatedVehicle = addOptionInChoicesSelected(
-        vehicle,
+        updatedVehicle,
         component.groupName,
         updatedChoice
       );
     }
   });
+
   return updatedVehicle;
 }
 
@@ -298,10 +306,7 @@ function removePackageSiblings(vehicle, groupName, siblings) {
     );
     selectedPackages.choicesSelected.forEach((selectedPackage) => {
       if (sibling === selectedPackage.serial) {
-        const siblingComponents = getComponents(
-          vehicle.selected.trim,
-          selectedPackage.serial
-        );
+        const siblingComponents = getComponents(selectedPackage.serial);
         siblingComponents.forEach((sc) => {
           updatedVehicle = removeOptionInChoicesSelected(
             updatedVehicle,
@@ -322,7 +327,7 @@ function removePackageSiblings(vehicle, groupName, siblings) {
 
 function deletePackageComponents(vehicle, serial) {
   let updatedVehicle = { ...vehicle };
-  const packageComponents = getComponents(vehicle.selected.trim, serial);
+  const packageComponents = getComponents(serial);
   packageComponents.forEach((option) => {
     updatedVehicle = removeOptionInChoicesSelected(
       vehicle,

@@ -50,12 +50,13 @@ export default function Options({ vehicle, onChange }) {
     });
   }
 
+  optionBuilder(vehicle.options);
+
   return (
     <>
       <br></br>
       <fieldset>
         <legend> Vehicle Options</legend>
-        {optionBuilder(vehicle.options)}
         {optionDropdowns}
         <br></br>
         {optionCheckBoxes}
