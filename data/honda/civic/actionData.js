@@ -39,6 +39,33 @@ export const exteriorColorAction = (vehicle, optionDetail) => {
   return additionalInteriorColor;
 };
 
+export const groupDataHandler = (vehicle, optionDetail) => {
+  const { groupName } = optionDetail;
+  switch (groupName) {
+    case "Powertrain":
+      return vehicle;
+
+    case "Exterior Color":
+      return exteriorColorAction(vehicle, optionDetail);
+    case "Interior Color":
+      return vehicle;
+    case "Wheels":
+      return vehicle;
+    case "Exterior Accessories":
+      const { action, popup } = optionDetail;
+      if (popup) {
+      }
+
+      return vehicle;
+    case "Interior Accessories":
+      return vehicle;
+    case "Electronic Accessories":
+      return vehicle;
+    default:
+    // code block
+  }
+};
+
 export const getPackageExclusiveSiblings = (vehicle, optionDetail) => {
   const exclusiveArray = packageExclusiveArray[vehicle.selected.trim.name];
   const siblings = [];
@@ -296,9 +323,45 @@ export const getComponents = (packageSerial) => {
   return components;
 };
 
-export const exteriorAccessoriesExclusives = {
-  ea5: [{ groupName: "Exterior Accessories", serial: "ea6" }],
-  ea6: [{ groupName: "Exterior Accessories", serial: "ea5" }],
+export const getExteriorAccessories = (vehicle, optionDetail) => {
+  const exclusiveArray =
+    exteriorAccessoriesExclusiveArray[vehicle.selected.trim.name];
+  const siblings = [];
+  if (exclusiveArray.includes(optionDetail.serial)) {
+    siblings = exclusiveArray.filter((item) => item !== optionDetail.serial);
+  }
+  return siblings;
 };
 
-export const exteriorAccessoriesInclusives = {};
+export const exteriorAccessoriesExclusiveArray = {
+  "Sedan Sport": ["ea5", "ea6"],
+  "Sedan EX": ["ea5", "ea6"],
+  "Sedan Touring": ["ea5", "ea6"],
+  "Hatchback Sport": ["ea5", "ea6"],
+  "Hatchback EX-L": ["ea20", "ea21"],
+  "Hatchback Sport Touring": ["pk2", "pk4", "pk9"],
+  Si: ["pk1", "pk6", "pk8"],
+  "Type R": [],
+};
+
+export const exteriorAccessoriesInclusiveArray = {
+  "Sedan Sport": ["ea5", "ea6"],
+  "Sedan EX": ["ea5", "ea6"],
+  "Sedan Touring": ["ea5", "ea6"],
+  "Hatchback Sport": ["ea5", "ea6"],
+  "Hatchback EX-L": ["e14", "ea19", "ea20", "ea21"],
+  "Hatchback Sport Touring": ["pk2", "pk4", "pk9"],
+  Si: ["pk1", "pk6", "pk8"],
+  "Type R": [],
+};
+
+export const exteriorAccessoriesPrecessorArray = {
+  "Sedan Sport": ["ea5", "ea6"],
+  "Sedan EX": ["ea5", "ea6"],
+  "Sedan Touring": ["ea5", "ea6"],
+  "Hatchback Sport": ["ea5", "ea6"],
+  "Hatchback EX-L": ["e14", "ea19", "ea20", "ea21"],
+  "Hatchback Sport Touring": ["pk2", "pk4", "pk9"],
+  Si: ["pk1", "pk6", "pk8"],
+  "Type R": [],
+};

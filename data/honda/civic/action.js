@@ -51,6 +51,7 @@ export const addActionHandler = (vehicle, optionDetail) => {
 
 //Main delete handler function
 export const deleteActionHandler = (vehicle, optionDetail) => {
+  console.log("Line 54 in action, deleteActionHandle");
   return (
     deleteOptionFunctionMap[optionDetail.groupName]?.(vehicle, optionDetail) ||
     vehicle
@@ -72,6 +73,7 @@ function addExteriorColor(vehicle, optionDetail) {
       (option) => option.name === additionalInteriorColor.groupName
     );
     if (optionGroup) {
+      //Resets to default the Interior Colors available
       optionGroup.choicesAvailable = filterChoicesAvailableByTrim(
         optionGroup,
         vehicle.selected.trim.serial

@@ -1,9 +1,7 @@
 import { modelOptions, trims } from "/data/honda/civic/options";
 import {
-  getComponents,
+  groupDataHandler,
   getPackageExclusiveSiblings,
-  exteriorAccessoriesExclusives,
-  exteriorAccessoriesInclusives,
 } from "/data/honda/civic/actionData";
 
 const optionsAvailable = new Map(modelOptions.map((e) => [e.name, e]));
@@ -93,9 +91,8 @@ function addPackagesMessage(vehicle, optionDetail) {
 }
 
 function addExteriorAccessoriesMessage(vehicle, optionDetail) {
-  console.log(
-    "Line 85 in popup, ADD Exterior Accessories generic popup Message function"
-  );
+  let data = groupDataHandler(vehicle, optionDetail);
+  console.log(data);
   return vehicle;
 }
 function addInteriorAccessoriesMessage(vehicle, optionDetail) {
