@@ -40,11 +40,23 @@ const updateChoicesSelected = (
   optionSelected,
   checked
 ) => {
-  optionGroupSelected.choicesSelected = checked
-    ? [...optionGroupSelected.choicesSelected, optionSelected]
-    : optionGroupSelected.choicesSelected.filter(
+  if (checked) {
+    if (
+      !optionGroupSelected.choicesSelected.some(
+        (choice) => choice.serial === optionSelected.serial
+      )
+    ) {
+      optionGroupSelected.choicesSelected = [
+        ...optionGroupSelected.choicesSelected,
+        optionSelected,
+      ];
+    }
+  } else {
+    optionGroupSelected.choicesSelected =
+      optionGroupSelected.choicesSelected.filter(
         (choice) => choice.serial !== optionSelected.serial
       );
+  }
 };
 
 export const handleOptionSelected = (vehicle, optionDetail) => {
@@ -91,5 +103,6 @@ export const handlePopupConfirm = (vehicle, optionDetail) => {
         : deleteActionHandler(vehicle, optionDetail);
     updateChoicesSelected(optionGroupSelected, optionSelected, checked);
   }
+
   return updatedVehicle;
 };

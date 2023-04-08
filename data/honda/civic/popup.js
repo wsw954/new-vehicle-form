@@ -1,7 +1,7 @@
 import { modelOptions, trims } from "/data/honda/civic/options";
 import {
   groupDataHandler,
-  getPackageExclusiveSiblings,
+  getPackageRivals,
 } from "/data/honda/civic/actionData";
 
 const optionsAvailable = new Map(modelOptions.map((e) => [e.name, e]));
@@ -70,14 +70,14 @@ function addPackagesMessage(vehicle, optionDetail) {
   const { groupName } = optionDetail;
   let updatedVehicle = { ...vehicle };
 
-  const siblings = getPackageExclusiveSiblings(vehicle, optionDetail);
-  if (siblings.length > 0) {
+  const rivals = getPackageRivals(vehicle, optionDetail);
+  if (rivals.length > 0) {
     const selectedPackages = updatedVehicle.selected.options.find(
       (o) => o.groupName === groupName
     );
-    siblings.forEach((sibling) => {
+    rivals.forEach((rival) => {
       selectedPackages.choicesSelected.forEach((p) => {
-        if (p.serial === sibling) {
+        if (p.serial === rival.serial) {
           updatedVehicle.popup = {
             show: true,
             message: "This will remove " + p.name,

@@ -1,8 +1,9 @@
 import { modelOptions, trims } from "/data/honda/civic/options";
 import {
   exteriorColorAction,
-  getComponents,
-  getPackageExclusiveSiblings,
+  getPackageSiblings,
+  getPackageRivals,
+  getPackageRivals2,
   exteriorAccessoriesExclusives,
   exteriorAccessoriesInclusives,
 } from "/data/honda/civic/actionData";
@@ -84,12 +85,16 @@ function addExteriorColor(vehicle, optionDetail) {
 }
 
 function addPackages(vehicle, optionDetail) {
+  let updatedVehicle = { ...vehicle };
   const { groupName, serial } = optionDetail;
-  let updatedVehicle = addPackageComponents(vehicle, serial);
-  const siblings = getPackageExclusiveSiblings(vehicle, optionDetail);
-
-  if (siblings.length > 0) {
-    updatedVehicle = removePackageSiblings(updatedVehicle, groupName, siblings);
+  updatedVehicle = addPackageComponents(vehicle, serial);
+  const rivals = getPackageRivals(vehicle, optionDetail);
+  if (rivals.length > 0) {
+    updatedVehicle = removePackageRivals(
+      updatedVehicle,
+      optionDetail.groupName,
+      rivals
+    );
   }
 
   let selectedPackages = updatedVehicle.selected.options.find(
@@ -152,9 +157,9 @@ function deletePackages(vehicle, optionDetail) {
       (o) => o.name === groupName
     );
 
-    siblings.forEach((sibling) => {
+    siblings.forEach((rival) => {
       let siblingPackageAvailable = packageOptionGroup.choicesAvailable.find(
-        (p) => p.serial === sibling
+        (p) => p.serial === rival
       );
       siblingPackageAvailable.popup = false;
     });
@@ -266,54 +271,54 @@ function addOptionInChoicesAvailable(vehicle, groupName, choice) {
 
 function addPackageComponents(vehicle, serial) {
   let updatedVehicle = { ...vehicle };
-  const packageComponents = getComponents(serial);
+  const packageSiblings = getPackageSiblings(serial);
+  if (packageSiblings.length > 0) {
+    packageSiblings.forEach((rival) => {
+      let choice = updatedVehicle.options
+        .find((option) => option.name === rival.groupName)
+        .choicesAvailable.find((c) => c.serial === rival.serial);
+      if (choice) {
+        const updatedChoice = {
+          ...choice,
+          package: serial,
+          action: true,
+          popup: true,
+        };
 
-  packageComponents.forEach((component) => {
-    let choice = updatedVehicle.options
-      .find((option) => option.name === component.groupName)
-      .choicesAvailable.find((c) => c.serial === component.serial);
-    if (choice) {
-      const updatedChoice = {
-        ...choice,
-        package: serial,
-        action: true,
-        popup: true,
-      };
-
-      updatedVehicle = addOptionInChoicesSelected(
-        updatedVehicle,
-        component.groupName,
-        updatedChoice
-      );
-    }
-  });
-
+        updatedVehicle = addOptionInChoicesSelected(
+          updatedVehicle,
+          rival.groupName,
+          updatedChoice
+        );
+      }
+    });
+  }
   return updatedVehicle;
 }
 
-function removePackageSiblings(vehicle, groupName, siblings) {
+function removePackageRivals(vehicle, groupName, rivals) {
   let updatedVehicle = { ...vehicle };
   const packageOption = updatedVehicle.options.find(
     (o) => o.name === groupName
   );
-  siblings.forEach((sibling) => {
-    const siblingOption = packageOption.choicesAvailable.find(
-      (p) => p.serial === sibling
+  rivals.forEach((rival) => {
+    const rivalOption = packageOption.choicesAvailable.find(
+      (p) => p.serial === rival.serial
     );
-    siblingOption.popup = true;
+    rivalOption.popup = true;
 
-    // Check if any siblings are checked
+    // Check if any rivals are selected
     const selectedPackages = updatedVehicle.selected.options.find(
       (s) => s.groupName === groupName
     );
     selectedPackages.choicesSelected.forEach((selectedPackage) => {
-      if (sibling === selectedPackage.serial) {
-        const siblingComponents = getComponents(selectedPackage.serial);
-        siblingComponents.forEach((sc) => {
+      if (rival.serial === selectedPackage.serial) {
+        const rivalSiblings = getPackageSiblings(selectedPackage.serial);
+        rivalSiblings.forEach((sibling) => {
           updatedVehicle = removeOptionInChoicesSelected(
             updatedVehicle,
-            sc.groupName,
-            sc.serial
+            sibling.groupName,
+            sibling.serial
           );
         });
         updatedVehicle = removeOptionInChoicesSelected(

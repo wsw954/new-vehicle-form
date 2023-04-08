@@ -1,6 +1,33 @@
 import { modelOptions, trims } from "/data/honda/civic/options";
 const optionsAvailable = new Map(modelOptions.map((e) => [e.name, e]));
 
+export const groupDataHandler = (vehicle, optionDetail) => {
+  const { groupName } = optionDetail;
+  switch (groupName) {
+    case "Powertrain":
+      return vehicle;
+
+    case "Exterior Color":
+      return exteriorColorAction(vehicle, optionDetail);
+    case "Interior Color":
+      return vehicle;
+    case "Wheels":
+      return vehicle;
+    case "Exterior Accessories":
+      const { action, popup } = optionDetail;
+      if (popup) {
+      }
+
+      return vehicle;
+    case "Interior Accessories":
+      return vehicle;
+    case "Electronic Accessories":
+      return vehicle;
+    default:
+    // code block
+  }
+};
+
 export const exteriorColorAction = (vehicle, optionDetail) => {
   const trim = vehicle.selected.trim.name;
   const exteriorColorChosen = optionDetail.name;
@@ -39,43 +66,70 @@ export const exteriorColorAction = (vehicle, optionDetail) => {
   return additionalInteriorColor;
 };
 
-export const groupDataHandler = (vehicle, optionDetail) => {
-  const { groupName } = optionDetail;
-  switch (groupName) {
-    case "Powertrain":
-      return vehicle;
+// export const getPackageRivals = (vehicle, optionDetail) => {
+//   const rivalArray = packageRivalArray[vehicle.selected.trim.name];
+//   const siblings = [];
+//   if (rivalArray.includes(optionDetail.serial)) {
+//     siblings = rivalArray.filter((item) => item !== optionDetail.serial);
+//   }
+//   return siblings;
+// };
 
-    case "Exterior Color":
-      return exteriorColorAction(vehicle, optionDetail);
-    case "Interior Color":
-      return vehicle;
-    case "Wheels":
-      return vehicle;
-    case "Exterior Accessories":
-      const { action, popup } = optionDetail;
-      if (popup) {
-      }
+// export const packageRivalArray = {
+//   "Sedan Sport": ["pk1", "pk3", "pk8"],
+//   "Sedan EX": ["pk1", "pk3", "pk8"],
+//   "Sedan Touring": ["pk1", "pk3", "pk8"],
+//   "Hatchback Sport": ["pk2", "pk4", "pk9"],
+//   "Hatchback EX-L": ["pk2", "pk4", "pk9"],
+//   "Hatchback Sport Touring": ["pk2", "pk4", "pk9"],
+//   Si: ["pk1", "pk6", "pk8"],
+//   "Type R": [],
+// };
 
-      return vehicle;
-    case "Interior Accessories":
-      return vehicle;
-    case "Electronic Accessories":
-      return vehicle;
-    default:
-    // code block
+// export const getPackageRivals3 = (vehicle, optionDetail) => {
+//   const rivalArray = packageRivalArray[vehicle.selected.trim.name];
+//   const rivalSerials = [];
+//   const rivalOptions = [];
+//   if (rivalArray.includes(optionDetail.serial)) {
+//     rivalSerials = rivalArray.filter((item) => item !== optionDetail.serial);
+//     let packagesAvailable = vehicle.options.find(
+//       (o) => o.name === optionDetail.groupName
+//     ).choicesAvailable;
+//     rivalSerials.forEach((r) => {
+//       packagesAvailable.forEach((p) => {
+//         if (p.serial === r) {
+//           rivalOptions.push(p);
+//         }
+//       });
+//     });
+//   }
+//   return rivalOptions;
+// };
+
+export const getPackageRivals = (vehicle, optionDetail) => {
+  const trimName = vehicle.selected.trim.name;
+  const rivals = packageRivalArray[trimName];
+  const { serial, groupName } = optionDetail;
+
+  if (!rivals.includes(serial)) {
+    return [];
   }
+
+  const filteredRivals = rivals.filter((item) => item !== serial);
+  const packagesAvailable = vehicle.options.find(
+    (option) => option.name === groupName
+  ).choicesAvailable;
+
+  const rivalOptions = filteredRivals.flatMap((rivalSerial) =>
+    packagesAvailable.filter(
+      (packageOption) => packageOption.serial === rivalSerial
+    )
+  );
+
+  return rivalOptions;
 };
 
-export const getPackageExclusiveSiblings = (vehicle, optionDetail) => {
-  const exclusiveArray = packageExclusiveArray[vehicle.selected.trim.name];
-  const siblings = [];
-  if (exclusiveArray.includes(optionDetail.serial)) {
-    siblings = exclusiveArray.filter((item) => item !== optionDetail.serial);
-  }
-  return siblings;
-};
-
-export const packageExclusiveArray = {
+export const packageRivalArray = {
   "Sedan Sport": ["pk1", "pk3", "pk8"],
   "Sedan EX": ["pk1", "pk3", "pk8"],
   "Sedan Touring": ["pk1", "pk3", "pk8"],
@@ -86,55 +140,55 @@ export const packageExclusiveArray = {
   "Type R": [],
 };
 
-export const getComponents = (packageSerial) => {
-  let components = [];
+export const getPackageSiblings = (packageSerial) => {
+  let siblings = [];
   switch (packageSerial) {
     case "pk1":
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Splash Guard Set",
         serial: "ea24",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "All Season Floor Mats",
         serial: "ia1",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "Trunk Tray",
         serial: "ia15",
       });
       break;
     case "pk2":
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Splash Guard Set",
         serial: "ea24",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "All Season Floor Mats",
         serial: "ia1",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "Cargo Tray",
         serial: "ia4",
       });
       break;
     case "pk3":
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Wheel Locks-Chrome",
         serial: "ea31",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "All Season Floor Mats",
         serial: "ia1",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "Trunk Tray",
         serial: "ia15",
@@ -142,136 +196,136 @@ export const getComponents = (packageSerial) => {
 
       break;
     case "pk4":
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Wheel Locks-Chrome",
         serial: "ea31",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "All Season Floor Mats",
         serial: "ia1",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "Cargo Tray",
         serial: "ia4",
       });
       break;
     case "pk5":
-      components.push({
+      siblings.push({
         groupName: "Powertrain",
         name: "1.5L Turbo 4-Cyl 180hp Engine w/CVT", //Experimental component to test Dropdown data-package functionality
         serial: "pw2",
       });
 
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Decklid Spoiler-HPD",
         serial: "ea4",
       });
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Underbody Spoiler-HPD Front",
         serial: "ea26",
       });
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Underbody Spoiler-HPD Rear",
         serial: "ea27",
       });
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Underbody Spoiler-HPD Side",
         serial: "ea28",
       });
       break;
     case "pk6":
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Emblem-HPD",
         serial: "ea11",
       });
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Underbody Spoiler-HPD Front",
         serial: "ea26",
       });
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Underbody Spoiler-HPD Rear",
         serial: "ea27",
       });
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Underbody Spoiler-HPD Side",
         serial: "ea28",
       });
       break;
     case "pk7":
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Emblem-HPD",
         serial: "ea11",
       });
 
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Tailgate Spoiler-HPD",
         serial: "ea25",
       });
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Underbody Spoiler-HPD Front",
         serial: "ea26",
       });
       break;
     case "pk8":
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Splash Guard Set",
         serial: "ea24",
       });
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Wheel Locks-Chrome",
         serial: "ea31",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "Trunk Tray",
         serial: "ia15",
       });
       break;
     case "pk9":
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Splash Guard Set",
         serial: "ea24",
       });
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Wheel Locks-Chrome",
         serial: "ea31",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "Cargo Tray",
         serial: "ia4",
       });
       break;
     case "pk10":
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Car Cover",
         serial: "ea3",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "Cargo Tray",
         serial: "ia4",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "Contoured High-Wall Carpet Floor Mats",
         serial: "ia6",
@@ -279,37 +333,37 @@ export const getComponents = (packageSerial) => {
 
       break;
     case "pk11":
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "Door Sill Trim Illuminated",
         serial: "ia8",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "Shift Knob",
         serial: "ia13",
       });
-      components.push({
+      siblings.push({
         groupName: "Interior Accessories",
         name: "Steering Wheel-Alcantara",
         serial: "ia14",
       });
       break;
     case "pk12":
-      components.push({
+      siblings.push({
         groupName: "Exterior Accessories",
         name: "Wing Spoiler-Carbon Fiber",
         serial: "ea34",
       });
-      components.push({
+      siblings.push({
         groupName: "Wheels",
         name: "19-Inch Matte Black Alloy Wheels",
         serial: "w6",
       });
       break;
     case "pk13":
-      //The Honda website apparently has an error here, no available options are selected as components
-      //The stated components are:
+      //The Honda website apparently has an error here, no available options are selected as siblings
+      //The stated siblings are:
       //Door Handle Film
       //Rear Bumper Applique
       //Door Edge Film
@@ -320,7 +374,7 @@ export const getComponents = (packageSerial) => {
       break;
   }
 
-  return components;
+  return siblings;
 };
 
 export const getExteriorAccessories = (vehicle, optionDetail) => {
