@@ -3,8 +3,7 @@ import {
   exteriorColorAction,
   getPackageSiblings,
   getPackageRivals,
-  getPackageRivals2,
-  exteriorAccessoriesExclusives,
+  getExteriorAccessoriesRivals,
   exteriorAccessoriesInclusives,
 } from "/data/honda/civic/actionData";
 
@@ -16,11 +15,10 @@ function defaultHandler(vehicle, optionDetail) {
 }
 
 const addFunctionMap = {
-  addPowertrain: addPowertrain,
   addExteriorColor: addExteriorColor,
   addPackages: addPackages,
   addExteriorAccessories: addExteriorAccessories,
-  addInteriorAccessories: addInteriorAccessories,
+  //   addInteriorAccessories: addInteriorAccessories,
 };
 
 const deleteFunctionMap = {
@@ -52,16 +50,11 @@ export const addActionHandler = (vehicle, optionDetail) => {
 
 //Main delete handler function
 export const deleteActionHandler = (vehicle, optionDetail) => {
-  console.log("Line 54 in action, deleteActionHandle");
   return (
     deleteOptionFunctionMap[optionDetail.groupName]?.(vehicle, optionDetail) ||
     vehicle
   );
 };
-
-function addPowertrain(vehicle, optionDetail) {
-  return vehicle;
-}
 
 function addExteriorColor(vehicle, optionDetail) {
   let additionalInteriorColor = exteriorColorAction(vehicle, optionDetail);
@@ -87,7 +80,7 @@ function addExteriorColor(vehicle, optionDetail) {
 function addPackages(vehicle, optionDetail) {
   let updatedVehicle = { ...vehicle };
   const { groupName, serial } = optionDetail;
-  updatedVehicle = addPackageComponents(vehicle, serial);
+  updatedVehicle = addPackageSiblings(vehicle, serial);
   const rivals = getPackageRivals(vehicle, optionDetail);
   if (rivals.length > 0) {
     updatedVehicle = removePackageRivals(
@@ -110,77 +103,75 @@ function addPackages(vehicle, optionDetail) {
   return updatedVehicle;
 }
 
-function addExteriorAccessories(vehicle, optionDetail) {
-  let updatedVehicle = { ...vehicle };
-  if (exteriorAccessoriesExclusives.hasOwnProperty(optionDetail.serial)) {
-    exteriorAccessoriesExclusives[optionDetail.serial].forEach(
-      (exclusiveOption) => {
-        updatedVehicle = removeOptionInChoicesSelected(
-          vehicle,
-          exclusiveOption.groupName,
-          exclusiveOption.serial
-        );
-      }
-    );
-  }
-  if (exteriorAccessoriesInclusives.hasOwnProperty(optionDetail.serial)) {
-    exteriorAccessoriesInclusives[optionDetail.serial].forEach(
-      (exclusiveOption) => {
-        const modelOption = optionsAvailable.get(exclusiveOption.groupName);
-        const choice = modelOption.choicesAvailable.find(
-          (choice) => choice.serial === exclusiveOption.serial
-        );
-        updatedVehicle = addOptionInChoicesSelected(
-          vehicle,
-          exclusiveOption.groupName,
-          choice
-        );
-      }
-    );
-  }
-  return updatedVehicle;
-}
-
-function addInteriorAccessories(vehicle, optionDetail) {
-  console.log("Line 156 in action, Interior Accessories ADD action function");
-  return vehicle;
-}
-
 function deletePackages(vehicle, optionDetail) {
   const { groupName, serial } = optionDetail;
-
-  let updatedVehicle = deletePackageComponents(vehicle, serial);
-  const siblings = getPackageExclusiveSiblings(vehicle, optionDetail);
-
-  if (siblings.length > 0) {
-    let packageOptionGroup = updatedVehicle.options.find(
-      (o) => o.name === groupName
-    );
-
-    siblings.forEach((rival) => {
-      let siblingPackageAvailable = packageOptionGroup.choicesAvailable.find(
-        (p) => p.serial === rival
-      );
-      siblingPackageAvailable.popup = false;
+  let updatedVehicle = deletePackageSiblings(vehicle, serial);
+  const rivals = getPackageRivals(vehicle, optionDetail);
+  //Check for package rivals, & mark popup false
+  if (rivals.length > 0) {
+    rivals.forEach((sibling) => {
+      sibling.popup = false;
     });
   }
   return updatedVehicle;
 }
 
-function deleteExteriorAccessories(vehicle, optionDetail) {
-  const { serial, package: packageID } = optionDetail;
+function addExteriorAccessories(vehicle, optionDetail) {
   let updatedVehicle = { ...vehicle };
-  if (exteriorAccessoriesInclusives.hasOwnProperty(serial)) {
-    exteriorAccessoriesInclusives[optionDetail.serial].forEach(
-      (exclusiveOption) => {
-        updatedVehicle = removeOptionInChoicesSelected(
-          vehicle,
-          exclusiveOption.groupName,
-          exclusiveOption.serial
-        );
-      }
+  const { groupName, serial } = optionDetail;
+  const rivals = getExteriorAccessoriesRivals(vehicle, optionDetail);
+  const exteriorAccOptionGroup = updatedVehicle.options.find(
+    (o) => o.name === groupName
+  );
+  let selectedExternalAccessories = updatedVehicle.selected.options.find(
+    (s) => s.groupName === groupName
+  );
+
+  if (rivals.length > 0) {
+    rivals.forEach((rival) => {
+      //Find any available option which is a rival and mark popup true
+      exteriorAccOptionGroup.choicesAvailable.find(
+        (ea) => ea.serial === rival.serial
+      ).popup = true;
+      //Find any selected option which is a rival and unselect it
+      selectedExternalAccessories.choicesSelected.forEach((selectedExtAcc) => {
+        if (rival.serial === selectedExtAcc.serial) {
+          updatedVehicle = removeOptionInChoicesSelected(
+            updatedVehicle,
+            groupName,
+            selectedExtAcc.serial
+          );
+        }
+      });
+    });
+    //Finally, mark the current selected option popup false
+    const choiceFound = selectedExternalAccessories.choicesSelected.find(
+      (s) => s.serial === optionDetail.serial
     );
+
+    if (choiceFound) {
+      choiceFound.popup = false;
+    }
   }
+  return updatedVehicle;
+}
+
+function deleteExteriorAccessories(vehicle, optionDetail) {
+  let updatedVehicle = { ...vehicle };
+  const { groupName, serial, package: packageID } = optionDetail;
+
+  const rivals = getExteriorAccessoriesRivals(vehicle, optionDetail);
+  const exteriorAccOptionGroup = updatedVehicle.options.find(
+    (o) => o.name === groupName
+  );
+  if (rivals.length > 0) {
+    rivals.forEach((rival) => {
+      exteriorAccOptionGroup.choicesAvailable.find(
+        (ea) => ea.serial === rival.serial
+      ).popup = false;
+    });
+  }
+
   if (packageID) {
     //Adjust the optionDetail to pass to deletePackages()
     optionDetail.groupName = "Packages";
@@ -191,23 +182,58 @@ function deleteExteriorAccessories(vehicle, optionDetail) {
 }
 
 function deleteInteriorAccessories(vehicle, optionDetail) {
-  return vehicle;
-}
-
-function filterChoicesAvailableByTrim(optionGroup, trimSerial) {
-  return optionGroup.choicesAvailable.filter((option) =>
-    option.trim.includes(trimSerial)
-  );
-}
-
-function clearChoicesSelected(vehicle, optionGroupName) {
-  const optionGroup = vehicle.selected.options.find(
-    (option) => option.groupName === optionGroupName
-  );
-  if (optionGroup) {
-    optionGroup.choicesSelected = [];
+  const { serial, package: packageID } = optionDetail;
+  let updatedVehicle = { ...vehicle };
+  if (packageID) {
+    //Adjust the optionDetail to pass to deletePackages()
+    optionDetail.groupName = "Packages";
+    optionDetail.serial = packageID;
+    updatedVehicle = deletePackages(updatedVehicle, optionDetail);
   }
-  return vehicle;
+  return updatedVehicle;
+}
+
+//These are secondary callback functions
+
+function addPackageSiblings(vehicle, serial) {
+  let updatedVehicle = { ...vehicle };
+  const packageSiblings = getPackageSiblings(serial);
+  if (packageSiblings.length > 0) {
+    packageSiblings.forEach((sibling) => {
+      let choice = updatedVehicle.options
+        .find((option) => option.name === sibling.groupName)
+        .choicesAvailable.find((c) => c.serial === sibling.serial);
+      if (choice) {
+        const updatedChoice = {
+          ...choice,
+          package: serial,
+          action: true,
+          popup: true,
+        };
+
+        updatedVehicle = addOptionInChoicesSelected(
+          updatedVehicle,
+          sibling.groupName,
+          updatedChoice
+        );
+      }
+    });
+  }
+  return updatedVehicle;
+}
+
+function deletePackageSiblings(vehicle, serial) {
+  let updatedVehicle = { ...vehicle };
+  const packageSiblings = getPackageSiblings(serial);
+  packageSiblings.forEach((option) => {
+    updatedVehicle = removeOptionInChoicesSelected(
+      vehicle,
+      option.groupName,
+      option.serial
+    );
+  });
+
+  return updatedVehicle;
 }
 
 function addOptionInChoicesSelected(vehicle, optionGroupName, choice) {
@@ -242,75 +268,20 @@ function removeOptionInChoicesSelected(vehicle, optionGroupName, serial) {
   return vehicle;
 }
 
-function removeOptionInChoicesAvailable(vehicle, optionGroupName, choice) {
-  const optionGroup = vehicle.options.find(
-    (option) => option.name === optionGroupName
-  );
-  if (optionGroup) {
-    optionGroup.choicesAvailable = optionGroup.choicesAvailable.filter(
-      (option) => option.serial !== choice.serial
-    );
-  }
-  return vehicle;
-}
-
-function addOptionInChoicesAvailable(vehicle, groupName, choice) {
-  const optionGroup = vehicle.options.find(
-    (option) => option.name === groupName
-  );
-
-  const objectExists = optionGroup.choicesAvailable.some(
-    (option) => option.serial === choice.serial
-  );
-
-  if (!objectExists) {
-    optionGroup.choicesAvailable.push(choice);
-  }
-  return vehicle;
-}
-
-function addPackageComponents(vehicle, serial) {
-  let updatedVehicle = { ...vehicle };
-  const packageSiblings = getPackageSiblings(serial);
-  if (packageSiblings.length > 0) {
-    packageSiblings.forEach((rival) => {
-      let choice = updatedVehicle.options
-        .find((option) => option.name === rival.groupName)
-        .choicesAvailable.find((c) => c.serial === rival.serial);
-      if (choice) {
-        const updatedChoice = {
-          ...choice,
-          package: serial,
-          action: true,
-          popup: true,
-        };
-
-        updatedVehicle = addOptionInChoicesSelected(
-          updatedVehicle,
-          rival.groupName,
-          updatedChoice
-        );
-      }
-    });
-  }
-  return updatedVehicle;
-}
-
 function removePackageRivals(vehicle, groupName, rivals) {
   let updatedVehicle = { ...vehicle };
-  const packageOption = updatedVehicle.options.find(
+  const packageOptionGroup = updatedVehicle.options.find(
     (o) => o.name === groupName
   );
-  rivals.forEach((rival) => {
-    const rivalOption = packageOption.choicesAvailable.find(
-      (p) => p.serial === rival.serial
-    );
-    rivalOption.popup = true;
+  const selectedPackages = updatedVehicle.selected.options.find(
+    (s) => s.groupName === groupName
+  );
 
-    // Check if any rivals are selected
-    const selectedPackages = updatedVehicle.selected.options.find(
-      (s) => s.groupName === groupName
-    );
+  rivals.forEach((rival) => {
+    packageOptionGroup.choicesAvailable.find(
+      (p) => p.serial === rival.serial
+    ).popup = true;
+
     selectedPackages.choicesSelected.forEach((selectedPackage) => {
       if (rival.serial === selectedPackage.serial) {
         const rivalSiblings = getPackageSiblings(selectedPackage.serial);
@@ -329,19 +300,37 @@ function removePackageRivals(vehicle, groupName, rivals) {
       }
     });
   });
+
   return updatedVehicle;
 }
 
-function deletePackageComponents(vehicle, serial) {
-  let updatedVehicle = { ...vehicle };
-  const packageComponents = getComponents(serial);
-  packageComponents.forEach((option) => {
-    updatedVehicle = removeOptionInChoicesSelected(
-      vehicle,
-      option.groupName,
-      option.serial
-    );
-  });
+function addOptionInChoicesAvailable(vehicle, groupName, choice) {
+  const optionGroup = vehicle.options.find(
+    (option) => option.name === groupName
+  );
 
-  return updatedVehicle;
+  const objectExists = optionGroup.choicesAvailable.some(
+    (option) => option.serial === choice.serial
+  );
+
+  if (!objectExists) {
+    optionGroup.choicesAvailable.push(choice);
+  }
+  return vehicle;
+}
+
+function clearChoicesSelected(vehicle, optionGroupName) {
+  const optionGroup = vehicle.selected.options.find(
+    (option) => option.groupName === optionGroupName
+  );
+  if (optionGroup) {
+    optionGroup.choicesSelected = [];
+  }
+  return vehicle;
+}
+
+function filterChoicesAvailableByTrim(optionGroup, trimSerial) {
+  return optionGroup.choicesAvailable.filter((option) =>
+    option.trim.includes(trimSerial)
+  );
 }

@@ -66,46 +66,6 @@ export const exteriorColorAction = (vehicle, optionDetail) => {
   return additionalInteriorColor;
 };
 
-// export const getPackageRivals = (vehicle, optionDetail) => {
-//   const rivalArray = packageRivalArray[vehicle.selected.trim.name];
-//   const siblings = [];
-//   if (rivalArray.includes(optionDetail.serial)) {
-//     siblings = rivalArray.filter((item) => item !== optionDetail.serial);
-//   }
-//   return siblings;
-// };
-
-// export const packageRivalArray = {
-//   "Sedan Sport": ["pk1", "pk3", "pk8"],
-//   "Sedan EX": ["pk1", "pk3", "pk8"],
-//   "Sedan Touring": ["pk1", "pk3", "pk8"],
-//   "Hatchback Sport": ["pk2", "pk4", "pk9"],
-//   "Hatchback EX-L": ["pk2", "pk4", "pk9"],
-//   "Hatchback Sport Touring": ["pk2", "pk4", "pk9"],
-//   Si: ["pk1", "pk6", "pk8"],
-//   "Type R": [],
-// };
-
-// export const getPackageRivals3 = (vehicle, optionDetail) => {
-//   const rivalArray = packageRivalArray[vehicle.selected.trim.name];
-//   const rivalSerials = [];
-//   const rivalOptions = [];
-//   if (rivalArray.includes(optionDetail.serial)) {
-//     rivalSerials = rivalArray.filter((item) => item !== optionDetail.serial);
-//     let packagesAvailable = vehicle.options.find(
-//       (o) => o.name === optionDetail.groupName
-//     ).choicesAvailable;
-//     rivalSerials.forEach((r) => {
-//       packagesAvailable.forEach((p) => {
-//         if (p.serial === r) {
-//           rivalOptions.push(p);
-//         }
-//       });
-//     });
-//   }
-//   return rivalOptions;
-// };
-
 export const getPackageRivals = (vehicle, optionDetail) => {
   const trimName = vehicle.selected.trim.name;
   const rivals = packageRivalArray[trimName];
@@ -377,45 +337,44 @@ export const getPackageSiblings = (packageSerial) => {
   return siblings;
 };
 
-export const getExteriorAccessories = (vehicle, optionDetail) => {
-  const exclusiveArray =
-    exteriorAccessoriesExclusiveArray[vehicle.selected.trim.name];
-  const siblings = [];
-  if (exclusiveArray.includes(optionDetail.serial)) {
-    siblings = exclusiveArray.filter((item) => item !== optionDetail.serial);
+export const getExteriorAccessoriesRivals = (vehicle, optionDetail) => {
+  const trimName = vehicle.selected.trim.name;
+  const rivals = exteriorAccessoriesRivalArray[trimName];
+  const { serial, groupName } = optionDetail;
+
+  // Find the array containing the 'serial' string
+  const foundArray = rivals.find((array) => array.includes(serial));
+  if (!foundArray) {
+    return [];
   }
-  return siblings;
+
+  const filteredRivals = foundArray.filter((item) => item !== serial);
+  const externalAccAvailable = vehicle.options.find(
+    (option) => option.name === groupName
+  ).choicesAvailable;
+
+  const rivalOptions = filteredRivals.flatMap((rivalSerial) =>
+    externalAccAvailable.filter(
+      (externalAccOption) => externalAccOption.serial === rivalSerial
+    )
+  );
+
+  return rivalOptions;
 };
 
-export const exteriorAccessoriesExclusiveArray = {
-  "Sedan Sport": ["ea5", "ea6"],
-  "Sedan EX": ["ea5", "ea6"],
-  "Sedan Touring": ["ea5", "ea6"],
-  "Hatchback Sport": ["ea5", "ea6"],
-  "Hatchback EX-L": ["ea20", "ea21"],
-  "Hatchback Sport Touring": ["pk2", "pk4", "pk9"],
-  Si: ["pk1", "pk6", "pk8"],
-  "Type R": [],
-};
-
-export const exteriorAccessoriesInclusiveArray = {
-  "Sedan Sport": ["ea5", "ea6"],
-  "Sedan EX": ["ea5", "ea6"],
-  "Sedan Touring": ["ea5", "ea6"],
-  "Hatchback Sport": ["ea5", "ea6"],
-  "Hatchback EX-L": ["e14", "ea19", "ea20", "ea21"],
-  "Hatchback Sport Touring": ["pk2", "pk4", "pk9"],
-  Si: ["pk1", "pk6", "pk8"],
-  "Type R": [],
-};
-
-export const exteriorAccessoriesPrecessorArray = {
-  "Sedan Sport": ["ea5", "ea6"],
-  "Sedan EX": ["ea5", "ea6"],
-  "Sedan Touring": ["ea5", "ea6"],
-  "Hatchback Sport": ["ea5", "ea6"],
-  "Hatchback EX-L": ["e14", "ea19", "ea20", "ea21"],
-  "Hatchback Sport Touring": ["pk2", "pk4", "pk9"],
-  Si: ["pk1", "pk6", "pk8"],
+export const exteriorAccessoriesRivalArray = {
+  "Sedan Sport": [["ea5", "ea6"]],
+  "Sedan EX": [["ea5", "ea6"]],
+  "Sedan Touring": [["ea5", "ea6"]],
+  "Hatchback Sport": [["ea5", "ea6"]],
+  "Hatchback EX-L": [
+    ["ea5", "ea6"],
+    ["ea15", "ea21"],
+  ],
+  "Hatchback Sport Touring": [
+    ["ea5", "ea6"],
+    ["ea15", "ea21"],
+  ],
+  Si: [["ea24", "ea28"]],
   "Type R": [],
 };

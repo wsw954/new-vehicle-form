@@ -360,7 +360,7 @@ export const modelOptions = [
         price: 54,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
         serial: "ea5",
-        popup: true,
+        popup: false,
         action: true,
       },
       {
@@ -368,7 +368,7 @@ export const modelOptions = [
         price: 124,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
         serial: "ea6",
-        popup: true,
+        popup: false,
         action: true,
       },
       {
@@ -376,6 +376,8 @@ export const modelOptions = [
         price: 54,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7"],
         serial: "ea7",
+        popup: false,
+        action: true,
       },
       {
         name: "Door Visors",

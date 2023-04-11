@@ -2,6 +2,7 @@ import { modelOptions, trims } from "/data/honda/civic/options";
 import {
   groupDataHandler,
   getPackageRivals,
+  getExteriorAccessoriesRivals,
 } from "/data/honda/civic/actionData";
 
 const optionsAvailable = new Map(modelOptions.map((e) => [e.name, e]));
@@ -14,7 +15,7 @@ function defaultHandler(vehicle, optionDetail) {
 }
 
 const addFunctionMap = {
-  addPowertrain: addPowertrainMessage,
+  // addPowertrain: addPowertrainMessage,
   addPackagesMessage: addPackagesMessage,
   addExteriorAccessoriesMessage: addExteriorAccessoriesMessage,
   addInteriorAccessoriesMessage: addInteriorAccessoriesMessage,
@@ -22,7 +23,7 @@ const addFunctionMap = {
 
 const deleteFunctionMap = {
   deletePowertrainMessage: deletePowertrainMessage,
-  deletePackagesMessage: deletePackagesMessage,
+  // deletePackagesMessage: deletePackagesMessage,
   deleteExteriorAccessoriesMessage: deleteExteriorAccessoriesMessage,
   deleteInteriorAccessoriesMessage: deleteInteriorAccessoriesMessage,
 };
@@ -91,10 +92,28 @@ function addPackagesMessage(vehicle, optionDetail) {
 }
 
 function addExteriorAccessoriesMessage(vehicle, optionDetail) {
-  let data = groupDataHandler(vehicle, optionDetail);
-  console.log(data);
-  return vehicle;
+  const { groupName } = optionDetail;
+  let updatedVehicle = { ...vehicle };
+  const rivals = getExteriorAccessoriesRivals(vehicle, optionDetail);
+  if (rivals.length > 0) {
+    const selectedPackages = updatedVehicle.selected.options.find(
+      (o) => o.groupName === groupName
+    );
+    rivals.forEach((rival) => {
+      selectedPackages.choicesSelected.forEach((p) => {
+        if (p.serial === rival.serial) {
+          updatedVehicle.popup = {
+            show: true,
+            message: "This will remove " + p.name,
+            detail: optionDetail,
+          };
+        }
+      });
+    });
+  }
+  return updatedVehicle;
 }
+
 function addInteriorAccessoriesMessage(vehicle, optionDetail) {
   console.log(
     "Line 92 in popup, ADD Interior Accessories generic popup Message function"
@@ -134,10 +153,20 @@ function deleteExteriorAccessoriesMessage(vehicle, optionDetail) {
 }
 
 function deleteInteriorAccessoriesMessage(vehicle, optionDetail) {
-  console.log(
-    "Line 148 in popup, DELETE Interior Accessories generic popup Message function"
-  );
-  return vehicle;
+  const { action, groupName, package: packageID, serial } = optionDetail;
+  let updatedVehicle = { ...vehicle };
+  if (packageID != "") {
+    let parentPackage = optionsAvailable
+      .get("Packages")
+      .choicesAvailable.find((choice) => choice.serial === packageID);
+    updatedVehicle.popup = {
+      show: true,
+      message: "This will remove the Package- " + parentPackage.name,
+      detail: optionDetail,
+    };
+  }
+
+  return updatedVehicle;
 }
 
 function deleteComponentMessage(vehicle, optionDetail) {
