@@ -427,6 +427,8 @@ export const modelOptions = [
         price: 167,
         trim: ["tt2", "tt3", "tt5", "tt6", "tt7"],
         serial: "ea15",
+        popup: false,
+        action: true,
       },
       {
         name: "Rear Bumper Applique",
@@ -445,6 +447,8 @@ export const modelOptions = [
         price: 404,
         trim: ["tt4", "tt5", "tt6", "tt8"],
         serial: "ea18",
+        popup: true,
+        action: true,
       },
 
       {
@@ -452,19 +456,23 @@ export const modelOptions = [
         price: 555,
         trim: ["tt4", "tt5", "tt6", "tt8"],
         serial: "ea19",
+        popup: true,
+        action: true,
       },
       {
         name: "Roof Box-Short",
         price: 523,
         trim: ["tt4", "tt5", "tt6", "tt8"],
         serial: "ea20",
+        popup: true,
+        action: true,
       },
       {
         name: "Roof Rack",
         price: 399,
         trim: ["tt4", "tt5", "tt6", "tt8"],
         serial: "ea21",
-        popup: true,
+        popup: false,
         action: true,
       },
       {
@@ -472,12 +480,16 @@ export const modelOptions = [
         price: 262,
         trim: ["tt4", "tt5", "tt6", "tt8"],
         serial: "ea22",
+        popup: true,
+        action: true,
       },
       {
         name: "Surf/Paddleboard Attachment",
         price: 169,
         trim: ["tt4", "tt5", "tt6", "tt8"],
         serial: "ea23",
+        popup: true,
+        action: true,
       },
       {
         name: "Splash Guard Set",
@@ -557,8 +569,6 @@ export const modelOptions = [
         price: 183,
         trim: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6", "tt7", "tt8"],
         serial: "ia1",
-        // popup: false,
-        // action: true,
       },
       {
         name: "Cargo Hook",

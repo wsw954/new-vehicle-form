@@ -339,7 +339,7 @@ export const getPackageSiblings = (packageSerial) => {
 
 export const getExteriorAccessoriesRivals = (vehicle, optionDetail) => {
   const trimName = vehicle.selected.trim.name;
-  const rivals = exteriorAccessoriesRivalArray[trimName];
+  const rivals = exteriorAccessoriesRivals[trimName];
   const { serial, groupName } = optionDetail;
 
   // Find the array containing the 'serial' string
@@ -362,7 +362,7 @@ export const getExteriorAccessoriesRivals = (vehicle, optionDetail) => {
   return rivalOptions;
 };
 
-export const exteriorAccessoriesRivalArray = {
+export const exteriorAccessoriesRivals = {
   "Sedan Sport": [["ea5", "ea6"]],
   "Sedan EX": [["ea5", "ea6"]],
   "Sedan Touring": [["ea5", "ea6"]],
@@ -377,4 +377,34 @@ export const exteriorAccessoriesRivalArray = {
   ],
   Si: [["ea24", "ea28"]],
   "Type R": [],
+};
+
+export const getExteriorAccParentChild = (trimName, optionDetail) => {
+  const children = exteriorAccessoriesParentChild[trimName];
+  const { serial, groupName } = optionDetail;
+  const parentChild = exteriorAccessoriesParentChild[trimName];
+  return parentChild;
+};
+
+export const exteriorAccessoriesParentChild = {
+  "Sedan Sport": { parent: "", child: [] },
+  "Sedan EX": { parent: "", child: [] },
+  "Sedan Touring": { parent: "", child: [] },
+  "Hatchback Sport": {
+    parent: "ea21",
+    child: ["ea1", "ea14", "ea18", "ea19", "ea20", "ea22", "ea23"],
+  },
+  "Hatchback EX-L": {
+    parent: "ea21",
+    child: ["ea1", "ea14", "ea18", "ea19", "ea20", "ea22", "ea23"],
+  },
+  "Hatchback Sport Touring": {
+    parent: "ea21",
+    child: ["ea1", "ea14", "ea18", "ea19", "ea20", "ea22", "ea23"],
+  },
+  Si: { parent: "", child: [] },
+  "Type R": {
+    parent: "ea21",
+    child: ["ea1", "ea14", "ea18", "ea19", "ea20", "ea22", "ea23"],
+  },
 };

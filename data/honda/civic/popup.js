@@ -3,6 +3,7 @@ import {
   groupDataHandler,
   getPackageRivals,
   getExteriorAccessoriesRivals,
+  getExteriorAccParentChild,
 } from "/data/honda/civic/actionData";
 
 const optionsAvailable = new Map(modelOptions.map((e) => [e.name, e]));
@@ -92,24 +93,29 @@ function addPackagesMessage(vehicle, optionDetail) {
 }
 
 function addExteriorAccessoriesMessage(vehicle, optionDetail) {
-  const { groupName } = optionDetail;
+  const { groupName, serial } = optionDetail;
   let updatedVehicle = { ...vehicle };
-  const rivals = getExteriorAccessoriesRivals(vehicle, optionDetail);
+  const rivals = getExteriorAccessoriesRivals(updatedVehicle, optionDetail);
+  const parentChild = getExteriorAccParentChild(
+    updatedVehicle.selected.trim.name,
+    optionDetail
+  );
   if (rivals.length > 0) {
-    const selectedPackages = updatedVehicle.selected.options.find(
-      (o) => o.groupName === groupName
+    updatedVehicle = handleRivalsMessage(updatedVehicle, optionDetail, rivals);
+  }
+  if (parentChild.parent === serial) {
+    updatedVehicle = handleParentMessage(
+      updatedVehicle,
+      optionDetail,
+      parentChild
     );
-    rivals.forEach((rival) => {
-      selectedPackages.choicesSelected.forEach((p) => {
-        if (p.serial === rival.serial) {
-          updatedVehicle.popup = {
-            show: true,
-            message: "This will remove " + p.name,
-            detail: optionDetail,
-          };
-        }
-      });
-    });
+  }
+  if (parentChild.child.includes(serial)) {
+    updatedVehicle = handleChildMessage(
+      updatedVehicle,
+      optionDetail,
+      parentChild
+    );
   }
   return updatedVehicle;
 }
@@ -187,4 +193,50 @@ function deleteComponentMessage(vehicle, optionDetail) {
   };
   vehicle.popup = newpopup;
   return vehicle;
+}
+
+function handleRivalsMessage(updatedVehicle, optionDetail, rivals) {
+  const selectedPackages = updatedVehicle.selected.options.find(
+    (o) => o.groupName === optionDetail.groupName
+  );
+
+  rivals.forEach((rival) => {
+    selectedPackages.choicesSelected.forEach((p) => {
+      if (p.serial === rival.serial) {
+        updatedVehicle.popup = {
+          show: true,
+          message: "This will remove " + p.name,
+          detail: optionDetail,
+        };
+      }
+    });
+  });
+
+  return updatedVehicle;
+}
+
+function handleParentMessage(updatedVehicle, optionDetail, parentChild) {
+  console.log("Line 215 in popup, a Parent was selected");
+
+  return updatedVehicle;
+}
+
+function handleChildMessage(updatedVehicle, optionDetail, parentChild) {
+  const { name, serial, groupName } = optionDetail;
+  // Check if the child option serial exists in parentChildRelation
+  if (parentChild.child.includes(serial)) {
+    const currentOptionsAvailable = updatedVehicle.options.find(
+      (o) => o.name === groupName
+    ).choicesAvailable;
+    // Find the parent option in the group
+    const parentOption = currentOptionsAvailable.find(
+      (o) => o.serial === parentChild.parent
+    );
+    updatedVehicle.popup = {
+      show: true,
+      message: "To add " + name + " you must also add " + parentOption.name,
+      detail: optionDetail,
+    };
+  }
+  return updatedVehicle;
 }
