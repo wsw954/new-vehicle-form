@@ -421,6 +421,8 @@ export const modelOptions = [
         price: 264,
         trim: ["tt4", "tt5", "tt6", "tt8"],
         serial: "ea14",
+        popup: true,
+        action: true,
       },
       {
         name: "Moonroof Visor",
@@ -464,7 +466,7 @@ export const modelOptions = [
         price: 523,
         trim: ["tt4", "tt5", "tt6", "tt8"],
         serial: "ea20",
-        popup: true,
+        popup: false,
         action: true,
       },
       {

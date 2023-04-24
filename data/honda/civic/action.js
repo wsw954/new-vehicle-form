@@ -8,6 +8,8 @@ import {
   exteriorAccessoriesInclusives,
 } from "/data/honda/civic/actionData";
 
+import { handleLastChildMessage } from "/data/honda/civic/popup";
+
 const optionsAvailable = new Map(modelOptions.map((e) => [e.name, e]));
 
 function defaultHandler(vehicle, optionDetail) {
@@ -122,16 +124,15 @@ function addExteriorAccessories(vehicle, optionDetail) {
   const { groupName, serial } = optionDetail;
   const trimName = updatedVehicle.selected.trim.name;
   const rivals = getExteriorAccessoriesRivals(vehicle, optionDetail);
-  const parentChild = getExteriorAccParentChild(trimName, optionDetail);
+  const parentChildRelation = getExteriorAccParentChild(trimName, optionDetail);
   if (rivals.length > 0) {
     updatedVehicle = handleRivals(vehicle, groupName, serial, rivals);
   }
-  if (parentChild.parent === serial) {
-    console.log("A parent was selected");
-    //updatedVehicle = handleParent(vehicle, optionDetail, parentChild))
+  if (parentChildRelation.parent === serial) {
+    updatedVehicle = addParent(vehicle, optionDetail, parentChildRelation);
   }
-  if (parentChild.child.includes(serial)) {
-    updatedVehicle = handleChild(vehicle, optionDetail, parentChild);
+  if (parentChildRelation.child.includes(serial)) {
+    updatedVehicle = addChild(vehicle, optionDetail, parentChildRelation);
   }
 
   return updatedVehicle;
@@ -140,11 +141,13 @@ function addExteriorAccessories(vehicle, optionDetail) {
 function deleteExteriorAccessories(vehicle, optionDetail) {
   let updatedVehicle = { ...vehicle };
   const { groupName, serial, package: packageID } = optionDetail;
-
   const rivals = getExteriorAccessoriesRivals(vehicle, optionDetail);
   const exteriorAccOptionGroup = updatedVehicle.options.find(
     (o) => o.name === groupName
   );
+  const trimName = updatedVehicle.selected.trim.name;
+
+  const parentChildRelation = getExteriorAccParentChild(trimName, optionDetail);
   if (rivals.length > 0) {
     rivals.forEach((rival) => {
       exteriorAccOptionGroup.choicesAvailable.find(
@@ -158,6 +161,12 @@ function deleteExteriorAccessories(vehicle, optionDetail) {
     optionDetail.groupName = "Packages";
     optionDetail.serial = packageID;
     updatedVehicle = deletePackages(updatedVehicle, optionDetail);
+  }
+  if (parentChildRelation.parent === serial) {
+    updatedVehicle = deleteParent(vehicle, optionDetail, parentChildRelation);
+  }
+  if (parentChildRelation.child.includes(serial)) {
+    updatedVehicle = deleteChild(vehicle, optionDetail, parentChildRelation);
   }
   return updatedVehicle;
 }
@@ -285,49 +294,155 @@ function handleRivals(updatedVehicle, groupName, serial, rivals) {
   return updatedVehicle;
 }
 
-function handleChild(vehicle, optionDetail, parentChildRelation) {
-  // Create a shallow copy of the vehicle object to prevent direct mutation
+function addChild(vehicle, optionDetail, parentChildRelation) {
   let updatedVehicle = { ...vehicle };
-
-  // Destructure properties from optionDetail
-  const { serial, groupName } = optionDetail;
-
-  // Find the group of options where the child option belongs
+  const { serial, name, groupName, checked } = optionDetail;
   const currentOptionsGroup = updatedVehicle.options.find(
     (option) => option.name === groupName
   ).choicesAvailable;
 
-  // Find the parent option in the group
-  const parentOption = currentOptionsGroup.find(
-    (option) => option.serial === parentChildRelation.parent
-  );
-
-  // Set the popup property on the parent option
-  parentOption.popup = true;
-
-  // Add the parent option to the choices selected
-  updatedVehicle = addOptionInChoicesSelected(
-    updatedVehicle,
-    groupName,
-    parentOption
-  );
-
-  // Get the updated list of selected options for the group
   const selectedOptionsGroup = updatedVehicle.selected.options.find(
     (selected) => selected.groupName === groupName
   ).choicesSelected;
 
-  // Find the child option in the selected options group
-  const childOption = selectedOptionsGroup.find(
-    (option) => option.serial === serial
+  let parentOption = currentOptionsGroup.find(
+    (option) => option.serial === parentChildRelation.parent
+  );
+  let selectedChildCount = checkCountOfChildSelected(
+    parentChildRelation,
+    selectedOptionsGroup
+  );
+  if (parentOption) {
+    // Mark parent popup true
+    parentOption.popup = true;
+
+    // Add the parent option
+    updatedVehicle = addOptionInChoicesSelected(
+      updatedVehicle,
+      groupName,
+      parentOption
+    );
+    if (selectedChildCount === 0 || selectedChildCount > 1) {
+      parentChildRelation.child.forEach((child) => {
+        let childOption = currentOptionsGroup.find(
+          (option) => option.serial === child
+        );
+        childOption.popup = false;
+      });
+    }
+    if (selectedChildCount === 1) {
+      let childOption = currentOptionsGroup.find(
+        (option) => option.serial === serial
+      );
+      childOption.popup = true;
+    }
+  }
+  return updatedVehicle;
+}
+
+function deleteChild(vehicle, optionDetail, parentChildRelation) {
+  let updatedVehicle = { ...vehicle };
+  let { serial, name, groupName, checked } = optionDetail;
+  const currentOptionsGroup = updatedVehicle.options.find(
+    (option) => option.name === groupName
+  ).choicesAvailable;
+
+  const selectedOptionsGroup = updatedVehicle.selected.options.find(
+    (selected) => selected.groupName === groupName
+  ).choicesSelected;
+
+  let parentOption = selectedOptionsGroup.find(
+    (option) => option.serial === parentChildRelation.parent
+  );
+  let selectedChildCount = checkCountOfChildSelected(
+    parentChildRelation,
+    selectedOptionsGroup
   );
 
-  // If the child option is found, set its popup property to false
-  if (childOption) {
+  if (selectedChildCount === 1) {
+    let childOption = getLastChildSelected(
+      selectedOptionsGroup,
+      parentChildRelation
+    );
+    childOption.popup = true;
+  }
+  if (selectedChildCount === 0) {
+    parentOption.popup = false;
+    serial = parentChildRelation.parent;
+    return removeOptionInChoicesSelected(updatedVehicle, groupName, serial);
+  }
+  return updatedVehicle;
+}
+
+function addParent(vehicle, optionDetail, parentChildRelation) {
+  let updatedVehicle = { ...vehicle };
+  const { serial, groupName, checked } = optionDetail;
+  const currentOptionsGroup = updatedVehicle.options.find(
+    (option) => option.name === groupName
+  ).choicesAvailable;
+
+  parentChildRelation.child.forEach((child) => {
+    let childOption = currentOptionsGroup.find((c) => c.serial === child);
     childOption.popup = false;
+  });
+
+  return updatedVehicle;
+}
+
+function deleteParent(vehicle, optionDetail, parentChildRelation) {
+  let updatedVehicle = { ...vehicle };
+  const { serial, groupName } = optionDetail;
+  const currentOptionsGroup = updatedVehicle.options.find(
+    (option) => option.name === groupName
+  ).choicesAvailable;
+  let parentOption = currentOptionsGroup.find(
+    (option) => option.serial === serial
+  );
+  const selectedOptionsGroup = updatedVehicle.selected.options.find(
+    (option) => option.groupName === groupName
+  ).choicesSelected;
+
+  parentOption.popup = false;
+  if (checkIfNoChildSelected(parentChildRelation, selectedOptionsGroup)) {
+    //Mark popup for child options, true
+    parentChildRelation.child.forEach((child) => {
+      let childOption = currentOptionsGroup.find((c) => c.serial === child);
+      childOption.popup = true;
+      return updatedVehicle;
+    });
+  } else {
+    //Remove the child options
+    parentChildRelation.child.forEach((child) => {
+      let childOption = currentOptionsGroup.find((c) => c.serial === child);
+      childOption.popup = true;
+      updatedVehicle = removeOptionInChoicesSelected(
+        updatedVehicle,
+        groupName,
+        childOption.serial
+      );
+    });
   }
 
   return updatedVehicle;
+}
+
+function checkIfNoChildSelected(parentChildRelation, selectedOptionsGroup) {
+  return !selectedOptionsGroup.some((obj) =>
+    parentChildRelation.child.includes(obj.serial)
+  );
+}
+
+function checkCountOfChildSelected(parentChildRelation, selectedObjects) {
+  return parentChildRelation.child.filter((child) =>
+    selectedObjects.some((obj) => child === obj.serial)
+  ).length;
+}
+
+function getLastChildSelected(selectedObjects, parentChildRelation) {
+  const matchedObjects = selectedObjects.filter((selectedObject) =>
+    parentChildRelation.child.includes(selectedObject.serial)
+  );
+  return matchedObjects.slice(-1)[0] || null;
 }
 
 function removePackageRivals(vehicle, groupName, rivals) {

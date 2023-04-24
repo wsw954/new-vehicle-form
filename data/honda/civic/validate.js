@@ -103,6 +103,5 @@ export const handlePopupConfirm = (vehicle, optionDetail) => {
         : deleteActionHandler(vehicle, optionDetail);
     updateChoicesSelected(optionGroupSelected, optionSelected, checked);
   }
-
   return updatedVehicle;
 };
